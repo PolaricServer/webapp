@@ -1,0 +1,7 @@
+#!/bin/bash
+DIR=/etc/polaric-webapp
+if [ -e $DIR/users ]; then
+  htpasswd $DIR/users $1
+else
+  htpasswd -c $DIR/users $1
+fi

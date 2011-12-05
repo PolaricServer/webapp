@@ -1,0 +1,130 @@
+div.trblock {display: block; overflow: hidden; margin-bottom: 0.2em}
+div#traffic {margin-top: 0.4em}
+
+div.lstill, div.lobject, div.lmoving {
+   border: 1px solid #766;   
+   top: -10px;
+   left: 12px;
+   position: absolute; 
+   font-family: Arial, sans-serif;   
+   font-weight: bold;
+   font-size: 100%;
+   white-space: nowrap;
+   padding: 1px 3px 1px 3px; 
+   align: center;
+   opacity: 0.88;
+   -moz-border-radius: 0.3em;
+   -webkit-border-radius: 4px;
+   border-radius: 0.3em;
+    -moz-box-shadow: 2px 2px 5px #242;
+    -webkit-box-shadow: 2px 2px 5px #242;
+    box-shadow: 2px 2px 5px #242;
+}
+
+div.lstill {
+      background: #ffffb8;
+}
+
+div.lmoving {
+      background: #ffdd87;
+}
+
+
+div.lobject {
+      background: #e7f4ff;
+      font-weight: normal;
+      opacity: 0.88;
+}
+
+div.lflash {
+   text-decoration: blink;
+   border: solid 3px red;
+   color: #c44;
+}
+
+div.tracked {
+   color: #60d;
+   border: #45e 5px double;
+}
+div.igate { background: #dfc; border: 2px solid #262}
+div.wdigi { background: #fcc; border: 2px solid #522}
+
+div.olControlAttribution, div.olControlAttribution a {
+    left: 10px  !important;
+    bottom: 5px !important;
+    color: #500 !important;
+    font-weight: bold !important;
+} 
+div.olControlLayerSwitcher {
+   top: 60px !important; 
+}
+div.olControlPanZoomBar {
+   top: 60px !important
+}
+
+.olControlPermalink {
+   display: inline-block !important;
+   position: relative !important;
+   top: 1px !important;
+}
+
+#permolink {
+  display: -moz-inline-stack;
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+}
+
+#canvasBG {
+  background: #aaa; 
+  opacity: 0.35;
+  filter: alpha(opacity=35);
+}
+div#tools {*padding-top:3px !important;}
+
+.kmTitle {
+   top: 5px;
+   font-size: 19px;
+}
+
+div#sarmode {display: inline-block; 
+             visibility : hidden }
+
+div#login {
+  display: -moz-inline-stack;
+  display: inline-block;
+  zoom:1;
+  *display: inline;
+}
+
+div#login a img { border: none }
+
+div.login {background: white; padding: 2px 4px 2px 4px; border: 1px dotted red;}
+
+#maps, #filters { width: 8em }
+
+#clogo {
+  position: absolute;
+  left: 6px;
+  bottom: 20px;
+  z-index: 1500; 
+}
+
+
+div.trailPoint:hover, div.trailPoint_hover { 
+   border: solid 2px #f63; 
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   border-radius: 10px;
+}
+
+
+.welcome {
+   margin-top: 90px;
+   margin-left: 65px;
+   margin-right: 50px;
+   background: white;
+   opacity: 0.85;
+   border: outset 1px #333;
+   padding: 1em !important;
+}

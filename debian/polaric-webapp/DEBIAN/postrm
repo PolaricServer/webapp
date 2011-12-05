@@ -1,0 +1,38 @@
+#!/bin/bash
+set -e
+
+
+case "$1" in
+    remove|purge)
+       if [ -d "/var/www/aprs/kacache2" ]; then
+          rm -R /var/www/aprs/kacache2
+       fi
+
+       if [ "$1" == "purge" ] ; then
+         if [ -e "/etc/polaric-webapp/users" ]; then
+            rm /etc/polaric-webapp/users
+         fi
+         if [ -e "/var/www/aprs/KaMap/mapserv" ]; then
+            rm /var/www/aprs/KaMap/mapserv
+         fi
+         if [ -e "/etc/polaric-webapp/mapserv" ]; then
+            rmdir /etc/polaric-webapp/mapserv
+         fi
+      fi
+    ;;
+
+    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+        # Nothing to do here
+    ;;
+
+    *)
+        echo "$0 called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+# Automatically added by dh_installinit
+if [ "$1" = "purge" ] ; then
+	update-rc.d polaric-webapp remove >/dev/null
+fi
+# End automatically added section

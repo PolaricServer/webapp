@@ -1,0 +1,135 @@
+div.trblock, label {display: block; overflow: hidden; 
+margin-bottom: 0.07em; max-width: 45em; vertical-align: top}
+
+div.trblock {margin-bottom: 0.2em}
+div#traffic {margin-top: 0.4em}
+
+#measureSeg, #measureTot { 
+  width: 6em; 
+  background-color:transparent; 
+  border: none; 
+  overflow: hidden; 
+  margin-bottom: 0.1em
+}
+
+a.sarurl {color: #900; font-size: 100%; font-family: monospace}
+
+div.POPUP, div.POPUPMENU, #measureResult 
+{
+   font-family: Helvetica, sans-serif; 
+   font-size: 90%;
+   border: 1px solid #777;
+   -moz-box-shadow: 3px 3px 5px #242;
+   -webkit-box-shadow: 3px 3px 5px #242;
+   box-shadow: 3px 3px 5px #242;
+}
+
+
+div.POPUP, #measureResult {
+   line-height: 1.2em;
+   background: #f8f8d5;
+   z-index: 1301 !important; 
+   padding: 0.3em !important;
+   min-width: 15em;
+}
+
+#measureResult {
+  min-width: 10em;
+}
+
+#infopopup {
+  min-width: 23em;
+}
+
+
+div.POPUPMENU {
+   padding-bottom: 0.3em;
+   margin-bottom: 0.7em;
+   line-height: 1.0em;
+   background: #fefeee; 
+   z-index: 1301 !important;
+}
+
+.leftlab, .sleftlab, label.lleftlab {
+    float: left;
+    width: 9em;
+    text-align: right;
+    padding-right: 7px;
+    color: gray;
+}
+
+.sleftlab, label.lleftlab {
+    width: 5em;
+} 
+
+div.POPUP img { max-width: 500px; }
+div.POPUP #cancel {visibility: hidden; width: 0; height: 0; margin: 0; padding: 0}
+
+div.POPUPMENU > div
+{
+   font-family: Arial, Helvetica, sans-serif;
+   font-size: 80%;
+   padding-left: 0.5em;
+   padding-right: 0.5em; 
+}
+
+div.ITEM_sep {
+  padding-bottom: 2px;
+  margin-bottom: 2px;
+  border-bottom: solid 1px #555;
+}
+
+div.ITEM_hover, .link_id:hover
+{
+   background:#a44;
+   color: white;
+}
+
+th, td {font-size: 90%;}
+  
+th { 
+   text-align: left;  
+   background: #fb9; 
+   border: #d86 1px solid; 
+   padding: 0 0 0 0.5em
+}
+
+
+a {text-decoration: none}
+
+table {border-collapse: collapse}
+td {
+    padding-left: 0.5em; 
+    padding-right: 0.5em;
+    padding-bottom: 0.2em;
+    padding-top: 0.2em;
+    line-height: 1em;
+    border: 1px #d86 dotted
+}
+
+tr {height: 12px;}
+
+tr:hover {background: #ff8}
+
+
+h1 { font-family: helvetica, sans-serif; 
+     font-size: 1em; 
+     margin-bottom: 0.5em; 
+   }
+
+
+span.kartref {
+   padding: 0px 0px 0px 0px;
+   color: #880000;
+}
+
+
+
+span.kartref:hover {
+   font-weight: bold; 
+   border: solid 2px #eeaaaa;
+}
+
+
+
+

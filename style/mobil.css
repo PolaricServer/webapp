@@ -1,0 +1,27 @@
+#toolbar {left: 10px; height: 35px; width: 16.5em;  min-width: 280px;}
+#tools {height: 29px; border: solid #999 1px;}
+#toolbarBackground {height: 33px;}
+#toolbarToggler {left: 18px; top: 38px;}
+
+div.view {
+    display: none;
+    padding: 0 6px;
+}
+div.POPUPMENU {
+    font-size: 140%;
+    line-height: 1.4em;
+}    
+
+div.POPUPMENU > div { 
+  border-bottom: dotted 1px #777;
+}
+div.ITEM_sep {
+  border-bottom: solid 1px #444 !important;
+}
+
+div.ITEM_last {border-bottom: none !important}
+
+tr:hover {background: none}
+td {
+  line-height: 1.3em;
+}
