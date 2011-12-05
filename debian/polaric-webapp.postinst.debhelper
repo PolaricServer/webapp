@@ -1,6 +1,0 @@
-# Automatically added by dh_installinit
-if [ -x "/etc/init.d/polaric-webapp" ]; then
-	update-rc.d polaric-webapp defaults >/dev/null
-	invoke-rc.d polaric-webapp start || exit $?
-fi
-# End automatically added section
