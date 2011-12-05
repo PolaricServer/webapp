@@ -1,6 +1,0 @@
-#!/bin/bash
-
-# cleanup of map files
-# This should be moved to the polaric-webapp package! 
-
-/usr/bin/find /var/www/aprs/kacache2/. -size 1716c -exec rm {} \;

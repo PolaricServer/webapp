@@ -1,1 +1,0 @@
-/etc/polaric-webapp/mapconfig.js
