@@ -18,7 +18,6 @@ function add_Gpx_Layer(name, url)
 
     var layer = new OpenLayers.Layer.Vector(name, {styleMap: styleMap});
     OpenLayers.loadURL(url, null, null, loadSuccess, loadFailure);
-    layer.setVisibility(false);
     return layer; 
     
     /* A closure function to transform data */
