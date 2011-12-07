@@ -23,9 +23,26 @@
     SetEnv  proxy-nokeepalive 1
     ProxyTimeout 180
     
-    
-<Directory /var/www/aprs>
+Alias /aprsd/ "/usr/share/polaric/"
+<Directory /usr/share/polaric>
+   Options Indexes FollowSymLinks MultiViews
+   AllowOverride None
+   Order allow,deny
+   Allow from all
+</Directory>
+        
+        
+Alias /config/ "/etc/polaric-webapp"
+<Directory /etc/polaric-webapp>
+   Options Indexes FollowSymLinks MultiViews
+   AllowOverride None
+   Order allow,deny
+   Allow from all
+</Directory>
 
+
+
+<Directory /var/www/aprs>
     # 
     # Login. For a server to be widely available on the internet. Please consider using
     # SSL to protect this. 
