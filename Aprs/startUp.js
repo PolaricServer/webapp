@@ -1,3 +1,4 @@
+  
 var myKaMap = null;
 var myKaNavigator = null;
 var myKaQuery   = null;
@@ -19,8 +20,8 @@ var isIframe = false;
 var isMobile = false;
 var storage = null;
 
-var myCoordinates = myOverlay = myInterval = null;
 
+var myCoordinates = myOverlay = myInterval = null;
 
 /* Permissions */
 /* Return true if logged in user is allowed to update information */
@@ -33,15 +34,15 @@ function isAdmin()
 
 
 function getLogin()
-{ 
+  { 
     if (window.location.href.match(/.*\/sar_[0-9a-f]+/))
-       return "-SAR-";
+      return "-SAR-";
     if (/null/.test(myOverlay.meta.login)) 
-       return null;   
+      return null;   
     return myOverlay.meta.login; 
-}
-
-
+  }    
+    
+    
 function myOnLoad_iframe() {
     isIframe = true; 
     startUp();
@@ -53,6 +54,7 @@ function myOnLoad_iframe() {
 function myOnLoad() {
   startUp();
 }
+
 
 /* FIXME: Detect this automatically ? */
 function myOnLoad_mobile() {
@@ -66,10 +68,10 @@ function myOnLoad_mobile() {
 /* For use inside an Android app. (using PhoneGap). */ 
 function myOnLoad_droid() {
   isMobile = true; 
-  
+
   document.addEventListener("deviceready", function() {
       var networkState = navigator.network.connection.type;
-      if (networkState == Connection.NONE)  {
+      if (networkState == Connection.NONE || networkState == Connection.UNKNOWN)  {
         navigator.notification.vibrate(100);
         alert("OBS! Denne applikasjonen trenger internett!");
       }
@@ -103,6 +105,7 @@ function startUp() {
     myKaNavigator = new kaNavigator(myKaMap);
     myKaNavigator.activate();
     
+    
     myKaMap.registerForEvent( KAMAP_MAP_INITIALIZED, null, myMapInitialized ); 
     myKaMap.registerForEvent( KAMAP_INITIALIZED, null, myInitialized );  
     myKaMap.registerForEvent( KAMAP_SCALE_CHANGED, null, myScaleChanged );
@@ -113,7 +116,7 @@ function startUp() {
     myKaMap.registerForEvent( KAMAP_MAP_CLICKED, null, myMapClicked );
     myKaMap.registerForEvent( KAMAP_MOUSE_TRACKER, null, myMouseMoved );
     myKaMap.registerForEvent( KAMAP_MOVE_START, null, function() 
-    {    if (myOverlay != null) 
+         {  if (myOverlay != null) 
                 myOverlay.removePoint(); 
          } );
         
@@ -123,13 +126,13 @@ function startUp() {
     myScalebar.minWidth = 150;
     myScalebar.maxWidth = 250;
     myScalebar.place('scalebar');
-
+    
     drawPage();
     myKaMap.initialize( szMap, szExtents, szCPS );
     geopos = document.getElementById('geoPosition');
-
-    /* Dummy storage object for old browsers that do not 
-       support it */
+    
+ /* Dummy storage object for old browsers that do not 
+    support it */
     storage = window.localStorage;
     if (storage == null) {
         storage = {
@@ -173,12 +176,10 @@ function myMapInitialized() {
     
     permalink = (qstring.length >= 2 && qstring.match(/^zoom\=.*/));
     if (!permalink) {
-         var blayer = storage['polaric.baselayer'];
+         var blayer = sessionStorage['polaric.baselayer'];
          if (blayer != null)
             myKaMap.setBaseLayer(blayer);
     }
-
-    
 };
 
 
@@ -194,10 +195,10 @@ function myInitialized() {
        view = defaultView; 
     
     if (!permalink)  {
-         var ext0 = storage['polaric.extents.0'];
-         var ext1 = storage['polaric.extents.1'];
-         var ext2 = storage['polaric.extents.2'];
-         var ext3 = storage['polaric.extents.3'];
+         var ext0 = sessionStorage['polaric.extents.0'];
+         var ext1 = sessionStorage['polaric.extents.1'];
+         var ext2 = sessionStorage['polaric.extents.2'];
+         var ext3 = sessionStorage['polaric.extents.3'];
           
          if (ext0 != null) {
             myKaMap.zoomToExtents(parseInt(ext0, 10), parseInt(ext1, 10), parseInt(ext2, 10), parseInt(ext3, 10));
@@ -228,7 +229,6 @@ function myInitialized() {
            }
         }   
     }
- 
 
     
     /* Set up XML overlay */
@@ -237,7 +237,7 @@ function myInitialized() {
     }
     
     /* Filter select box */
-    var sFilter = storage['polaric.filter'];  
+    var sFilter = sessionStorage['polaric.filter'];  
     if (sFilter==null)
        sFilter = args['filter'];
     if (sFilter==null)
@@ -288,20 +288,11 @@ function myInitialized() {
           { if (isMenu) menuMouseSelect(); }       
      }
      initialized = true;
-     
-     /* Welcome info page */
-     if (!isIframe && !isMobile && !ses_storage['polaric.welcomed']) {
-        ses_storage['polaric.welcomed'] = true;
-        setTimeout( function() { welcome(); }, 2000);
-     }
 }
 
 
 
-function welcome()
-{  
-   remotepopupwindowCSS(myKaMap.domObj, 'welcome.html', 1, 1, 'welcome');
-}
+
 
 
 function extentQuery()
@@ -318,6 +309,7 @@ function extentQuery()
 
 var xmlSeqno = 0;
 var retry = 0;
+var lastXmlCall;
 
 function getXmlData(wait)
 {
@@ -346,7 +338,6 @@ function getXmlData(wait)
 
 
 
-
 function postLoadXml() 
 {
      retry = 0;
@@ -371,14 +362,14 @@ function postLoadXml()
      getXmlData(true);
 }
 
- 
+
 
 var selectedFView = defaultFilterView;
 function filterView(fname)
 {
    selectedFView = fname; 
    if (initialized) {
-       storage['polaric.filter'] = fname;
+       sessionStorage['polaric.filter'] = fname;
        myOverlay.removePoint();
        getXmlData(false);
    }
@@ -411,6 +402,7 @@ function myScaleChanged( eventID, scale )
  * to the current view
  */
 var prev_extents = null;
+var ext_dont_reload = false;
 function myExtentChanged( eventID, extents ) 
 {
        if ( prev_extents == null ||
@@ -421,24 +413,24 @@ function myExtentChanged( eventID, extents )
        {    
            OpenLayers.Console.info("EXTENTS CHANGED: ", extents);
            if (initialized) {
-               storage.removeItem('polaric.extents.0');
-               storage.removeItem('polaric.extents.1');
-               storage.removeItem('polaric.extents.2');
-               storage.removeItem('polaric.extents.3');
-               storage.removeItem('polaric.baselayer'); 
-               storage['polaric.extents.0'] = Math.round(extents[0]).toString();
-               storage['polaric.extents.1'] = Math.round(extents[1]).toString();
-               storage['polaric.extents.2'] = Math.round(extents[2]).toString();
-               storage['polaric.extents.3'] = Math.round(extents[3]).toString();
-               storage['polaric.baselayer'] = myKaMap.getBaseLayer();
+               sessionStorage.removeItem('polaric.extents.0');
+               sessionStorage.removeItem('polaric.extents.1');
+               sessionStorage.removeItem('polaric.extents.2');
+               sessionStorage.removeItem('polaric.extents.3');
+               sessionStorage.removeItem('polaric.baselayer'); 
+               sessionStorage['polaric.extents.0'] = Math.round(extents[0]).toString();
+               sessionStorage['polaric.extents.1'] = Math.round(extents[1]).toString();
+               sessionStorage['polaric.extents.2'] = Math.round(extents[2]).toString();
+               sessionStorage['polaric.extents.3'] = Math.round(extents[3]).toString();
+               sessionStorage['polaric.baselayer'] = myKaMap.getBaseLayer();
            }
            
            if (initialized) {
                getXmlData(false);
                myKaMap.updateObjects();
            } 
-           else
-               setTimeout( function() { getXmlData(false);}, 2000);
+           else if (!ext_dont_reload)
+               setTimeout( function() { getXmlData(false); }, 2000);
            prev_extents = extents;
        }
        myKaRuler.reset();
@@ -455,9 +447,14 @@ function myLayersChanged(eventID, map) {
 function myQuery( eventID, queryType, coords ) 
 {
     if (menuMouseSelect()) {
-       showPosInfo(coords); 
+       if (false /*For some browsers?*/ ) {
+           var pixPos = myKaMap.geoToPix(coords[0], coords[1]);
+           showContextMenu(null, eventID, pixPos[0], pixPos[1]);
+       }
+       else 
+           showPosInfo(coords);
     }
-    return false;  
+    return false;
 }
 
 
@@ -476,30 +473,23 @@ function myMouseMoved( eventID, position) {
 
 
 
-function myObjectClicked(ident, e, href, title) 
+
+function myObjectClicked(ident, e, href) 
 {
     e = (e)?e:((event)?event:null); 
     var x = (e.pageX) ? e.pageX : e.clientX;  
     var y = (e.pageY) ? e.pageY : e.clientY; 
     
     menuMouseSelect();
-    if (href) {
-      setTimeout( function() { 
-	  if ( /^(p|P):.*/.test(href) )
-              popupwindow(myKaMap.domObj, 
-                      '<h1>'+title+'</h1>' +
-                      '<img src=\"'+href.substring(2)+'\">'
-                      , x, y, null, 'obj_click', true);    
-	  else
-	      window.location = href; 
-      }, 100);
-      
-    }
+    if (href)
+      remotepopupwindow(myKaMap.domObj, href, x, y);
     else
-       showStationInfo(ident, false, x, y);
+      showStationInfo(ident, false, x, y);
+    
     e.cancelBubble = true;
     return false; 
 }
+
 
 
 /*  Trail */
@@ -510,10 +500,10 @@ function myTrailClicked(ident, e) {
     
     menuMouseSelect();
     if (ie)
-       remotepopupwindow(myKaMap.domObj, 
+      remotepopupwindow(myKaMap.domObj, 
        server_url + 'srv/trailpoint?id='+ident+"&index="+e.srcElement._index, x, y);
     else
-       remotepopupwindow(myKaMap.domObj,
+      remotepopupwindow(myKaMap.domObj,
        server_url + 'srv/trailpoint?id='+ident+"&index="+e.target._index, x, y);
     e.cancelBubble = true; 
     if (e.stopPropagation) e.stopPropagation();
@@ -655,7 +645,7 @@ function getQueryParam(p) {
  * to be called
  */
 function mySetMap( name ) {
-   window.storage['polaric.view'] = name;
+   window.sessionStorage['polaric.view'] = name;
    myKaMap.selectMap( name );
 }
 
@@ -734,20 +724,10 @@ function drawPage() {
     var viewport = getRawObject('viewport');
 
     //Set Viewport Width
-    if(myKaMap.isIE4) {
-        //terrible hack to avoid IE to show scrollbar
-        viewport.style.width = (browserWidth -2) + "px";
-    } else {
-        viewport.style.width = browserWidth + "px";
-    }
+    viewport.style.width = browserWidth + "px";
 
     //Set Viewport Height
-    if(myKaMap.isIE4) {
-        //terrible hack to avoid IE to show scrollbar
-        viewport.style.height = (browserHeight -2) + "px";
-    } else {
-        viewport.style.height = browserHeight + "px";
-    }
+    viewport.style.height = browserHeight + "px";
 
     myKaMap.resize();
 }
@@ -771,54 +751,54 @@ function getFullExtent() {
  * ...
  */
 function switchMode(id) {
-  if (!isIframe && !isMobile && id=='toolRuler') { 
+    if (!isIframe && !isMobile && id=='toolRuler') { 
         myKaRuler.activate();
         objectClickable = false; 
         getRawObject('toolRuler').style.backgroundImage = 
-           'url(' +server_url+ 'KaMap/images/icon_set_nomad/ruler2.gif)'; 
+           'url('+server_url+'KaMap/images/icon_set_nomad/ruler2.gif)'; 
         getRawObject('toolQuery').style.backgroundImage = 
-           'url(' +server_url+ 'KaMap/images/icon_set_nomad/tool_query_1.png)';
+           'url('+server_url+'KaMap/images/icon_set_nomad/tool_query_1.png)';
         getRawObject('toolPan').style.backgroundImage = 
-           'url(' +server_url+ 'KaMap/images/icon_set_nomad/tool_pan_1.png)';
+           'url('+server_url+'KaMap/images/icon_set_nomad/tool_pan_1.png)';
         getRawObject('toolZoomRubber').style.backgroundImage = 
-           'url(' +server_url+ 'KaMap/images/icon_set_nomad/tool_rubberzoom_1.png)';
+           'url('+server_url+'KaMap/images/icon_set_nomad/tool_rubberzoom_1.png)';
     } else if (id=='toolQuery') {
         myKaQuery.activate();
         objectClickable = true; 
         if (!isIframe && !isMobile)
-          getRawObject('toolRuler').style.backgroundImage = 
-             'url(' +server_url+ 'KaMap/images/icon_set_nomad/ruler1.gif)'; 
+           getRawObject('toolRuler').style.backgroundImage = 
+              'url('+server_url+'KaMap/images/icon_set_nomad/ruler1.gif)'; 
         getRawObject('toolQuery').style.backgroundImage = 
-           'url(' +server_url+ 'KaMap/images/icon_set_nomad/tool_query_2.png)'; 
+           'url('+server_url+'KaMap/images/icon_set_nomad/tool_query_2.png)'; 
         getRawObject('toolPan').style.backgroundImage = 
-           'url(' +server_url+ 'KaMap/images/icon_set_nomad/tool_pan_1.png)';
+           'url('+server_url+'KaMap/images/icon_set_nomad/tool_pan_1.png)';
         getRawObject('toolZoomRubber').style.backgroundImage = 
-           'url(' +server_url+ 'KaMap/images/icon_set_nomad/tool_rubberzoom_1.png)';
+           'url('+server_url+'KaMap/images/icon_set_nomad/tool_rubberzoom_1.png)';
     } else if (id=='toolPan') {
         /* Panning/zooming is handled by OpenLayers */
         myKaNavigator.activate();
         objectClickable = true; 
         if (!isIframe && !isMobile)
           getRawObject('toolRuler').style.backgroundImage = 
-             'url(' +server_url+ 'KaMap/images/icon_set_nomad/ruler1.gif)'; 
+             'url('+server_url+'KaMap/images/icon_set_nomad/ruler1.gif)'; 
         getRawObject('toolQuery').style.backgroundImage = 
-           'url(' +server_url+ 'KaMap/images/icon_set_nomad/tool_query_1.png)'; 
+           'url('+server_url+'KaMap/images/icon_set_nomad/tool_query_1.png)'; 
         getRawObject('toolPan').style.backgroundImage = 
-           'url(' +server_url+ 'KaMap/images/icon_set_nomad/tool_pan_2.png)';
+           'url('+server_url+'KaMap/images/icon_set_nomad/tool_pan_2.png)';
         getRawObject('toolZoomRubber').style.backgroundImage = 
-           'url(' +server_url+ 'KaMap/images/icon_set_nomad/tool_rubberzoom_1.png)';
+           'url('+server_url+'KaMap/images/icon_set_nomad/tool_rubberzoom_1.png)';
     } else if (id=='toolZoomRubber') {
         myKaRubberZoom.activate();
         objectClickable = false; 
         if (!isIframe && !isMobile)
-          getRawObject('toolRuler').style.backgroundImage =
-             'url(' +server_url+ 'KaMap/images/icon_set_nomad/ruler1.gif)'; 
+          getRawObject('toolRuler').style.backgroundImage = 
+             'url('+server_url+'KaMap/images/icon_set_nomad/ruler1.gif)'; 
         getRawObject('toolQuery').style.backgroundImage = 
-           'url(' +server_url+ 'KaMap/images/icon_set_nomad/tool_query_1.png)'; 
+           'url('+server_url+'KaMap/images/icon_set_nomad/tool_query_1.png)'; 
         getRawObject('toolPan').style.backgroundImage = 
-           'url(' +server_url+ 'KaMap/images/icon_set_nomad/tool_pan_1.png)';
+           'url('+server_url+'KaMap/images/icon_set_nomad/tool_pan_1.png)';
         getRawObject('toolZoomRubber').style.backgroundImage = 
-           'url(' +server_url+ 'KaMap/images/icon_set_nomad/tool_rubberzoom_2.png)';
+           'url('+server_url+'KaMap/images/icon_set_nomad/tool_rubberzoom_2.png)';
     } else {
         myKaNavigator.activate();
         objectClickable = true; 
@@ -839,7 +819,7 @@ function switchMode(id) {
  * gets applied on IE browsers :)
  */
 function applyPNGFilter(o) {
-    var t=server_url+ "KaMap/images/a_pixel.gif";
+    var t=server_url+"KaMap/images/a_pixel.gif";
     if( o.src != t ) {
         var s=o.src;
         o.src = t;
