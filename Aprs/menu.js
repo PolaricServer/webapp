@@ -5,7 +5,7 @@ function showContextMenu(ident, e, ax, ay)
      e = (e)?e:((event)?event:null); 
      var x = (ax) ? ax : ((e.pageX) ? e.pageX : e.clientX); 
      var y = (ay) ? ay : ((e.pageY) ? e.pageY : e.clientY);
-     
+ 
      var p = myOverlay.getPointObject(ident);
      var d = myKaMap.domObj;
      if (ident == null) {
@@ -26,17 +26,18 @@ function showContextMenu(ident, e, ax, ay)
              txt.push(['Legg inn objekt', function() { editObjectInfo(null, null); } ]);
              txt.push(['Slett objekt', function() { deleteObject(null); } ]);
           }
+          txt.push(['Historisk spor', function() { searchHistData(null); } ]);
           txt.push(null);
-          if (!traceIsHidden('ALL'))
+	  if (!traceIsHidden('ALL'))
             txt.push(['Skjul sporlogger', function() { myOverlay.hidePointTrace('ALL'); } ]);
           else
             txt.push(['Vis sporlogger', function() { myOverlay.showPointTrace('ALL'); } ]);
-          txt.push(null);
+	  txt.push(null);
           txt.push(['Zoom inn', function() {myKaMap.zoomIn(); } ]);
           txt.push(['Zoom ut',  function() {myKaMap.zoomOut(); } ]);
           if (isAdmin()|canUpdate()) {
              txt.push(null);
-             txt.push(['SAR URL', sarUrl ]);
+	     txt.push(['SAR URL', sarUrl ]);
              txt.push(['SAR modus', sarModeWindow ]);
           }
           if (isAdmin()) {          
@@ -47,7 +48,8 @@ function showContextMenu(ident, e, ax, ay)
           txt = new Array( ['Vis info', function() { showStationInfo(ident, false, x, y);} ]);
           if (p != null && p.hasTrace)
                txt.push( ['Siste bevegelser', function() { showStationHistory(ident,x, y);} ]);
-          
+         
+	  txt.push(['Historisk spor', function() { searchHistData(ident); } ]);
           if (canUpdate()) { 
              txt.push( ['Globale innstillinger', function() { showStationInfo(ident, true);} ]);
              if (p != null) { 
@@ -67,9 +69,9 @@ function showContextMenu(ident, e, ax, ay)
               
           if (hasTrace(ident)) {
              if (!traceIsHidden(ident))
-               txt.push(['Skjul spor', function() { myOverlay.hidePointTrace(ident); }]);
+                txt.push(['Skjul spor', function() { myOverlay.hidePointTrace(ident); }]);
              else
-               txt.push(['Vis spor', function() { myOverlay.showPointTrace(ident); }]);
+                txt.push(['Vis spor', function() { myOverlay.showPointTrace(ident); }]);
           } 
       }                       
 
@@ -96,7 +98,7 @@ function mainMenu(icn, e)
 function findStation(ident, showInfo)
 {   
     /* AJA(X) call to find station */ 
-    call(server_url + "srv/findstation?id="+ident, null, findStationCallback, false); 
+    call("srv/findstation?ajax=true&id="+ident, null, findStationCallback, false); 
     
     function findStationCallback(info)
     {
@@ -138,7 +140,7 @@ function showStationInfoGeo(ident, edit, x, y)
 function editObjectInfo(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
-    WOOpenWin('Objekt', server_url + 'srv/addobject' +
+    WOOpenWin('Objekt',  server_url + 'srv/addobject' +
           (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]),
           'resizable=yes,scrollbars=yes, width=495, height=280' );
 }
@@ -147,41 +149,40 @@ function editObjectInfo(x, y)
 
 function deleteObject(ident)
 {
-       WOOpenWin('Objekt', server_url + 'srv/deleteobject'+ (ident==null ? "" : '?objid='+ident),
+       WOOpenWin('Objekt',  server_url + 'srv/deleteobject'+ (ident==null ? "" : '?objid='+ident),
           'resizable=yes,scrollbars=yes, width=350, height=200' );
 }
 
 function resetInfo(ident)
 {
-       WOOpenWin('Stasjon', server_url + 'srv/resetinfo'+ (ident==null ? "" : '?objid='+ident),
+       WOOpenWin('Stasjon',  server_url + 'srv/resetinfo'+ (ident==null ? "" : '?objid='+ident),
           'resizable=yes,scrollbars=yes, width=350, height=200' );
 }
 
 function deleteAllObjects()
 {
-       WOOpenWin('Objekt', server_url + 'srv/deleteallobj',
+       WOOpenWin('Objekt',  server_url + 'srv/deleteallobj',
           'resizable=yes,scrollbars=yes, width=350, height=230' );
 }
 
 function adminWindow()
 {
-       WOOpenWin('Admin', server_url + 'srv/admin?cmd=info',
+       WOOpenWin('Admin',  server_url + 'srv/admin?cmd=info',
           'resizable=yes,scrollbars=yes, width=630, height=460' );
 }
 
 function sarModeWindow()
 {
-       WOOpenWin('SarMode', server_url + 'srv/sarmode',
+       WOOpenWin('SarMode',  server_url + 'srv/sarmode',
           'resizable=yes,scrollbars=yes, width=460, height=250' );
 }
-
 
 
 function showStationInfo(ident, edit, x, y)
 {
   if (!edit)
       remotepopupwindow(myKaMap.domObj, 
-           server_url + 'srv/station?simple=true&id='+ident+ (edit ? '&edit=true':''), x, y, 'infopopup');
+           server_url + 'srv/station?ajax=true&simple=true&id='+ident+ (edit ? '&edit=true':''), x, y, 'infopopup');
   else {
       var url = server_url + (getLogin() ? 'srv/sec-station?id=' : 'srv/station?id=');
       WOOpenWin('Stasjon', url + ident + (edit ? '&edit=true':''), 
@@ -201,8 +202,10 @@ function sarUrl(x, y)
 
 function showStationHistory(ident, x, y)
 {
-  remotepopupwindow(document.getElementById("anchor"),  server_url + 'srv/history?simple=true&id='+ident, x, y);
+    remotepopupwindow(document.getElementById('toolbar'),  server_url + 'srv/history?ajax=true&simple=true&id='+ident, x, y);
 }
+
+
 
 
 
@@ -211,28 +214,26 @@ function searchStations()
      var xpos = 50; 
      var ypos = 70;
      var pdiv = popupwindow(document.getElementById("anchor"), 
-        " <div><h1>Finn APRS stasjon/objekt:</h1><hr><div id=\"searchform\"><form> "+
+        " <h1>Finn APRS stasjon/objekt:</h1><hr><form> "+
         " Tekst i ident/komment: <input type=\"text\"  width=\"10\" id=\"findcall\"/> "+
         " <input id=\"searchbutton\" type=\"button\"" +
             " value=\"Søk\" />"+
-          "</form><br><div id=\"searchresult\"></div></div></div>", xpos, ypos, null); 
+          "</form><br><div id=\"searchresult\"></div>", xpos, ypos, null, false); 
+
+     $('#searchbutton').click( function() {
+	 call('srv/search?ajax=true&filter=' + 
+	    $('#findcall').val(), null, searchStationCallback, false);
+     }); 
      
-     document.getElementById("searchbutton").onclick = function(e) {
-         var srch = document.getElementById('findcall').value;
-         e.cancelBubble = true; 
-         if (e.stopPropagation) e.stopPropagation();
-         call(server_url + "srv/search?filter="+srch, null, searchStationCallback, false);  
-     };
-
-
+     
     function searchStationCallback(info)
     {  
-        if (info == null) 
+        if (info == null)
            return; 
 
-        var x = (isMobile ? document.getElementById('searchform') : 
+        var x = (isMobile ? document.getElementById('searchform')   : 
                             document.getElementById('searchresult'));
-        if (x != null) {            
+        if (x != null) {       
             x.innerHTML = info;
             removePopup();
             popup(document.getElementById("anchor"), pdiv, xpos, ypos, null);         
@@ -322,14 +323,13 @@ function showRefSearch()
      "</form><br>" 
      
    , 50, 80, false);
-   
-      autojump('utmz', 'utmnz');
-      autojump('utmnz', 'utmx');
-      autojump('utmx', 'utmy');
-      autojump('locx', 'locy');
-      autojump('ll_Nd', 'll_Nm');
-      autojump('ll_Nm', 'll_Ed');
-      autojump('ll_Ed', 'll_Em');
+   autojump('utmz', 'utmnz');
+   autojump('utmnz', 'utmx');
+   autojump('utmx', 'utmy');
+   autojump('locx', 'locy');
+   autojump('ll_Nd', 'll_Nm');
+   autojump('ll_Nm', 'll_Ed');
+   autojump('ll_Ed', 'll_Em');
 }
 
 
@@ -376,11 +376,12 @@ function doRefSearchLocal(ax, ay)
       return;
     
     var ext = myKaMap.getGeoExtents();
-    var cref = new UTMRef((ext[0] + ext[2]) / 2, (ext[1] + ext[3]) / 2,  this.utmnzone,  this.utmzone);
+    var cref = new UTMRef((ext[0]+ext[2])/2, (ext[1]+ext[3])/2, this.utmnzone, this.utmzone);
     cref = cref.toLatLng().toUTMRef(); 
-    var bx = Math.floor(cref.easting  / 100000) * 100000;
+        
+    var bx = Math.floor(cref.easting / 100000) * 100000;
     var by = Math.floor(cref.northing / 100000) * 100000; 
-    var uref = new UTMRef(bx + x * 100,  by + y * 100, cref.latZone, cref.lngZone); 
+    var uref = new UTMRef(bx+x*100, by+y*100, cref.latZone, cref.lngZone); 
     
     /* This is a hack, but the coordinates need to be in the same zone as the map */
     /* TODO: We should actually try to show a 100x100m area */
