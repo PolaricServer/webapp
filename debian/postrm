@@ -7,18 +7,18 @@ case "$1" in
        if [ -d "/var/www/aprs/kacache2" ]; then
           rm -R /var/www/aprs/kacache2
        fi
-
+       
        if [ "$1" == "purge" ] ; then
-         if [ -e "/etc/polaric-webapp/users" ]; then
-            rm /etc/polaric-webapp/users
-         fi
-         if [ -e "/var/www/aprs/KaMap/mapserv" ]; then
-            rm /var/www/aprs/KaMap/mapserv
-         fi
-         if [ -e "/etc/polaric-webapp/mapserv" ]; then
-            rmdir /etc/polaric-webapp/mapserv
-         fi
-      fi
+          if [ -e "/etc/polaric-webapp/users" ]; then
+             rm /etc/polaric-webapp/users
+          fi
+          if [ -e "/var/www/aprs/KaMap/mapserv" ]; then
+             rm /var/www/aprs/KaMap/mapserv
+          fi
+          if [ -e "/etc/polaric-webapp/mapserv" ]; then
+             rmdir /etc/polaric-webapp/mapserv
+          fi
+       fi  
     ;;
 
     upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
