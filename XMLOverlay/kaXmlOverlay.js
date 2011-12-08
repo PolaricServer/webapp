@@ -1248,8 +1248,8 @@ kaXmlPoint.prototype.parse = function(point_element) {
         var py = this.geoy;
         var x = parseFloat(point_element.getAttribute("x"));
         var y = parseFloat(point_element.getAttribute("y"));
-	var href = point_element.getAttribute("href");
-        var title = point_element.getAttribute("title");    
+        var href = point_element.getAttribute("href");
+        var title = point_element.getAttribute("title");
         var ident = point_element.getAttribute("id");    
         var isSign = (ident.substr(0,2) == "__");
         var redraw_a = point_element.getAttribute("redraw");
@@ -1311,11 +1311,11 @@ kaXmlPoint.prototype.parse = function(point_element) {
 
            if (title != null)
               mdiv.title = title; 
- 
-             mdiv.onclick= function (e) 
+  
+           mdiv.onclick= function (e) 
              { return myObjectClicked(ident, e, href, title); }
-          
-           if (!isSign) {    
+             
+           if (!isSign) {   
              mdiv.oncontextmenu= function(e)
              { showContextMenu(ident, e); return false; }
              
