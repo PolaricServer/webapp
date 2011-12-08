@@ -11,7 +11,7 @@ case "$1" in
         if [ -e "/var/www/aprs/KaMap/mapserv" ]; then
            rm -R /var/www/aprs/KaMap/mapserv
         fi
-        ln -s /etc/polaric-webapp/mapserv /var/www/aprs/KaMap/mapserv    
+        ln -s /etc/polaric-webapp/mapserv /var/www/aprs/KaMap/mapserv
         a2enmod proxy_http > /dev/null 2>&1
         a2enmod expires > /dev/null 2>&1
         a2ensite aprs > /dev/null 2>&1
