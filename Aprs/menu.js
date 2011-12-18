@@ -12,6 +12,9 @@ function showContextMenu(ident, e, ax, ay)
           var txt = new Array( ['Vis kartreferanse',  function () { setTimeout('showPosInfoPix('+x+', '+y+');',100); } ]);
           if (canUpdate()) 
              txt.push(['Legg på APRS objekt',function () { editObjectInfo(x, y);} ]);
+	  if (isAdmin())
+	     txt.push(['Sett egen posisjon', function () { setOwnPosition(x, y);} ]);
+	  
           txt.push(null);
           txt.push(['Sentrer punkt', function()  { myZoomTo(x,y); } ]);
           txt.push(['Zoom inn', function()  { myZoomTo(x,y); myKaMap.zoomIn();} ]);
@@ -135,6 +138,8 @@ function showStationInfoGeo(ident, edit, x, y)
 }
 
 
+
+
 function editObjectInfo(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
@@ -143,6 +148,15 @@ function editObjectInfo(x, y)
           'resizable=yes,scrollbars=yes, width=495, height=280' );
 }
 
+
+
+function setOwnPosition(x, y)
+{
+    var coord = myKaMap.pixToGeo(x, y);
+    WOOpenWin('Posisjon', server_url + 'srv/setownpos' +
+          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]),
+          'resizable=yes,scrollbars=yes, width=495, height=200' );
+}
 
 
 function deleteObject(ident)
