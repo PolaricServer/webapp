@@ -127,3 +127,7 @@ var filterViews = [
 /* View to be selected by default */
 var defaultFilterView = 'track2';
 
+/*
+ *  Set to true to add SAR URL to the menu
+ */ 
+var sarUrl = false;
