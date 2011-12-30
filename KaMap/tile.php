@@ -295,7 +295,6 @@ if (!file_exists($szCacheFile) || $bForce)
         $szMetaImg = $szMetaDir."/t".$metaTop."l".$metaLeft.$szImageExtension;
         $oImg = $oMap->draw();
         $oImg->saveImage($szMetaImg);
-        $oImg->free();
         eval("\$oGDImg = ".$szMapImageCreateFunction."('".$szMetaImg."');");
         if ($bDebug)
         {
