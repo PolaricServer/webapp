@@ -15,19 +15,21 @@
  */
  
 var zzindex;                 
-var trackedObject = null;    
-var trackedOrigStyle = "";   
-var _hidePointLabel = new Array(); 
-var _hidePointTrace = new Array(); 
+var _sstorage = null;
+
+function setSesStorage(s)
+{ _sstorage = s; }
+
+
 
 function toggleTracked ( tr) {
-    if (trackedObject != null)
-        clearTracking(trackedObject);
-    if (tr == trackedObject) 
-        trackedObject = null;
-    else
-    {
-        trackedObject = tr;
+    var tracked = _sstorage['polaric.tracked'];
+    if (tracked != null)
+        clearTracking(tracked);
+    if (tr == tracked) 
+        _sstorage['polaric.tracked'] = null;
+    else {
+        _sstorage['polaric.tracked'] = tr;
         setTracking(tr);
     } 
 }
@@ -35,7 +37,7 @@ function toggleTracked ( tr) {
 function setTracking(tr) 
    {  x = document.getElementById(tr+"_label_txt"); 
       if (x==null) return;
-      trackedOrigStyle = x.className;
+      _sstorage['polaric.trackedOrigStyle'] = x.className;
       x.className += " tracked";
    }
 
@@ -43,18 +45,18 @@ function setTracking(tr)
 function clearTracking(tr) 
    {  x = document.getElementById(tr+"_label_txt");
       if (x==null) return;
-      x.className = trackedOrigStyle;
+      x.className = _sstorage['polaric.trackedOrigStyle'];
    }
 
 
 function isTracked(tr) 
-   { return (tr == trackedObject); }
+   { return (tr == _sstorage['polaric.tracked']); }
 
 
 
 function hidePointLabel(ident)
 {
-   _hidePointLabel[ident] = true; 
+   _sstorage['polaric.hidelabel.'+ident] = 'T';
    var elem = document.getElementById(ident+'_label_txt');
    if (elem != null)
       elem.style.visibility = 'hidden';
@@ -63,7 +65,7 @@ function hidePointLabel(ident)
    
 function showPointLabel(ident)
 { 
-   _hidePointLabel[ident] = false; 
+   _sstorage['polaric.hidelabel.'+ident] = null;
    var elem = document.getElementById(ident+'_label_txt');
    if (elem!=null)
       elem.style.visibility = 'visible';
@@ -71,8 +73,11 @@ function showPointLabel(ident)
 
 
 function labelIsHidden(ident) 
-  { return _hidePointLabel[ident] == true; }
-
+  { return _sstorage['polaric.hidelabel.'+ident] == 'T'; }
+  
+  
+  
+  
 function hasTrace(ident)
  { return (document.getElementById(ident+'_trace')!=null) ; }
 
@@ -91,11 +96,11 @@ kaXmlOverlay.prototype._setPointTrace = function (ident, hide)
       for (var i=0; i < this.ovrObjects.length; i++) 
         _setElemTrace(this.ovrObjects[i].pid, hide);     
    else {
-       if (_hidePointTrace['ALL'])
+       if (_sstorage['polaric.hidetrace.ALL'] == 'T')
           return;
        _setElemTrace(ident, hide);       
    }
-   _hidePointTrace[ident] = hide;
+   _sstorage['polaric.hidetrace.'+ident] = (hide ? 'T' : null);
 }
 
 
@@ -107,8 +112,9 @@ kaXmlOverlay.prototype.showPointTrace = function (ident)
   { this._setPointTrace(ident, false); }
 
 
+
 function traceIsHidden(ident) 
-  { return _hidePointTrace[ident] == true; }
+  { return _sstorage['polaric.hidetrace.'+ident] == 'T'; }
 
 
 /**
@@ -734,7 +740,8 @@ kaXmlLinestring.prototype.draw_canvas = function(point)
             this.ldiv = document.createElement( 'div' );
             this.ldiv.setAttribute('id', point.pid+"_trace");
             this.ldiv.style.position = 'absolute';
-            if (_hidePointTrace[point.pid] || _hidePointTrace['ALL'])
+	    
+	    if ( _sstorage['polaric.hidetrace.'+point.pid] == 'T' || _sstorage['polaric.hidetrace.ALL'] == 'T')
                this.ldiv.style.visibility = 'hidden';
             point.div.appendChild(this.ldiv);
             this.canvas = _BrowserIdent_newCanvas(this.ldiv);
@@ -1259,7 +1266,7 @@ kaXmlPoint.prototype.parse = function(point_element) {
         var own_a = point_element.getAttribute("own");
         if (own_a == "true") this.own = true;
         
-        tracked = (trackedObject != null && ident == trackedObject);                         
+        tracked = (_sstorage['polaric.tracked'] != null && ident == _sstorage['polaric.tracked']);                         
         
         if (!this.shown) {
                 this.placeOnMap(x,y);
@@ -1384,7 +1391,7 @@ kaXmlPoint.prototype.parse = function(point_element) {
                 this.addGraphic(t);
                 mdiv.appendChild(t.ldiv);  
                 t.ldiv.setAttribute('id', ident+"_label_txt");
-                if (_hidePointLabel[ident] == true)
+                if (labelIsHidden(ident))
                     t.ldiv.style.visibility = 'hidden';
            }
        }
