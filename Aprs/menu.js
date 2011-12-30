@@ -39,7 +39,8 @@ function showContextMenu(ident, e, ax, ay)
           txt.push(['Zoom ut',  function() {myKaMap.zoomOut(); } ]);
           if (isAdmin()|canUpdate()) {
              txt.push(null);
-             txt.push(['SAR URL', sarUrl ]);
+             if (sarUrl) 
+                  txt.push(['SAR URL', sarUrl ]);
              txt.push(['SAR modus', sarModeWindow ]);
           }
           if (isAdmin()) {          
