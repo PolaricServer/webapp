@@ -1,3 +1,4 @@
+
 var myKaMap = null;
 var myKaNavigator = null;
 var myKaQuery   = null;
@@ -18,6 +19,7 @@ var isOpera = _BrowserIdent_isOpera();
 var isIframe = false;
 var isMobile = false;
 var storage = null;
+var ses_storage = null;
 
 var myCoordinates = myOverlay = myInterval = null;
 
@@ -146,6 +148,7 @@ function startUp() {
         setItem: function(x,y) {return null; }
       };
     }
+    setSesStorage(ses_storage);
 }
 
 
@@ -177,8 +180,6 @@ function myMapInitialized() {
          if (blayer != null)
             myKaMap.setBaseLayer(blayer);
     }
-
-    
 };
 
 
@@ -232,9 +233,9 @@ function myInitialized() {
 
     
     /* Set up XML overlay */
-    if (myOverlay == null)  {
+    if (myOverlay == null)  
         myOverlay = new kaXmlOverlay( myKaMap, 1200 );
-    }
+
     
     /* Filter select box */
     var sFilter = storage['polaric.filter'];  
@@ -294,6 +295,7 @@ function myInitialized() {
         ses_storage['polaric.welcomed'] = true;
         setTimeout( function() { welcome(); }, 2000);
      }
+     
 }
 
 
