@@ -1,8 +1,8 @@
-polaric-webapp (1.0.4+) stable; urgency=low
+polaric-webapp (1.0.5) stable; urgency=low
 
-  * Testing 
+  * Save on session + some small fixes 
 
- -- Øyvind hanssen <ohanssen@acm.org>  Thu, 01 Dec 2011 23:15:24 +0100
+ -- Øyvind hanssen <ohanssen@acm.org>  Sun, 01 Jan 2012 18:05:09 +0100
 
 polaric-webapp (1.0.4) stable; urgency=low
 
