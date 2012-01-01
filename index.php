@@ -39,7 +39,7 @@ include_once( 'webappconfig.php' );
 
   // Add extra CSS stylesheets
   foreach ($cssIncludes as $inc) 
-     echo ('<link rel="stylesheet" href="'.$inc.'" type="text/css">');
+     echo ('<link rel="stylesheet" href="config/'.$inc.'" type="text/css">');
   
   // Add content of headinclude file
   $headInclude = "/etc/polaric-webapp/".$headInclude;
