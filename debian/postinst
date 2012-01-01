@@ -14,6 +14,7 @@ case "$1" in
         ln -s /etc/polaric-webapp/mapserv /var/www/aprs/KaMap/mapserv    
         a2enmod proxy_http > /dev/null 2>&1
         a2enmod expires > /dev/null 2>&1
+        a2enmod deflate > /dev/null 2>&1
         a2ensite aprs > /dev/null 2>&1
         chown www-data:www-data /var/www/aprs/kacache2
         db_stop
