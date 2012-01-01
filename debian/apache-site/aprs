@@ -5,25 +5,36 @@
 # instead of a Directory directive. 
 #####################################################
 
-    # Operations for logged-in users. 
-    # For a server to be widely available on the internet. Please consider using 
-    # SSL to protect this.
-    #
-    <ProxyMatch "sec-station|sec-mapdata|addobject|deleteobject|resetinfo|sarmode|setownpos">
-       Order deny,allow
-       AuthType Basic
-       AuthName "Sporingstjeneste Login"
-       AuthUserFile /etc/polaric-webapp/users
-       Require valid-user
-    </ProxyMatch>
+# Operations for logged-in users. 
+# For a server to be widely available on the internet. Please consider using 
+# SSL to protect this.
+#
+<ProxyMatch "sec-station|sec-mapdata|addobject|deleteobject|resetinfo|sarmode|setownpos">
+   Order deny,allow
+   AuthType Basic
+   AuthName "Sporingstjeneste Login"
+   AuthUserFile /etc/polaric-webapp/users
+   Require valid-user
+</ProxyMatch>
 
-    ProxyPass /aprs/srv http://localhost:8081
-    ProxyPass /aprs/srv/* http://localhost:8081
-    ProxyPassReverse /aprs/srv http://localhost:8081
-    SetEnv  proxy-nokeepalive 1
-    ProxyTimeout 180
-    
-    
+
+ProxyPass /aprs/srv http://localhost:8081
+ProxyPass /aprs/srv/* http://localhost:8081
+ProxyPassReverse /aprs/srv http://localhost:8081
+SetEnv  proxy-nokeepalive 1
+ProxyTimeout 180
+
+
+Alias /aprs/config/ "/etc/polaric-webapp/www/"
+<Directory /etc/polaric-webapp/www>
+   Options Indexes FollowSymLinks MultiViews
+   AllowOverride None
+   Order allow,deny
+   Allow from all
+</Directory>
+
+
+
 <Directory /var/www/aprs>
 
     # 
