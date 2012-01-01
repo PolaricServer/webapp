@@ -23,7 +23,8 @@ $headInclude = "headinclude.html";
 
 /*
  * Extra styleshets (CSS files) to include [advanced]
- * This is a PHP array of filenames.
+ * This is a PHP array of filenames. NOTE: Place those files
+ * in the 'www' subdirectory. 
  *
  * Example: 
  * $cssIncludes = array('file1.css', 'file2.css');
