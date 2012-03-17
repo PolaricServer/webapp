@@ -8,6 +8,7 @@ var isMenu        = false ;
 var activepopup   = null; 
 var psubdiv       = null;
 var myScroll      = null;
+var onCallback = null, offCallback = null; 
 
 function menuMouseSelect()
 {
@@ -20,6 +21,15 @@ function menuMouseSelect()
     }
     return true;
 }
+
+
+function popupActive()
+   { return (activepopup != null); }
+
+
+function onPopup(on, off) 
+   { onCallback = on; offCallback = off; }
+  
 
 
 function _executeItem(elem, actn)
@@ -74,10 +84,13 @@ function removePopup()
 {
     if (activepopup == null)
        return;
+    if (offCallback != null)
+       offCallback(); 
     isMenu = false;
     allowedPopups++;
     activepopup.style.display = "none" ;
     activepopup.parentNode.removeChild(activepopup);
+    activepopup = null;
 }
 
 
@@ -95,11 +108,12 @@ function popupwindow(onDiv, ihtml, x, y, img, id, delay)
     var pdiv = document.createElement('div');
     pdiv.className = 'POPUP'; 
     pdiv.innerHTML = ihtml;
+    pdiv.onload = function() {alert("BERT"); };
     if (id != null) pdiv.id = id;
     if (delay) 
         setTimeout( function() {
           popup(onDiv, pdiv, x, y, img);
-        }, 700);
+        }, 900);
     else 
       popup(onDiv, pdiv, x, y, img);
     
@@ -140,7 +154,7 @@ function popup(onDiv, menudiv, x, y, img)
 {
      if (allowedPopups <= 0)
          return;
-           
+     
      var image;
      psubdiv = activepopup = menudiv;  
      if (img != null && img) {
@@ -160,7 +174,7 @@ function popup(onDiv, menudiv, x, y, img)
      onDiv.appendChild(activepopup);
      var xoff=0;
      var yoff=0;
-     
+     var firstTime = true;
   
      activepopup.style.position   = 'absolute';
      activepopup.style.display    = 'block';
@@ -182,20 +196,8 @@ function popup(onDiv, menudiv, x, y, img)
      else
        activepopup.style.overflowY = 'visible';
      
-     xoff = x + 10 + menudiv.clientWidth - document.body.clientWidth;
-     if (xoff > 0) {
-        x -= xoff;
-        if (image!=null)
-           image.style.left =(xoff-9)+'px';
-     }
-     yoff = y + 5 + menudiv.clientHeight - document.body.clientHeight;
-     if (yoff > 0) {
-        y -= yoff;
-        if (image!=null)
-           image.style.top =(yoff-12)+'px';
-     }
-     activepopup.style.left    = x+"px";
-     activepopup.style.top     = y+"px";
+     adjustPosition();
+     setTimeout(adjustPosition, 500); 
      activepopup.style.zIndex  = 1000;
 
      
@@ -206,8 +208,36 @@ function popup(onDiv, menudiv, x, y, img)
        onDiv.dispatchEvent(evObj);
      }
      allowedPopups--;
+     if (onCallback != null)
+       onCallback(); 
 
-
+ 
+    function adjustPosition()
+    {   
+      xoff = x + 5 + menudiv.clientWidth - document.body.clientWidth;
+      if (xoff > 0) {
+        x -= xoff;
+        if (x < 2) x=2;
+        if (image!=null)
+          image.style.left =(xoff-9)+'px';
+      }
+      yoff = y + 6 + menudiv.clientHeight - document.body.clientHeight;
+      if (yoff > 0) {
+        y -= yoff;
+        if (y < 2) y=2;
+        if (image!=null)
+          image.style.top =(yoff-12)+'px';
+      }
+      
+      if (firstTime || xoff > 0 || yoff > 0) {
+         activepopup.style.left    = x+"px";
+         activepopup.style.top     = y+"px";
+      }  
+      firstTime = false;
+     }
+    
+    
+    
 }
 
 
