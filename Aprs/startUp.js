@@ -56,7 +56,7 @@ function myOnLoad() {
   startUp();
 }
 
-/* FIXME: Detect this automatically ? */
+
 function myOnLoad_mobile() {
   isMobile = true; 
   startUp();
@@ -77,13 +77,28 @@ function myOnLoad_droid() {
       }
       
       document.addEventListener("menubutton", function(e) { 
-        return mainMenu(document.getElementById('toolbar'), e); 
+        if (popupActive())
+             return menuMouseSelect(); 
+        else
+            return mainMenu(document.getElementById('toolbar'), e); 
       }, false);
       
+   
       startUp(); 
       var d = document.getElementById('refToggler');
       toggleReference(d); 
   }, false);
+  
+  
+  function backButt(e)
+     { menuMouseSelect(); e.cancelBubble = true; }
+  
+  onPopup(
+     function() { 
+         document.addEventListener("backbutton", backButt, false); }, 
+     function() {
+         document.removeEventListener("backbutton", backButt , false); }  );
+        
 }
 
 
@@ -106,6 +121,7 @@ function startUp() {
     myKaNavigator.activate();
     
     myKaMap.registerForEvent( KAMAP_MAP_INITIALIZED, null, myMapInitialized ); 
+    myKaMap.registerForEvent( KAMAP_ERROR, null, myMapError );
     myKaMap.registerForEvent( KAMAP_INITIALIZED, null, myInitialized );  
     myKaMap.registerForEvent( KAMAP_SCALE_CHANGED, null, myScaleChanged );
     myKaMap.registerForEvent( KAMAP_EXTENTS_CHANGED, null, myExtentChanged );
@@ -126,12 +142,9 @@ function startUp() {
     myScalebar.maxWidth = 250;
     myScalebar.place('scalebar');
 
-    drawPage();
-    myKaMap.initialize( szMap, szExtents, szCPS );
-    geopos = document.getElementById('geoPosition');
-
-    /* Dummy storage object for old browsers that do not 
-       support it */
+    
+  /* Dummy storage object for old browsers that do not 
+     support it */
     storage = window.localStorage;
     if (storage == null) {
         storage = {
@@ -140,7 +153,8 @@ function startUp() {
             setItem: function(x,y) {return null; }
         };
     }   
-    ses_storage = window.sessionStorage;
+    
+    ses_storage = window.sessionStorage;   
     if (ses_storage == null) {
       ses_storage = {
         getItem: function(x) {return null; },
@@ -148,7 +162,14 @@ function startUp() {
         setItem: function(x,y) {return null; }
       };
     }
-    setSesStorage(ses_storage);
+    setSesStorage(ses_storage);  
+    
+    
+    drawPage();
+    myKaMap.initialize( szMap, szExtents, szCPS );
+    geopos = document.getElementById('geoPosition');
+
+
 }
 
 
@@ -183,10 +204,17 @@ function myMapInitialized() {
 };
 
 
+
+function myMapError(msg) {
+    alert(msg);
+}
+
+
 /* At this point ka-Map! has rendered the map. Since OL does not 
  * handle zoom level before rendering (I think this is a bug in OL), 
  * we have to separate this out. 
  */
+var ststate = null;
 function myInitialized() {
     var view = null;
     if (view == null)
@@ -272,19 +300,20 @@ function myInitialized() {
       buttonMenu.oncontextmenu = function(e) 
          { return mainMenu(buttonMenu, e);}  
     }      
-
-    document.getElementById('viewport').oncontextmenu = function(e) 
+    var vp = document.getElementById('viewport');
+    vp.oncontextmenu = function(e) 
          { if (document.kaCurrentTool != myKaRuler) 
-              showContextMenu(null, e); e.cancelBubble = true; }                                      
+              showContextMenu(null, e); e.cancelBubble = true; }      
+         
     if (ie) {
-       document.getElementById('viewport').onclick = function(e)
+       vp.onclick = function(e)
           { if (document.kaCurrentTool != myKaQuery) menuMouseSelect(); }
        document.getElementById('toolbar').onclick = function(e)
           { if (document.kaCurrentTool != myKaQuery) menuMouseSelect(); }   
      }
      else {
-       document.getElementById('viewport').onmouseup = function(e)
-          { if (isMenu) menuMouseSelect(); }
+       vp.onmouseup = function(e)
+          { menuMouseSelect(); }
        document.getElementById('toolbar').onmouseup = function(e)
           { if (isMenu) menuMouseSelect(); }       
      }
