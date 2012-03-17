@@ -236,7 +236,7 @@ function searchStations()
          var srch = document.getElementById('findcall').value;
          e.cancelBubble = true; 
          if (e.stopPropagation) e.stopPropagation();
-         call(server_url + "srv/search?filter="+srch, null, searchStationCallback, false);  
+         call(server_url + "srv/search?filter="+srch+(isMobile=true?"&mobile=true":""), null, searchStationCallback, false);  
      };
 
 
@@ -250,7 +250,7 @@ function searchStations()
         if (x != null) {            
             x.innerHTML = info;
             removePopup();
-            popup(document.getElementById("anchor"), pdiv, xpos, ypos, null);         
+            setTimeout(function() { popup(document.getElementById("anchor"), pdiv, xpos, ypos, null);}, 500);          
         }    
     }
 }
@@ -303,18 +303,18 @@ function showRefSearch()
 
    popupwindow(myKaMap.domObj, 
      "<h1>Vis kartreferanse på kartet</h1>" +
-     "<form>"+
+     "<form class=\"mapref\">"+
           
      "<hr><span class=\"sleftlab\">Kartref: </span>" +
-     "<input id=\"locx\" type=\"text\" size=\"3\" maxlength=\"3\">"+
+     "<div><input id=\"locx\" type=\"text\" size=\"3\" maxlength=\"3\">"+
      "<input id=\"locy\" type=\"text\" size=\"3\" maxlength=\"3\">"+
      
      "&nbsp;<input type=\"button\" "+
      "   onclick=\"doRefSearchLocal(document.getElementById('locx').value, document.getElementById('locy').value)\""+ 
-     "   value=\"Finn\">&nbsp;"+
+     "   value=\"Finn\">&nbsp;</div>"+
      
-     "<br><hr><span class=\"sleftlab\">UTM: </span>"+
-     "<input id=\"utmz\" type=\"text\" size=\"2\" maxlength=\"2\" value=\"" +cref.lngZone+ "\">" +
+     "<hr><span class=\"sleftlab\">UTM: </span>"+
+     "<nobr><div><input id=\"utmz\" type=\"text\" size=\"2\" maxlength=\"2\" value=\"" +cref.lngZone+ "\">" +
      "<input id=\"utmnz\" type=\"text\" size=\"1\" maxlength=\"1\" value=\"" +cref.latZone+ "\">" +
      "&nbsp;&nbsp<input id=\"utmx\" type=\"text\" size=\"6\" maxlength=\"6\">"+
      "<input id=\"utmy\" type=\"text\" size=\"7\" maxlength=\"7\">"+
@@ -322,21 +322,20 @@ function showRefSearch()
      "&nbsp;<input type=\"button\" "+
      "   onclick=\"doRefSearchUtm(document.getElementById('utmx').value, document.getElementById('utmy').value, "+ 
      "     document.getElementById('utmnz').value, document.getElementById('utmz').value)\""+
-     "   value=\"Finn\">&nbsp;"+
+     "   value=\"Finn\" style=\"margin-right:3.5em\">&nbsp;</div></nobr>" +
      
-     "<br><hr><nobr><span class=\"sleftlab\">LatLong: </span>" +
-     "<input id=\"ll_Nd\" type=\"text\" size=\"2\" maxlength=\"2\">°&nbsp;"+
+     "<hr><span class=\"sleftlab\">LatLong: </span>" +
+     "<nobr><div><input id=\"ll_Nd\" type=\"text\" size=\"2\" maxlength=\"2\">°&nbsp;"+
      "<input id=\"ll_Nm\" type=\"text\" size=\"6\" maxlength=\"6\">'N&nbsp;&nbsp;"+
      "<input id=\"ll_Ed\" type=\"text\" size=\"2\" maxlength=\"2\">°&nbsp;"+
      "<input id=\"ll_Em\" type=\"text\" size=\"6\" maxlength=\"6\">'E"+
-     
      "&nbsp;<input type=\"button\" "+
      "   onclick=\"doRefSearchLatlong(document.getElementById('ll_Nd').value, document.getElementById('ll_Nm').value, "+
      "        document.getElementById('ll_Ed').value, document.getElementById('ll_Em').value)\""+ 
-     "   value=\"Finn\">&nbsp;</nobr>"+
-     "</form><br>" 
+     "   value=\"Finn\">&nbsp;</div></nobr><hr>"+
+     "</form>" 
      
-   , 50, 80, false);
+   , (isMobile? 20:50), (isMobile?53:70), false);
    
       autojump('utmz', 'utmnz');
       autojump('utmnz', 'utmx');
