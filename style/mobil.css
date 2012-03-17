@@ -1,7 +1,3 @@
-#toolbar {left: 10px; height: 35px; width: 16.5em;  min-width: 280px;}
-#tools {height: 29px; border: solid #999 1px;}
-#toolbarBackground {height: 33px;}
-#toolbarToggler {left: 18px; top: 38px;}
 
 div.view {
     display: none;
@@ -24,4 +20,56 @@ div.ITEM_last {border-bottom: none !important}
 tr:hover {background: none}
 td {
   line-height: 1.3em;
+}
+
+
+
+#tools * {
+  cursor: pointer;
+  margin-right:3px
+}
+
+#toolRuler     { width: 29px; height: 24px; } 
+#toolQuery     { visibility: hidden; width: 0px; }
+#toolPan       { width: 28px; height: 28px; }
+#toolZoomIn    { width: 28px; height: 28px; }
+#toolZoomOut   { width: 28px; height: 28px; }
+#toolZoomRubber{ width: 28px; height: 28px; }
+#toolZoomFull  { width: 28px; height: 28px; }
+#toolRuler     { width: 29px; height: 24px; } 
+
+#toolbar { left: 10px; height: 39px; width: 16.5em;  min-width: 299px; }
+#tools { height: 33px; border: solid #999 1px; }
+#toolbarBackground { height: 39px;}
+#toolbarToggler { left: 18px; top: 45px;}
+
+
+@media screen and (min-device-width: 1200px) and (min-resolution: 120dpi),
+screen and (min-device-width: 1200px) and (-webkit-device-pixel-ratio: 1.0), 
+screen and (min-device-width: 1200px) and (-webkit-device-pixel-ratio: 1.5),
+screen and (min-device-height: 1200px) and (min-resolution: 120dpi),
+screen and (min-device-height: 1200px) and (-webkit-device-pixel-ratio: 1.0), 
+screen and (min-device-height: 1200px) and (-webkit-device-pixel-ratio: 1.5) 
+{
+  #toolPan       { width: 34px; height: 34px; }
+  #toolZoomIn    { width: 34px; height: 34px; }
+  #toolZoomOut   { width: 34px; height: 34px; }
+  #toolZoomRubber{ width: 34px; height: 34px; }
+  #toolZoomFull  { width: 34px; height: 34px; }  
+  #toolRuler     { width: 35px; height: 30px; } 
+  #filters       { font-size: 90%; vertical-align: middle }
+  
+  #toolbar { height: 45px; min-width: 352px;}
+  #tools { height: 39px; }
+  #toolbarBackground {height: 45px;}
+  #toolbarToggler { top: 50px; }
+  div.POPUP {font-size: 100% }
+  div.layersDiv {font-size: 120% }
+}
+
+@media screen and (max-device-width: 500px),
+       screen and (max-device-width: 20em) 
+{
+  form.mapref { width: 99% }
+  .mapref span.sleftlab {float: none}
 }
