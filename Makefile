@@ -24,6 +24,7 @@ all: compile
 install: Aprs/compiled.js
 	install -d $(INSTALL_CONFIG)
 	install -d $(INSTALL_CONFIG)/mapserv
+	install -d $(INSTALL_CONFIG)/www
 	install -d $(INSTALL_BIN)
 	install -d $(INSTALL_WEB)/Aprs $(INSTALL_WEB)/images $(INSTALL_WEB)/KaMap $(INSTALL_WEB)/OpenLayers \
 	           $(INSTALL_WEB)/style $(INSTALL_WEB)/XMLOverlay
