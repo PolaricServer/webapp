@@ -1134,6 +1134,7 @@ function kaXmlPoint(pid, xml_overlay) {
         this.shown = false;
         this.hasTrace = false;
         this.own = false;
+        this.thandler = new touchHandler();
         
         this.graphics = new Array();
         
@@ -1323,27 +1324,12 @@ kaXmlPoint.prototype.parse = function(point_element) {
              { return myObjectClicked(ident, e, href, title); }
           
            if (!isSign) {    
+                       
              mdiv.oncontextmenu= function(e)
              { showContextMenu(ident, e); return false; }
              
-             mdiv.ontouchstart = function(e) { 
-               tstate = e.touches[0]; 
-               setTimeout( function() {
-                 if (tstate != null) {
-                   showContextMenu(ident, tstate);
-                   tstate = null;
-                 }
-               }, 600);
-               return false; 
-             }
-             
-             mdiv.ontouchend= function(e) { 
-                if (tstate != null)
-                   myObjectClicked(ident, tstate, href, title);
-                tstate = null;
-                e = (e)?e:((event)?event:null); e.cancelBubble = true;
-                return false; 
-             }        
+             mdiv.ontouchstart = this.thandler.handle;         
+             mdiv.ontouchend = this.thandler.handle;
            }
         
               
