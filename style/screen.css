@@ -162,7 +162,7 @@ div .transparentBackground {
     position: absolute;
     right: 3px;
     bottom: 3px;
-    z-index: 999;
+    z-index: 1000;
     cursor: auto;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
