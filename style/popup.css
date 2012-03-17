@@ -23,7 +23,7 @@ div.POPUP, div.POPUPMENU, #measureResult
    -webkit-box-shadow: 3px 3px 5px #242;
    box-shadow: 3px 3px 5px #242;
 }
-
+div.POPUP input {font-size: 100%}
 
 div.POPUP, #measureResult {
    line-height: 1.2em;
@@ -32,6 +32,9 @@ div.POPUP, #measureResult {
    padding: 0.3em !important;
    min-width: 15em;
 }
+
+form.mapref { min-width: 27em }
+
 
 #measureResult {
   min-width: 10em;
@@ -52,14 +55,14 @@ div.POPUPMENU {
 
 .leftlab, .sleftlab, label.lleftlab {
     float: left;
-    width: 9em;
+    width: 8.5em;
     text-align: right;
     padding-right: 7px;
     color: gray;
 }
 
 .sleftlab, label.lleftlab {
-    width: 5em;
+    width: 4.5em;
 } 
 
 div.POPUP img { max-width: 500px; }
