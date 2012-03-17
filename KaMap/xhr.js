@@ -82,7 +82,7 @@ function xmlResult()
                 if (status == 503)
                    setTimeout(function() { window.location.reload(); }, 25000);
                 else if (status == 0)
-                   setTimeout(function() { call(u, o, f); }, 1000);
+                   setTimeout(function() { call(u, o, f); }, 30000);
            }
         }
     }
