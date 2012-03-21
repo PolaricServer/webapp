@@ -1,7 +1,8 @@
 
 
-var ie  = document.all
-var ns6 = document.getElementById&&!document.all
+var ie  = document.all;
+var ns6 = document.getElementById&&!document.all;
+var isGecko = (navigator.product == 'Gecko');
 
 var allowedPopups = 1;
 var isMenu        = false ;
@@ -108,7 +109,6 @@ function popupwindow(onDiv, ihtml, x, y, img, id, delay)
     var pdiv = document.createElement('div');
     pdiv.className = 'POPUP'; 
     pdiv.innerHTML = ihtml;
-    pdiv.onload = function() {alert("BERT"); };
     if (id != null) pdiv.id = id;
     if (delay) 
         setTimeout( function() {
@@ -180,7 +180,9 @@ function popup(onDiv, menudiv, x, y, img)
      activepopup.style.display    = 'block';
      activepopup.style.padding    = '2px';
      activepopup.style.cursor     = 'default';
-
+     if (document.body.clientWidth < 500 && menudiv.clientWidth > document.body.clientWidth)
+       activepopup.style.minWidth   = document.body.clientWidth+'px'; 
+     
      if (menudiv.clientHeight+10 > document.body.clientHeight) {
          activepopup.style.maxHeight = document.body.clientHeight-5 + "px";
          menudiv.id = 'wrapper';
@@ -214,30 +216,28 @@ function popup(onDiv, menudiv, x, y, img)
  
     function adjustPosition()
     {   
-      xoff = x + 5 + menudiv.clientWidth - document.body.clientWidth;
+      xoff = x + 4 + menudiv.clientWidth - document.body.clientWidth;
       if (xoff > 0) {
         x -= xoff;
-        if (x < 2) x=2;
+        if (x < 1) x=1;
         if (image!=null)
           image.style.left =(xoff-9)+'px';
       }
-      yoff = y + 6 + menudiv.clientHeight - document.body.clientHeight;
+      yoff = y + 4 + menudiv.clientHeight - document.body.clientHeight;
       if (yoff > 0) {
         y -= yoff;
-        if (y < 2) y=2;
+        if (y < 1) y=1;
         if (image!=null)
           image.style.top =(yoff-12)+'px';
       }
       
-      if (firstTime || xoff > 0 || yoff > 0) {
-         activepopup.style.left    = x+"px";
-         activepopup.style.top     = y+"px";
+      if (firstTime || xoff > 0 || yoff > 0) { 
+         activepopup.style.left    = x-3+"px";
+         activepopup.style.top     = y-3+"px";
       }  
       firstTime = false;
      }
-    
-    
-    
+
 }
 
 
