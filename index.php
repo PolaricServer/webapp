@@ -59,7 +59,7 @@ include_once( 'webappconfig.php' );
 <body onload="<?php if ($isMobile) echo("myOnLoad_mobile();");
                     else if ($isIframe) echo ("myOnLoad_iframe();");
                     else echo("myOnLoad();"); ?>">
-
+<div id="viewport">
 <?php
   if ($isMobile || $isIframe)
     include_once('form_small.php');
@@ -68,7 +68,7 @@ include_once( 'webappconfig.php' );
 ?>
 
 <img id="toolbarToggler" onclick="toggleToolbar(this);" alt="toggle toolbar" src="KaMap/images/a_pixel.gif">
-<div id="viewport"> 
+ 
 <?php
   if ($creditLogo!= ""  && !$isMobile && !$isIframe) 
       echo ('<img id="clogo" src="'.$creditLogo.'">');
