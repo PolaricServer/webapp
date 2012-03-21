@@ -4,7 +4,6 @@
  */ 
 var server_url = '';
 
-
 /* set to true to add map-layers from ka-map.
  * Metadata will be fetched with an AJAX call to the server.
  */
@@ -28,7 +27,7 @@ var backgroundColor = '#A1C1C9'
  var mapOptions = {
      projection: new OpenLayers.Projection('EPSG:32633'),
      displayProjection: new OpenLayers.Projection('EPSG:32633'),
-     numZoomLevels: 5,
+     numZoomLevels: 12,
      maxExtent: new OpenLayers.Bounds(-2500000.0,3500000.0,3045984.0,9045984.0),
      maxResolution: 1354.0, 
      minResolution: 0.6611328, 
@@ -56,29 +55,25 @@ var backgroundColor = '#A1C1C9'
     new OpenLayers.Layer.WMS(
              "Kartverket Topo2", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
              {  layers: 'topo2',
-                format: 'image/png',
-                numZoomLevels: 5 },
+                format: 'image/png'},
              {  attribution: _kv_attr }
         ),
     new OpenLayers.Layer.WMS(
              "Kartverket Raster", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
              {  layers: 'toporaster2',
-                format: 'image/png', 
-                numZoomLevels: 5 },
+                format: 'image/png'},
              {  attribution: _kv_attr }
         ),        
     new OpenLayers.Layer.WMS(
              "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
              {  layers: 'sjo_hovedkart2',
-                format: 'image/png', 
-                numZoomLevels: 5 },
+                format: 'image/png'},
              {  attribution: _kv_attr }
         ),
     new OpenLayers.Layer.WMS(
              "Kartverket Europakart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
              {  layers: 'europa',
-                format: 'image/png', 
-                numZoomLevels: 5 },
+                format: 'image/png'},
              {  attribution: _kv_attr }
         )
     /* Example of how to add a GPX layer: Uncomment and modify the line below.. */
@@ -127,7 +122,6 @@ var filterViews = [
 /* View to be selected by default */
 var defaultFilterView = 'track2';
 
-/*
- *  Set to true to add SAR URL to the menu
- */ 
-var sarUrl = false;
+
+/* Set to true to enable SAR URL */
+var sarUrl = false; 
