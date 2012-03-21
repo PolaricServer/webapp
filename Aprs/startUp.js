@@ -304,18 +304,20 @@ function myInitialized() {
     vp.oncontextmenu = function(e) 
          { if (document.kaCurrentTool != myKaRuler) 
               showContextMenu(null, e); e.cancelBubble = true; }      
+    document.getElementById('toolbar').oncontextmenu = function(e)     
+         {e.cancelBubble = true;}
          
     if (ie) {
        vp.onclick = function(e)
           { if (document.kaCurrentTool != myKaQuery) menuMouseSelect(); }
        document.getElementById('toolbar').onclick = function(e)
-          { if (document.kaCurrentTool != myKaQuery) menuMouseSelect(); }   
+          { if (document.kaCurrentTool != myKaQuery) menuMouseSelect();  e.cancelBubble = true;}   
      }
      else {
        vp.onmouseup = function(e)
           { menuMouseSelect(); }
        document.getElementById('toolbar').onmouseup = function(e)
-          { if (isMenu) menuMouseSelect(); }       
+          { if (isMenu) menuMouseSelect(); e.cancelBubble = true;}       
      }
      initialized = true;
      
@@ -519,7 +521,7 @@ function myObjectClicked(ident, e, href, title)
 	  if ( /^(p|P):.*/.test(href) )
               popupwindow(myKaMap.domObj, 
                       '<h1>'+title+'</h1>' +
-                      '<img src=\"'+href.substring(2)+'\">'
+                      '<img class=\"popupimg\" src=\"'+href.substring(2)+'\">'
                       , x, y, null, 'obj_click', true);    
 	  else
 	      window.location = href; 
