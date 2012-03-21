@@ -67,9 +67,19 @@ screen and (min-device-height: 1200px) and (-webkit-device-pixel-ratio: 1.5)
   div.layersDiv {font-size: 120% }
 }
 
+
+
+
+
 @media screen and (max-device-width: 500px),
        screen and (max-device-width: 20em) 
 {
   form.mapref { width: 99% }
   .mapref span.sleftlab {float: none}
+  div.POPUP img {max-width: 310px}
+}
+@media screen and (max-device-height: 500px)
+{
+   div.POPUP img {max-height: 290px}
+   div.POPUP h1 {margin: 0em}}
 }
