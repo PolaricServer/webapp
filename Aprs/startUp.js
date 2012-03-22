@@ -302,16 +302,19 @@ function myInitialized() {
     }      
     var vp = document.getElementById('viewport');
     vp.oncontextmenu = function(e) 
-         { if (document.kaCurrentTool != myKaRuler) 
+         { e = (e)?e:((event)?event:null);
+           if (document.kaCurrentTool != myKaRuler) 
               showContextMenu(null, e); e.cancelBubble = true; }      
     document.getElementById('toolbar').oncontextmenu = function(e)     
-         {e.cancelBubble = true;}
+         { e = (e)?e:((event)?event:null); 
+           e.cancelBubble = true; }
          
     if (ie) {
        vp.onclick = function(e)
           { if (document.kaCurrentTool != myKaQuery) menuMouseSelect(); }
        document.getElementById('toolbar').onclick = function(e)
-          { if (document.kaCurrentTool != myKaQuery) menuMouseSelect();  e.cancelBubble = true;}   
+          { e = (e)?e:((event)?event:null);
+            if (document.kaCurrentTool != myKaQuery) menuMouseSelect();  e.cancelBubble = true;}   
      }
      else {
        vp.onmouseup = function(e)
@@ -519,7 +522,7 @@ function myObjectClicked(ident, e, href, title)
     if (href) {
       setTimeout( function() { 
 	  if ( /^(p|P):.*/.test(href) )
-              popupwindow(myKaMap.domObj, 
+              popupwindow( myKaMap.domObj, 
                       '<h1>'+title+'</h1>' +
                       '<img class=\"popupimg\" src=\"'+href.substring(2)+'\">'
                       , x, y, null, 'obj_click', true);    
