@@ -1,8 +1,8 @@
-polaric-webapp (1.0.5+) stable; urgency=low
+polaric-webapp (1.0.6) stable; urgency=low
 
-  * testing  
+  * OpenLayers 2.11, mobile app improvements, fixes 
 
- -- Øyvind hanssen <ohanssen@acm.org>  Mon, 27 Feb 2012 00:19:47 +0100
+ -- Øyvind hanssen <ohanssen@acm.org>  Thu, 22 Mar 2012 21:50:56 +0100
 
 polaric-webapp (1.0.5) stable; urgency=low
 
