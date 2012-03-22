@@ -3,7 +3,7 @@ ExpiresDefault A300
 ExpiresByType image/gif A1209600 
 ExpiresByType image/png A1209600 
 ExpiresByType image/jpg A1209600 
-ExpiresByType application/javascript A604800 
-ExpiresByType text/plain A604800 
-ExpiresByType text/css A604800 
+ExpiresByType application/javascript A259200
+ExpiresByType text/plain A259200 
+ExpiresByType text/css A259200
 
