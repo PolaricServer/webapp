@@ -18,6 +18,7 @@ var geopos;
 var isOpera = _BrowserIdent_isOpera();
 var isIframe = false;
 var isMobile = false;
+var isMobileApp = false;
 var storage = null;
 var ses_storage = null;
 
@@ -67,26 +68,22 @@ function myOnLoad_mobile() {
 
 /* For use inside an Android app. (using PhoneGap). */ 
 function myOnLoad_droid() {
-  isMobile = true; 
+  isMobile = isMobileApp = true; 
   
   document.addEventListener("deviceready", function() {
-      var networkState = navigator.network.connection.type;
-      if (networkState == Connection.NONE)  {
-        navigator.notification.vibrate(100);
-        alert("OBS! Denne applikasjonen trenger internett!");
-      }
       
       document.addEventListener("menubutton", function(e) { 
         if (popupActive())
              return menuMouseSelect(); 
         else
             return mainMenu(document.getElementById('toolbar'), e); 
+        
       }, false);
-      
-   
+         
       startUp(); 
       var d = document.getElementById('refToggler');
       toggleReference(d); 
+      geopos.innerHTML = '&nbsp; PolaricDroid app ready';
   }, false);
   
   
@@ -129,10 +126,11 @@ function startUp() {
     myKaMap.registerForEvent( KAMAP_LAYER_STATUS_CHANGED, null, myLayersChanged );
     myKaMap.registerForEvent( KAMAP_QUERY, null, myQuery );
     myKaMap.registerForEvent( KAMAP_MAP_CLICKED, null, myMapClicked );
-    myKaMap.registerForEvent( KAMAP_MOUSE_TRACKER, null, myMouseMoved );
+    if (!isMobileApp)
+       myKaMap.registerForEvent( KAMAP_MOUSE_TRACKER, null, myMouseMoved );
     myKaMap.registerForEvent( KAMAP_MOVE_START, null, function() 
     {    if (myOverlay != null) 
-                myOverlay.removePoint(); 
+                myOverlay.removePointExcept("my_.*"); 
          } );
         
     myScalebar = new ScaleBar(1);
@@ -601,21 +599,27 @@ function histList_click(ident, index)
 
 
 
-function myZoomToGeo(x,y)
+function myZoomToGeo(x, y, t)
 {      
     var extents = myKaMap.getGeoExtents();
-    var cx = (extents[2] + extents[0])/2;
-    var cy = (extents[3] + extents[1])/2;
-    if (x < cx-50 || x > cx+50 || y < cy-30 || y > cy+30) {
+    var xx = extents[0];
+    var xy = extents[1]; 
+    var cx = (extents[2] - extents[0])/2;
+    var cy = (extents[3] - extents[1])/2;
+    if (!t)
+        t = 0.05; 
+    var tx = cx * t;
+    var ty = cy * t; 
+    if (x < xx+cx-tx || x > xx+cx+tx || y < xy+cy-ty || y > xy+cy+ty) {
        myKaMap.zoomTo(x,y);
     }
 }
 
 
-function myZoomTo(x,y)
+function myZoomTo(x,y,t)
 { 
     var coord = myKaMap.pixToGeo(x,y-5);
-    myZoomToGeo(coord[0], coord[1]);
+    myZoomToGeo(coord[0], coord[1], t);
 }
 
 
@@ -735,14 +739,14 @@ function toggleReference(obj) {
         var d = getObject('reference');
         d.display = 'none';
         obj.isOpen = false;
-        obj.style.bottom = '3px';
+        obj.style.bottom = '5px';
     } else {
         obj.title = 'hide reference';
         obj.style.backgroundImage = 'url(' +server_url+ 'KaMap/images/arrow_down.png)';
         var d = getObject('reference');
         d.display = 'block';
         obj.isOpen = true;
-        obj.style.bottom = (getObjectHeight('reference') + 3) + 'px';
+        obj.style.bottom = (getObjectHeight('reference') + 5) + 'px';
     }
 }
 
