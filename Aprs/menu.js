@@ -1,4 +1,7 @@
 var toolbar = document.getElementById('toolbar');
+var gpsTracker = null; 
+
+
 
 function showContextMenu(ident, e, ax, ay)
 {
@@ -30,6 +33,14 @@ function showContextMenu(ident, e, ax, ay)
              txt.push(['Slett objekt', function() { deleteObject(null); } ]);
           }
           txt.push(null);
+	  
+	  if (isMobileApp) {          
+	     if (gpsTracker==null)
+	          txt.push(['Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); } ]);
+	     else
+	          txt.push(['De-aktiver GPS pos.', function() { gpsTracker.deactivate(); gpsTracker=null; } ]);
+	  }
+	  
           if (!traceIsHidden('ALL'))
             txt.push(['Skjul sporlogger', function() { myOverlay.hidePointTrace('ALL'); } ]);
           else
