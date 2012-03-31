@@ -303,8 +303,8 @@ kaXmlOverlay.prototype.loadXmlDoc = function(xml_string)
  * 
  */
 kaXmlOverlay.prototype.urlNormalize = function(url) {
-    return server_url + url;
-    // FIXME: Check for "http://" prefix
+    return /* server_url + */ url;
+    // FIXME: don't need this?
 }
  
  
@@ -344,7 +344,7 @@ kaXmlOverlay.prototype.getPointObject = function(pid) {
  */
 kaXmlOverlay.prototype.addNewPoint = function(pid,x,y) {
     this.removePoint(pid);
-    var np = new kaXmlPoint(pid,this);
+    var np = new kaXmlPoint(pid, this);
     np.placeOnMap(x,y);
     this.ovrObjects.push(np);
     return np;
@@ -362,24 +362,35 @@ kaXmlOverlay.prototype.getDivId = function(pid) {
 
 
 
-/**
+
+kaXmlOverlay.prototype.removePointExcept = function( pid ) {
+  
+  var re = (pid==null ? null : new RegExp(pid));
+  for (var i=this.ovrObjects.length; i-- > 0; ) {
+     if (this.ovrObjects[i] != null) {
+        if (pid==null || !re.test(this.ovrObjects[i].pid)) {
+           this.ovrObjects[i].removeFromMap();
+           delete this.ovrObjects[i];
+           this.ovrObjects[i] = null;
+        }
+     }
+     this.ovrObjects.splice(i,1); 
+  }       
+}  
+  
+  
+  /**
  * Remove one or more point div from the map.
  * If pid is null or not present remove all points.
+ * If pid starts with ! it means match all except pid
  *
  * pid          Point ID or a regexp 
  */
 kaXmlOverlay.prototype.removePoint = function( pid ) {
-
-    if ( (this.removePoint.arguments.length < 1) || (pid == null) ) {
-        for (var i=this.ovrObjects.length; i-- > 0; ) {
-             if (this.ovrObjects[i] != null) {
-                 this.ovrObjects[i].removeFromMap();
-                 delete this.ovrObjects[i];
-                 this.ovrObjects[i] = null;
-             }
-             this.ovrObjects.splice(i,1); 
-        }       
-    } 
+   
+    if ( (this.removePoint.arguments.length < 1) || (pid == null) ) 
+        removePointExcept();       
+  
     else {    
         var re = new RegExp(pid);
         for (var i=this.ovrObjects.length; i-- > 0; ) {
@@ -398,7 +409,7 @@ kaXmlOverlay.prototype.removePoint = function( pid ) {
 }
 
 
-kaXmlOverlay.prototype.removePointGeo = function( x0,y0,x1,y1 ) {
+kaXmlOverlay.prototype.removePointGeo = function( x0, y0, x1, y1 ) {
         for (var i=this.ovrObjects.length; i-- > 0; ) {
             var obj = this.ovrObjects[i];
             if (obj != null) {                
@@ -1008,11 +1019,8 @@ kaXmlLabel.prototype.rescale = function(point) {
  ******************************************************************/
  
 function kaXmlIcon() {
-        kaXmlGraphicElement.apply(this);
-    //    if (_BrowserIdent_hasCanvasSupport())
-    //            kaXmlIcon.prototype['draw'] = kaXmlIcon.prototype['draw_canvas'];
-    //    else
-                kaXmlIcon.prototype['draw'] = kaXmlIcon.prototype['draw_plain'];
+    kaXmlGraphicElement.apply(this);
+    kaXmlIcon.prototype['draw'] = kaXmlIcon.prototype['draw_plain'];
     for (var p in kaXmlGraphicElement.prototype) {
         if (!kaXmlIcon.prototype[p]) 
             kaXmlIcon.prototype[p]= kaXmlGraphicElement.prototype[p];
@@ -1026,14 +1034,17 @@ function kaXmlIcon() {
         this.rot = 0;
         this.ldiv = null;       
         this.img = null;        
-        this.canvas = null;
 }
 
+kaXmlIcon.prototype.setImage = function(point, src, w, h) {
+   this.icon_src = point.xml_overlay.urlNormalize(src);
+   this.icon_w = w;
+   this.icon_h = h;
+}
 
 
 kaXmlIcon.prototype.remove = function(point) {
         this.ldiv = null;       
-        this.canvas = null;
         if (this.img) this.img.onload = null;
         this.img = null;        
 }
@@ -1041,9 +1052,7 @@ kaXmlIcon.prototype.remove = function(point) {
 
 
 kaXmlIcon.prototype.parseElement = function(point, domElement) {
-        this.icon_src = point.xml_overlay.urlNormalize(domElement.getAttribute("src"));
-        this.icon_w = parseInt(domElement.getAttribute("w"));
-        this.icon_h = parseInt(domElement.getAttribute("h"));
+        this.setImage(point, domElement.getAttribute("src"), domElement.getAttribute("w"), domElement.getAttribute("h"));
         var t;
         t = parseInt(domElement.getAttribute("px"));
         if (!isNaN(t)) {
@@ -1056,37 +1065,6 @@ kaXmlIcon.prototype.parseElement = function(point, domElement) {
         t = parseInt(domElement.getAttribute("rot"));
         if (!isNaN(t)) {
                 this.rot = t;
-        }
-}
-
-
-
-kaXmlIcon.prototype.draw_canvas = function(point) {
-        var dx = -this.icon_w / 2 + this.xoff;     
-        var dy = -this.icon_h / 2 + this.yoff;     
-        
-        if (this.canvas == null) {
-                this.ldiv = document.createElement( 'div' );
-                this.ldiv.style.position = 'absolute';
-            this.ldiv.style.top = dy+'px';
-        this.ldiv.style.left = dx+'px';
-                point.div.appendChild(this.ldiv);
-                this.canvas = _BrowserIdent_newCanvas(this.ldiv);
-                _BrowserIdent_setCanvasHW(this.canvas,this.icon_h*2,this.icon_w*2);
-        } 
-        
-        var ctx = _BrowserIdent_getCanvasContext(this.canvas);
-        ctx.save();
-    ctx.translate(-dx,-dy);
-    ctx.rotate(this.rot * Math.PI/180);
-    this.img = new Image();
-    this.img.src = this.icon_src;
-    var timg = this.img;
-    var tw = this.icon_w;
-    var th = this.icon_h;
-        this.img.onload = function() {
-                ctx.drawImage(timg, dx, dy, tw, th);
-                ctx.restore();
         }
 }
 
@@ -1107,7 +1085,6 @@ kaXmlIcon.prototype.draw_plain = function(point) {
     this.img.width = this.icon_w;
     this.img.height = this.icon_h;
     this.ldiv.appendChild( this.img );
-//    point.div.appendChild( this.ldiv );
 }
 
 
