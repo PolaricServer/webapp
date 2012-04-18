@@ -24,6 +24,9 @@ td {
 
 
 
+
+
+
 #tools * {
   cursor: pointer;
   margin-right:3px
@@ -65,6 +68,20 @@ screen and (min-device-height: 1200px) and (-webkit-device-pixel-ratio: 1.5)
   #toolbarToggler { top: 50px; }
   div.POPUP {font-size: 100% }
   div.layersDiv {font-size: 120% }
+  
+  #reference {
+    width: 270px; height: 120px;
+  }
+  
+  #geoPosition {
+    width: 268px;
+    height: 44px; 
+    font-size: 15px;
+  }
+  #scale { font-size: 12px; }
+  .sbNumbersBox {font-size: o.76em }
+  .sbLabelBox {font-size: 0.9em }
+  
 }
 
 
