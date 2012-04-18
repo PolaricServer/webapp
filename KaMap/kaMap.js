@@ -330,7 +330,14 @@ kaMap.prototype.initializeCallback = function( szInit )
     
     this.triggerEvent( KAMAP_MAP_INITIALIZED );
     this.olMap.render(this.domObj);   
-    document.getElementById('OpenLayers.Map_12_events').appendChild(this.theInsideLayer);
+
+    var cont = Array.filter( document.getElementsByClassName('olMapViewport'), function(elem){  
+      return elem.nodeName == 'DIV';  
+    });
+    /* Make this more robust? Should perhaps look for child with id='OpenLayers.Map_XX_events' */
+    var el = cont[0].firstChild;
+    el.appendChild(this.theInsideLayer);
+    
     document.getElementById('permolink').appendChild(this.plink.draw());
     this.plink.element.innerHTML="link to this view";    
     this.setBackgroundColor( backgroundColor ); 
@@ -984,7 +991,7 @@ kaMap.prototype.addMap = function( oMap ) {
             }
   
             olLayer = new OpenLayers.Layer.KaMap
-                  (  oMap.title+" (ka-map)", "KaMap/tile.php",
+                  (  oMap.title+" (ka-map)", this.server+"KaMap/tile.php",
                      { i: kaLayer.imageformat,
                        g: kaLayer.name,
                        map: oMap.name },
