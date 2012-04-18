@@ -97,6 +97,20 @@ function abortCall(i)
 
 
 
+var ajax_basicAuthString = null; 
+
+function ajax_setBasicAuth(user, pass)
+{  
+    var tok = user + ':' + pass;  
+    var hash = Base64.encode(tok);
+    ajax_basicAuthString = "Basic " + hash;
+}
+
+function ajax_clearBasicAuth() {
+    ajax_basicAuthString = null;
+}
+
+
 
 // u -> url
 // o -> object (can be null) to invoke function on
@@ -129,7 +143,10 @@ function call(u,o,f)
     if(aXmlHttp[idx])
     {
         aXmlHttp[idx][0].open(method, u, true);
-	aXmlHttp[idx][0].onreadystatechange=xmlResult;
+	aXmlHttp[idx][0].onreadystatechange=xmlResult;       
+     
+        if  (ajax_basicAuthString != null)
+          aXmlHttp[idx][0].setRequestHeader('Authorization', ajax_basicAuthString);
         if(method == "POST"){
 	  aXmlHttp[idx][0].setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
           aXmlHttp[idx][0].send(dat);
