@@ -299,14 +299,6 @@ kaXmlOverlay.prototype.loadXmlDoc = function(xml_string)
 }
 
 
-/**
- * 
- */
-kaXmlOverlay.prototype.urlNormalize = function(url) {
-    return /* server_url + */ url;
-    // FIXME: don't need this?
-}
- 
  
 /**
  * pid          Point ID
@@ -389,7 +381,7 @@ kaXmlOverlay.prototype.removePointExcept = function( pid ) {
 kaXmlOverlay.prototype.removePoint = function( pid ) {
    
     if ( (this.removePoint.arguments.length < 1) || (pid == null) ) 
-        removePointExcept();       
+        this.removePointExcept();       
   
     else {    
         var re = new RegExp(pid);
@@ -1037,7 +1029,7 @@ function kaXmlIcon() {
 }
 
 kaXmlIcon.prototype.setImage = function(point, src, w, h) {
-   this.icon_src = point.xml_overlay.urlNormalize(src);
+   this.icon_src = src;
    this.icon_w = w;
    this.icon_h = h;
 }
@@ -1256,9 +1248,8 @@ kaXmlPoint.prototype.parse = function(point_element) {
                 
                 this.setPosition(x,y);
                 /* Tracking of object: Move object to center of display */
-                if (tracked && ((x != px && Math.abs(x-px) > 50) 
-                             || (y != py && Math.abs(y-py) > 50))) {
-                    myZoomToGeo(x, y);  
+                if (tracked) {
+                    myZoomToGeo(x, y, 0.1);  
                     return;
                 }        
         }          
