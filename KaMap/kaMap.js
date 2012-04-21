@@ -300,6 +300,16 @@ kaMap.prototype.initializeCallback = function( szInit )
        this.triggerEvent(KAMAP_MOVE_START);
     }
 
+    /* Remove null layers */
+    while (true) {
+      for (idx=0; idx<baseLayers.length; idx++) 
+         if (baseLayers[idx] == null)
+            break;
+      if (idx < baseLayers.length)
+          baseLayers.splice(idx,1);
+      else break;
+    }
+    
     
     /* Get baselayers from kaMap backend */
     if (use_kaMap_maps && kaMapFirst)
@@ -331,12 +341,19 @@ kaMap.prototype.initializeCallback = function( szInit )
     this.triggerEvent( KAMAP_MAP_INITIALIZED );
     this.olMap.render(this.domObj);   
 
-    var cont = Array.filter( document.getElementsByClassName('olMapViewport'), function(elem){  
-      return elem.nodeName == 'DIV';  
-    });
-    /* Make this more robust? Should perhaps look for child with id='OpenLayers.Map_XX_events' */
-    var el = cont[0].firstChild;
-    el.appendChild(this.theInsideLayer);
+    
+    var cont = document.getElementsByTagName("div");
+    var elem; 
+    while (elem = cont[i++]) 
+       if (elem.className != null && elem.className.match(/olMapViewport/) != null) 
+          break;
+    
+    if (elem.className != null && elem.className.match(/olMapViewport/) != null) {
+        var elem = elem.firstChild;
+        elem.appendChild(this.theInsideLayer);
+    }
+    else
+        alert("ERROR: Can't find OpenLayers Viewport element");
     
     document.getElementById('permolink').appendChild(this.plink.draw());
     this.plink.element.innerHTML="link to this view";    
