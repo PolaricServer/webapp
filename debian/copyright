@@ -32,6 +32,10 @@ Files: KaMap/excanvas.js
 Copyright: Google inc. 
 License: BSD
 
+Files: KaMap/base64.js
+Copyright (c) 2008 Fred Palmer fred.palmer_at_gmail.com
+License: BSD like
+
 Files: XMLOverlay/*
 Copyright: Piergiorgio Navone
 Modified and parts removed by Øyvind Hanssen <ohanssen@acm.org>
