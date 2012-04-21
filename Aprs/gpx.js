@@ -1,9 +1,16 @@
 
 Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
 
+var gpx_alert = false; 
 
 function add_Gpx_Layer(name, url)
 {
+    if (document.all) {
+        if (!gpx_alert)
+            alert("GPX spor blir ikke aktivert for Internet Explorer. For full funksjonalitet, bruk en annen nettleser");
+        gpx_alert = true;
+        return null; 
+    }
     var gpx_format = new OpenLayers.Format.GPX();
     var styleMap = new OpenLayers.StyleMap(OpenLayers.Util.applyDefaults({
          	  strokeColor: "blue",
