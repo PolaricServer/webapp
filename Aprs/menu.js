@@ -3,7 +3,43 @@ var gpsTracker = null;
 
 
 
+/* Move this to separate source file */
+if (document.all /* IE */)
+      window.attachEvent("messsage", receiveMessage); 
+else
+      window.addEventListener("message", receiveMessage, false);  
+
+
+
+function receiveMessage(event)  
+{   
+  var args = event.data.split(" ");
+  if (args[0] == "zoomIn")
+       myKaMap.zoomIn();
+  else if (args[0] == "zoomOut")
+       myKaMap.zoomOut();
+  else if (args[0] == "zoomScale") {
+      var scale = parseInt(args[1], 10); 
+      if (isNaN(scale))
+         return; 
+      myKaMap.zoomToScale(scale); 
+  }
+  else if (args[0] == "gotoUtm") {
+      var zz = args[1].substring(0,2);
+      var nz = args[1].substring(2,3);
+      doRefSearchUtm(args[2], args[3], nz, zz, true)
+  }
+  else if (args[0] == "findItem")
+      findStation(args[1]);
+  else if (args[0] == "selectMap")
+      myKaMap.selectMap(args[1]);
+} 
+
+
+
+
 function showContextMenu(ident, e, ax, ay)
+
 {
      e = (e)?e:((event)?event:null); 
      var x = (ax) ? ax : ((e.pageX) ? e.pageX : e.clientX); 
@@ -139,10 +175,6 @@ function findStation(ident, showInfo)
 
 
 
-
-
-
-
 function showStationInfoGeo(ident, edit, x, y)
 {
     var pixPos = myKaMap.geoToPix(x, y);
@@ -151,13 +183,11 @@ function showStationInfoGeo(ident, edit, x, y)
 
 
 
-
 function editObjectInfo(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
-    WOOpenWin('Objekt', server_url + 'srv/addobject' +
-          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]),
-          'resizable=yes,scrollbars=yes, width=495, height=280' );
+    fullPopupWindow('Objekt', server_url + 'srv/addobject' +
+          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]), 495, 280);
 }
 
 
@@ -165,40 +195,29 @@ function editObjectInfo(x, y)
 function setOwnPosition(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
-    WOOpenWin('Posisjon', server_url + 'srv/setownpos' +
-          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]),
-          'resizable=yes,scrollbars=yes, width=495, height=200' );
+    fullPopupWindow('Posisjon', server_url + 'srv/setownpos' +
+          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]), 495, 200);
 }
 
 
-function deleteObject(ident)
-{
-       WOOpenWin('Objekt', server_url + 'srv/deleteobject'+ (ident==null ? "" : '?objid='+ident),
-          'resizable=yes,scrollbars=yes, width=350, height=200' );
+function deleteObject(ident) {
+    fullPopupWindow('Objekt', server_url + 'srv/deleteobject'+ (ident==null ? "" : '?objid='+ident), 350, 200);
 }
 
-function resetInfo(ident)
-{
-       WOOpenWin('Stasjon', server_url + 'srv/resetinfo'+ (ident==null ? "" : '?objid='+ident),
-          'resizable=yes,scrollbars=yes, width=350, height=200' );
+function resetInfo(ident) {
+    fullPopupWindow('Stasjon', server_url + 'srv/resetinfo'+ (ident==null ? "" : '?objid='+ident), 350, 200);
 }
 
-function deleteAllObjects()
-{
-       WOOpenWin('Objekt', server_url + 'srv/deleteallobj',
-          'resizable=yes,scrollbars=yes, width=350, height=230' );
+function deleteAllObjects() {
+    fullPopupWindow('Objekt', server_url + 'srv/deleteallobj', 350, 230);
 }
 
-function adminWindow()
-{
-       WOOpenWin('Admin', server_url + 'srv/admin?cmd=info',
-          'resizable=yes,scrollbars=yes, width=630, height=460' );
+function adminWindow() {
+    fullPopupWindow('Admin', server_url + 'srv/admin?cmd=info', 630, 460);
 }
 
-function sarModeWindow()
-{
-       WOOpenWin('SarMode', server_url + 'srv/sarmode',
-          'resizable=yes,scrollbars=yes, width=460, height=250' );
+function sarModeWindow() {
+    fullPopupWindow('SarMode', server_url + 'srv/sarmode', 460, 270);
 }
 
 
@@ -210,9 +229,8 @@ function showStationInfo(ident, edit, x, y)
            server_url + 'srv/station?simple=true&id='+ident+ (edit ? '&edit=true':''), x, y, 'infopopup');
   else {
       var url = server_url + (getLogin() ? 'srv/sec-station?id=' : 'srv/station?id=');
-      WOOpenWin('Stasjon', url + ident + (edit ? '&edit=true':''), 
-            'resizable=yes,scrollbars=yes, width=705, height=450' );
-  }
+      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 705, 450);
+  } 
 }
 
 
@@ -227,7 +245,7 @@ function sarUrl(x, y)
 
 function showStationHistory(ident, x, y)
 {
-  remotepopupwindow(document.getElementById("anchor"),  server_url + 'srv/history?simple=true&id='+ident, x, y);
+   remotepopupwindow(document.getElementById("anchor"),  server_url + 'srv/history?simple=true&id='+ident, x, y);
 }
 
 
@@ -367,15 +385,11 @@ function doRefSearchLatlong(nd, nm, ed, em)
    var xm = parseFloat(em);
    var ll = new LatLng(yd+ym/60, xd+xm/60);
    var uref = ll.toUTMRef();
-   
-   /* This is a hack, but the coordinates need to be in the same zone as the map */
-   var uref_map = uref.toLatLng().toUTMRef(this.utmnzone, this.utmzone);
-   myKaMap.zoomTo(uref_map.easting, uref_map.northing);
-   setTimeout( function() {showPosInfoUtm(uref_map);}, 1500 );
+   _doRefSearchUtm(uref);
 }
 
 
-function doRefSearchUtm(ax, ay, nz, zz)
+function doRefSearchUtm(ax, ay, nz, zz, hide)
 {
    removePopup();
    var x = parseInt(ax, 10);
@@ -384,12 +398,7 @@ function doRefSearchUtm(ax, ay, nz, zz)
    if (isNaN(x) || isNaN(y) || isNaN(z))
       return;
    var uref = new UTMRef(x, y, nz, z);
-   
-   /* This is a hack, but the coordinates need to be in the same zone as the map */
-   var uref_map = uref.toLatLng().toUTMRef(this.utmnzone, this.utmzone);
-   myKaMap.zoomTo(uref_map.easting, uref_map.northing);
-   setTimeout( function() {showPosInfoUtm(uref_map);}, 1500 );
-
+   _doRefSearchUtm(uref, hide);
 }
 
 
@@ -406,15 +415,18 @@ function doRefSearchLocal(ax, ay)
     var bx = Math.floor(cref.easting  / 100000) * 100000;
     var by = Math.floor(cref.northing / 100000) * 100000; 
     var uref = new UTMRef(bx + x * 100,  by + y * 100, cref.latZone, cref.lngZone); 
-    
-    /* This is a hack, but the coordinates need to be in the same zone as the map */
+
     /* TODO: We should actually try to show a 100x100m area */
-    
-    var uref_map = uref.toLatLng().toUTMRef(this.utmnzone, this.utmzone);
-    myKaMap.zoomTo(uref_map.easting, uref_map.northing);
-    setTimeout( function() {showPosInfoUtm(uref_map);}, 1500 );
+    _doRefSearchUtm(uref);
 }
 
+
+function _doRefSearchUtm(uref, hide) {
+    /* This is a hack, but the coordinates need to be in the same zone as the map */
+    var uref_map = uref.toLatLng().toUTMRef(this.utmnzone, this.utmzone);
+    myKaMap.zoomTo(uref_map.easting, uref_map.northing);
+    setTimeout( function() { showPosInfoUtm(uref_map, hide);}, 1500 );
+}
 
 
 function showDMstring(ll)
@@ -443,7 +455,7 @@ function showPosInfo(coords)
 }
 
 
-function showPosInfoUtm(uref)
+function showPosInfoUtm(uref, iconOnly)
 {
     var llref = uref.toLatLng();
     var sref = "" + llref.toUTMRef();
@@ -452,7 +464,11 @@ function showPosInfoUtm(uref)
                   sref.substring(16);
            
     var nPixPos = myKaMap.geoToPix(uref.easting, uref.northing);
-     
+    
+    if (iconOnly) {
+       popupImage(myKaMap.domObj, nPixPos[0], nPixPos[1]);
+       return;
+    }
     var w = popupwindow(myKaMap.domObj, 
                  "<span class=\"sleftlab\">UTM:</span>" + ustring +"<br>" +
                  "<nobr><span class=\"sleftlab\">Latlong:</span>" + showDMstring(llref.lat)+"N, "+showDMstring(llref.lng)+"E" +"<br>"  + 
