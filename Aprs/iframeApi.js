@@ -1,15 +1,27 @@
- 
-/* Identify the frame where Polaric Server runs */
-var frame = document.getElementById('polaric').contentWindow;
+var polaric = null;
 
-function polaric_zoomIn()
-{ frame.myKaMap.zoomIn(); }
+function init_polaric(iframeid, serverdomain)
+{ polaric = new polaricApi(iframeid, serverdomain); }
 
-function polaric_zoomOut()
-{ frame.myKaMap.zoomOut(); }
+function polaricApi(iframeid, serverdomain) {
+   this.domain = serverdomain;
+   this.frame = document.getElementById(iframeid).contentWindow; 
+}
 
-function polaric_searchStations()
-{ frame.searchStations(); }
+polaricApi.prototype.zoomIn = function()
+  { this.frame.postMessage("zoomIn", this.domain); }
 
-function polaric_findStation(ident)
-{ frame.findStation(ident); }
+polaricApi.prototype.zoomOut = function()
+  { this.frame.postMessage("zoomOut", this.domain);}
+  
+polaricApi.prototype.zoomScale = function(scale)
+  { this.frame.postMessage("zoomScale "+scale, this.domain);}
+  
+polaricApi.prototype.gotoUtm = function(zone, easting, northing)
+  { this.frame.postMessage("gotoUtm "+zone+" "+easting+" "+northing, this.domain);}
+
+polaricApi.prototype.findItem = function(ident)
+  { this.frame.postMessage("findItem "+ident, this.domain); }
+
+polaricApi.prototype.selectMap = function(ident)
+  { this.frame.postMessage("selectMap "+ident, this.domain); }
