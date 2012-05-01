@@ -148,6 +148,24 @@ function remotepopupwindowCSS(onDiv, url, x, y, css)
 
   
    
+function popupImage(onDiv, x, y) {
+  if (allowedPopups <= 0)
+    return;
+  image = document.createElement('img');
+  activepopup = document.createElement('div');
+  onDiv.appendChild(activepopup);
+  activepopup.appendChild(image);
+  image.src='images/cross.gif';
+  image.style.position='absolute';
+  image.style.left = x-11+'px';
+  image.style.top = y-11+'px';
+  image.style.zIndex = 1001;
+  allowedPopups--;
+  if (onCallback != null)
+     onCallback();
+}
+
+
    
 
 function popup(onDiv, menudiv, x, y, img)
@@ -239,5 +257,14 @@ function popup(onDiv, menudiv, x, y, img)
      }
 
 }
+
+
+// FIXME: Add position of window
+function fullPopupWindow(name, url, width, height) {
+   var ctrl = "resizable=yes,scrollbars=yes,width="+width+",height="+height;
+   eval( "this."+name+"=window.open('"+url+"','"+name+"','"+ctrl+"');" );
+   eval( "if( this."+name+") this."+name+".moveTo(0,0); this."+name+".moveBy(50,100); this."+name+".focus();" );
+}
+
 
 
