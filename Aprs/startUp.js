@@ -21,6 +21,7 @@ var isMobile = false;
 var isMobileApp = false;
 var storage = null;
 var ses_storage = null;
+var uid = null;
 
 var myCoordinates = myOverlay = myInterval = null;
 
@@ -30,11 +31,13 @@ var myCoordinates = myOverlay = myInterval = null;
 function canUpdate()
   { return (myOverlay.meta.updateuser != null && myOverlay.meta.updateuser == 'true'); }
 
+
 /* Return true if logged in user is a super user */  
 function isAdmin()
   { return (myOverlay.meta.adminuser != null && myOverlay.meta.adminuser == 'true'); }
 
 
+/* get login name */
 function getLogin()
 { 
     if (window.location.href.match(/.*\/sar_[0-9a-f]+/))
@@ -66,44 +69,10 @@ function myOnLoad_mobile() {
 }
 
 
-/* For use inside an Android app. (using PhoneGap). */ 
-function myOnLoad_droid() {
-  isMobile = isMobileApp = true; 
-  
-  document.addEventListener("deviceready", function() {
-      
-      document.addEventListener("menubutton", function(e) { 
-        if (popupActive())
-             return menuMouseSelect(); 
-        else
-            return mainMenu(document.getElementById('toolbar'), e); 
-        
-      }, false);
-         
-      startUp(); 
-      var d = document.getElementById('refToggler');
-      toggleReference(d); 
-      geopos.innerHTML = '&nbsp; PolaricDroid app ready';
-  }, false);
-  
-  
-  function backButt(e)
-     { menuMouseSelect(); e.cancelBubble = true; }
-  
-  onPopup(
-     function() { 
-         document.addEventListener("backbutton", backButt, false); }, 
-     function() {
-         document.removeEventListener("backbutton", backButt , false); }  );
-        
-}
-
-
-
 function startUp() {
     initDHTMLAPI();
     window.onresize=drawPage;
-
+    
     myKaMap = new kaMap( 'viewport' );
     myKaRuler = new myKaRuler( myKaMap);       
     var szMap = getQueryParam('map');   
@@ -139,7 +108,6 @@ function startUp() {
     myScalebar.minWidth = 150;
     myScalebar.maxWidth = 250;
     myScalebar.place('scalebar');
-
     
   /* Dummy storage object for old browsers that do not 
      support it */
@@ -161,7 +129,6 @@ function startUp() {
       };
     }
     setSesStorage(ses_storage);  
-    
     
     drawPage();
     myKaMap.initialize( szMap, szExtents, szCPS );
@@ -193,9 +160,15 @@ function myMapInitialized() {
         args[argname] = unescape(value); 
     }
     
-    permalink = (qstring.length >= 2 && qstring.match(/^zoom\=.*/));
+    uid = args['uid']; 
+    if (uid==null)
+      uid = "polaric"; 
+    else uid = "polaric."+uid;
+    OpenLayers.Console.info("UID=", uid);
+    
+    permalink = (qstring.length >= 2 && qstring.match(/.*zoom\=.*/) && qstring.match(/.*lat\=.*/));
     if (!permalink) {
-         var blayer = storage['polaric.baselayer'];
+         var blayer = storage[uid+'.baselayer'];
          if (blayer != null)
             myKaMap.setBaseLayer(blayer);
     }
@@ -213,7 +186,7 @@ function myMapError(msg) {
  * we have to separate this out. 
  */
 var ststate = null;
-function myInitialized() {
+function myInitialized() { 
     var view = null;
     if (view == null)
        view = args['view'];
@@ -221,10 +194,10 @@ function myInitialized() {
        view = defaultView; 
     
     if (!permalink)  {
-         var ext0 = storage['polaric.extents.0'];
-         var ext1 = storage['polaric.extents.1'];
-         var ext2 = storage['polaric.extents.2'];
-         var ext3 = storage['polaric.extents.3'];
+         var ext0 = storage[uid+'.extents.0'];
+         var ext1 = storage[uid+'.extents.1'];
+         var ext2 = storage[uid+'.extents.2'];
+         var ext3 = storage[uid+'.extents.3'];
           
          if (ext0 != null) {
             myKaMap.zoomToExtents(parseInt(ext0, 10), parseInt(ext1, 10), parseInt(ext2, 10), parseInt(ext3, 10));
@@ -255,7 +228,7 @@ function myInitialized() {
            }
         }   
     }
- 
+
 
     
     /* Set up XML overlay */
@@ -264,7 +237,7 @@ function myInitialized() {
 
     
     /* Filter select box */
-    var sFilter = storage['polaric.filter'];  
+    var sFilter = storage[uid+'.filter'];  
     if (sFilter==null)
        sFilter = args['filter'];
     if (sFilter==null)
@@ -286,7 +259,7 @@ function myInitialized() {
     }
     
     if (args['findcall'] != null)
-      findStation(args['findcall'], false); 
+      findStation( args['findcall'], false); 
     
     switchMode('toolPan');
     myKaMap.domObj.onmousedown  = menuMouseSelect;
@@ -338,6 +311,7 @@ function welcome()
 }
 
 
+/* Construct a query string (for server) representing the current map extent */
 function extentQuery()
 {
     var ext = myKaMap.getGeoExtents();
@@ -349,10 +323,9 @@ function extentQuery()
 }
 
 
-
+/* Get XML data from server */
 var xmlSeqno = 0;
 var retry = 0;
-
 function getXmlData(wait)
 {
    xmlSeqno++;
@@ -380,7 +353,7 @@ function getXmlData(wait)
 
 
 
-
+/* Called after XML is received from the server */
 function postLoadXml() 
 {
      retry = 0;
@@ -455,16 +428,16 @@ function myExtentChanged( eventID, extents )
        {    
            OpenLayers.Console.info("EXTENTS CHANGED: ", extents);
            if (initialized) {
-               storage.removeItem('polaric.extents.0');
-               storage.removeItem('polaric.extents.1');
-               storage.removeItem('polaric.extents.2');
-               storage.removeItem('polaric.extents.3');
-               storage.removeItem('polaric.baselayer'); 
-               storage['polaric.extents.0'] = Math.round(extents[0]).toString();
-               storage['polaric.extents.1'] = Math.round(extents[1]).toString();
-               storage['polaric.extents.2'] = Math.round(extents[2]).toString();
-               storage['polaric.extents.3'] = Math.round(extents[3]).toString();
-               storage['polaric.baselayer'] = myKaMap.getBaseLayer();
+               storage.removeItem(uid+'.extents.0');
+               storage.removeItem(uid+'.extents.1');
+               storage.removeItem(uid+'.extents.2');
+               storage.removeItem(uid+'.extents.3');
+               storage.removeItem(uid+'.baselayer'); 
+               storage[uid+'.extents.0'] = Math.round(extents[0]).toString();
+               storage[uid+'.extents.1'] = Math.round(extents[1]).toString();
+               storage[uid+'.extents.2'] = Math.round(extents[2]).toString();
+               storage[uid+'.extents.3'] = Math.round(extents[3]).toString();
+               storage[uid+'.baselayer'] = myKaMap.getBaseLayer();
            }
            
            if (initialized) {
@@ -479,9 +452,10 @@ function myExtentChanged( eventID, extents )
 }
 
 
-
-function myLayersChanged(eventID, map) {
-       updateLinkToView();         
+/* Called when base layer is changed */
+function myLayersChanged(eventID, map) {   
+    if (initialized) 
+       getXmlData(false);
 }
 
 
@@ -739,7 +713,7 @@ function toggleReference(obj) {
         var d = getObject('reference');
         d.display = 'none';
         obj.isOpen = false;
-        obj.style.bottom = '5px';
+        obj.style.bottom = '8px';
     } else {
         obj.title = 'hide reference';
         obj.style.backgroundImage = 'url(' +server_url+ 'KaMap/images/arrow_down.png)';
@@ -864,50 +838,3 @@ function switchMode(id) {
         objectClickable = true; 
     }
 }
-
-
-
-/*
- *  applyPNGFilter(o)
- *
- *  Applies the PNG Filter Hack for IE browsers when showing 24bit PNG's
- *
- *  var o = object (this png element in the page)
- *
- * The filter is applied using a nifty feature of IE that allows javascript to
- * be executed as part of a CSS style rule - this ensures that the hack only
- * gets applied on IE browsers :)
- */
-function applyPNGFilter(o) {
-    var t=server_url+ "KaMap/images/a_pixel.gif";
-    if( o.src != t ) {
-        var s=o.src;
-        o.src = t;
-        o.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+s+"',sizingMethod='scale')";
-    }
-}
-
-
-
-//functions to open popup
-
-function WOFocusWin( nn ) {
-        eval( "if( this."+name+") this."+name+".moveTo(50,50); this."+name+".focus();" );
-}
-
-
-
-function WOOpenWin( name, url, ctrl ) {
-    eval( "this."+name+"=window.open('"+url+"','"+name+"','"+ctrl+"');" );
-
-    /*IE needs a delay to move forward the popup*/
-    // window.setTimeout( "WOFocusWin(nome);", 300 );
-}
-
-
-
-function WinOpener() {
-    this.openWin=WOOpenWin;
-    this.focusWin=WOFocusWin;
-}
-
