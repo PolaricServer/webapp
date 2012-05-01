@@ -300,6 +300,11 @@ kaMap.prototype.initializeCallback = function( szInit )
        this.triggerEvent(KAMAP_MOVE_START);
     }
 
+    function layerChange() {
+       this.triggerEvent(KAMAP_LAYERS_CHANGED);
+    }
+    
+    
     /* Remove null layers */
     while (true) {
       for (idx=0; idx<baseLayers.length; idx++) 
@@ -322,6 +327,7 @@ kaMap.prototype.initializeCallback = function( szInit )
     
     
     /* OL controls, Permalink setup, etc.. */  
+    this.olMap.events.register("changebaselayer", this, layerChange);
     this.olMap.events.register("zoomend", this, zoomEnd);
     this.olMap.events.register("moveend", this, moveEnd);
     this.olMap.events.register("movestart", this, moveStart);
