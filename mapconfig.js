@@ -63,7 +63,13 @@ var backgroundColor = '#A1C1C9'
              {  layers: 'toporaster2',
                 format: 'image/png'},
              {  attribution: _kv_attr }
-        ),        
+        ),   
+    new OpenLayers.Layer.WMS(
+            "Norge i bilder (flyfoto)", "http://cache.norgeibilder.no/geowebcache/service/wms?",
+            {  layers: 'NiB',
+               format: 'image/jpeg'},
+            {  attribution: "Skog og landskap, Statens vegvesen og Statens kartverk" }
+        ),
     new OpenLayers.Layer.WMS(
              "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
              {  layers: 'sjo_hovedkart2',
