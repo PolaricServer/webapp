@@ -2,18 +2,15 @@ var toolbar = document.getElementById('toolbar');
 var gpsTracker = null; 
 
 
-
-/* Move this to separate source file */
-if (document.all /* IE */)
-      window.attachEvent("messsage", receiveMessage); 
-else
-      window.addEventListener("message", receiveMessage, false);  
+window.onmessage = receiveMessage; 
 
 
 
-function receiveMessage(event)  
-{   
-  var args = event.data.split(" ");
+
+function receiveMessage(e)  
+{        
+  e = (e)?e:((event)?event:null);
+  var args = e.data.split(" ");
   if (args[0] == "zoomIn")
        myKaMap.zoomIn();
   else if (args[0] == "zoomOut")
@@ -255,7 +252,7 @@ function searchStations()
      var xpos = 50; 
      var ypos = 70;
      var pdiv = popupwindow(document.getElementById("anchor"), 
-        " <div><h1>Finn APRS stasjon/objekt:</h1><hr><div id=\"searchform\"><form> "+
+        " <div><h1>Finn APRS stasjon/objekt</h1><div id=\"searchform\"><form> "+
         " Tekst i ident/komment: <input type=\"text\"  width=\"10\" id=\"findcall\"/> "+
         " <input id=\"searchbutton\" type=\"button\"" +
             " value=\"Søk\" />"+
@@ -265,7 +262,7 @@ function searchStations()
          var srch = document.getElementById('findcall').value;
          e.cancelBubble = true; 
          if (e.stopPropagation) e.stopPropagation();
-         call(server_url + "srv/search?filter="+srch+(isMobile=true?"&mobile=true":""), null, searchStationCallback, false);  
+         call(server_url + "srv/search?filter="+srch+(isMobile==true?"&mobile=true":""), null, searchStationCallback, false);  
      };
 
 
