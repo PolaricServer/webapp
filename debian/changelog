@@ -1,3 +1,15 @@
+polaric-webapp (1.0.7) stable; urgency=low
+
+  * Some small fixes... 
+
+ -- Øyvind hanssen <ohanssen@acm.org>  Sat, 05 May 2012 12:59:36 +0200
+
+polaric-webapp (1.0.6+4) stable; urgency=low
+
+  * Fix to problem with GPX layers  
+
+ -- Øyvind hanssen <ohanssen@acm.org>  Wed, 18 Apr 2012 10:25:58 +0200
+
 polaric-webapp (1.0.6) stable; urgency=low
 
   * OpenLayers 2.11, mobile app improvements, fixes 
