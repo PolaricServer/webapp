@@ -38,7 +38,7 @@ install: Aprs/compiled.js
 	install -m 644 iconx.png login.php nrrl.gif proj4js-compressed.js robots.txt $(INSTALL_WEB)
 	install -m 644 images/* $(INSTALL_WEB)/images
 	install -m 644 style/*.css $(INSTALL_WEB)/style
-	install -m 644 Aprs/compiled.js $(INSTALL_WEB)/Aprs
+	install -m 644 Aprs/compiled.js Aprs/gpx.js Aprs/iframeApi.js $(INSTALL_WEB)/Aprs
 	install -m 644 XMLOverlay/compiled.js $(INSTALL_WEB)/XMLOverlay
 	install -m 644 KaMap/kamap-core.js KaMap/*.php $(INSTALL_WEB)/KaMap
 	install -m 644 KaMap/excanvas.js $(INSTALL_WEB)/KaMap
