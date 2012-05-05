@@ -9,7 +9,7 @@
 # For a server to be widely available on the internet. Please consider using 
 # SSL to protect this.
 #
-<ProxyMatch "sec-station|sec-mapdata|addobject|deleteobject|resetinfo|sarmode|setownpos">
+<ProxyMatch "sec-station|sec-mapdata|admin|addobject|deleteobject|resetinfo|sarmode|setownpos">
    Order deny,allow
    AuthType Basic
    AuthName "Sporingstjeneste Login"
