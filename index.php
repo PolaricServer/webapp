@@ -89,12 +89,14 @@ include_once( 'webappconfig.php' );
 </div>
 
 <!--[if IE]><script type="text/javascript" src="KaMap/excanvas.js"></script><![endif]-->
+
 <?php
   if (!$isMobile) 
      echo('<script type="text/javascript" src="OpenLayers/lib/Firebug/firebug.js"></script>');
 ?>
 <script type="text/javascript" src="OpenLayers/openlayers-polaric.js"></script>
 <script type="text/javascript" src="proj4js-compressed.js"></script>
+<script type="text/javascript" src="Aprs/gpx.js"></script>
 <script type="text/javascript" src="mapconfig.js"></script>
 
 
@@ -105,6 +107,7 @@ include_once( 'webappconfig.php' );
      echo('<script type="text/javascript" src="Aprs/compiled.js"></script>');
   }
   else {
+     echo('<script type="text/javascript" src="KaMap/base64.js"></script>');
      echo('<script type="text/javascript" src="KaMap/DHTMLapi.js"></script>');
      echo('<script type="text/javascript" src="KaMap/xhr.js"></script>');
      echo('<script type="text/javascript" src="KaMap/touchHandler.js"></script>');
