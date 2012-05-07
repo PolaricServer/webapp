@@ -193,9 +193,9 @@ foreach($aszMapFiles as $key => $aszMapFile)
          * imageformat for this layer
          */
         $imageformat = $oLayer->getMetaData('imageformat');
-        if($imageformat == '') {
-            $imageformat = $oMap->imagetype;
-        }
+//        if($imageformat == '') {
+//            $imageformat = $oMap->imagetype;
+//        }
 
         /* detect if group should be queryable */
         $szQueryable = "false";
@@ -215,7 +215,7 @@ foreach($aszMapFiles as $key => $aszMapFile)
         $groupScaleVis = array();
         $i=0;
         foreach($aszMapFile['scales'] as $szScale) {
-            $oMap->set("scale", $szScale);
+            $oMap->set("scaledenom", $szScale);
             $groupScaleVis[$i] = 0;
             foreach($aLayersIdx As $idx) {
                 $oLayer = $oMap->getLayer($idx);
