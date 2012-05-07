@@ -178,6 +178,7 @@ function kaMap( szID ) {
         this.registerEventID( i );
     }
     
+    this.thandler = new touchHandler();
     this.createLayers();
 };
  
@@ -256,7 +257,10 @@ kaMap.prototype.initialize = function() {
         szURL = szURL + sep + "centerPoint="+ arguments[2];
         sep = "&";
     } 
-    call(szURL, this, this.initializeCallback);
+    if (use_kaMap_maps) 
+         call(szURL, this, this.initializeCallback);
+    else
+         this.initializeCallback(null);
     return true;
 };
 
@@ -267,7 +271,7 @@ kaMap.prototype.initialize = function() {
 kaMap.prototype.initializeCallback = function( szInit ) 
 {
     // szInit contains /*init*/ if it worked, or some php error otherwise
-    if (szInit.substr(0, 1) != "/") {
+    if (use_kaMap_maps && szInit.substr(0, 1) != "/") {
         this.triggerEvent( KAMAP_ERROR, 'ERROR: ka-Map! initialization '+
                           'failed on the server.  Message returned was:\n' +
                           szInit);
@@ -296,16 +300,34 @@ kaMap.prototype.initializeCallback = function( szInit )
        this.triggerEvent(KAMAP_MOVE_START);
     }
 
+    function layerChange() {
+       this.triggerEvent(KAMAP_LAYERS_CHANGED);
+    }
+    
+    
+    /* Remove null layers */
+    while (true) {
+      for (idx=0; idx<baseLayers.length; idx++) 
+         if (baseLayers[idx] == null)
+            break;
+      if (idx < baseLayers.length)
+          baseLayers.splice(idx,1);
+      else break;
+    }
+    
     
     /* Get baselayers from kaMap backend */
-    if (kaMapFirst)
-       eval(szInit);
+    if (use_kaMap_maps && kaMapFirst)
+        eval(szInit);
     if (baseLayers != null && baseLayers.length > 0)
-       this.olMap.addLayers(baseLayers);
-    if (!kaMapFirst)
-       eval(szInit);
-
+        this.olMap.addLayers(baseLayers);
+    if (use_kaMap_maps && !kaMapFirst)
+        eval(szInit);
+    
+    
+    
     /* OL controls, Permalink setup, etc.. */  
+    this.olMap.events.register("changebaselayer", this, layerChange);
     this.olMap.events.register("zoomend", this, zoomEnd);
     this.olMap.events.register("moveend", this, moveEnd);
     this.olMap.events.register("movestart", this, moveStart);
@@ -324,12 +346,29 @@ kaMap.prototype.initializeCallback = function( szInit )
     
     this.triggerEvent( KAMAP_MAP_INITIALIZED );
     this.olMap.render(this.domObj);   
+
+    
+    var cont = document.getElementsByTagName("div");
+    var elem; 
+    while (elem = cont[i++]) 
+       if (elem.className != null && elem.className.match(/olMapViewport/) != null) 
+          break;
+    
+    if (elem.className != null && elem.className.match(/olMapViewport/) != null) {
+        var elem = elem.firstChild;
+        elem.appendChild(this.theInsideLayer);
+    }
+    else
+        alert("ERROR: Can't find OpenLayers Viewport element");
+    
     document.getElementById('permolink').appendChild(this.plink.draw());
     this.plink.element.innerHTML="link to this view";    
     this.setBackgroundColor( backgroundColor ); 
+
     this.triggerEvent( KAMAP_INITIALIZED );
     this.triggerEvent( KAMAP_SCALE_CHANGED, this.getCurrentScale());
     this.initializationState = 2;      
+
 };
 
 
@@ -353,35 +392,6 @@ kaMap.prototype.setBackgroundColor = function( color ) {
 
 
 /**
- *  Try to map touch events to mouse events
- */
-function touchHandler(event)
-{
-    var touches = event.changedTouches,
-        first = touches[0],
-        type = "";
-
-    switch(event.type)
-    {
-        case "touchstart": type = "mousedown"; break;
-        case "touchmove":  type = "mousemove"; break;        
-        case "touchend":   type = "mouseup"; break;
-        default: return;
-    }
- 
-    var simulatedEvent = document.createEvent("MouseEvent");
-    simulatedEvent.initMouseEvent(type, true, true, window, 1,
-                              first.screenX, first.screenY,
-                              first.clientX, first.clientY, false,
-                              false, false, false, 0/*left*/, null);
-
-    first.target.dispatchEvent(simulatedEvent);
-    event.preventDefault();
-}
-
-
-
-/**
  * hidden method of kaMap to initialize all the various layers needed by
  * kaMap to draw and move the map image.
  */
@@ -396,8 +406,8 @@ kaMap.prototype.createLayers = function() {
     if (this.currentTool) {
         this.theInsideLayer.style.cursor = this.currentTool.cursor;
     }
-
-    this.domObj.appendChild(this.theInsideLayer);
+    
+    // this.domObj.appendChild(this.theInsideLayer);
     this.domObj.kaMap = this;
     this.theInsideLayer.onclick = kaMap_onclick;
     this.theInsideLayer.onmousedown = kaMap_onmousedown;
@@ -411,13 +421,12 @@ kaMap.prototype.createLayers = function() {
     this.theInsideLayer.onmousewheel = kaMap_onmousewheel;
     
         /* Map touch events */
-    this.theInsideLayer.ontouchstart = touchHandler;
-    this.theInsideLayer.ontouchmove = touchHandler;
-    this.theInsideLayer.ontouchend = touchHandler;
-    this.theInsideLayer.ontouchcancel = touchHandler;
+    this.theInsideLayer.ontouchstart = this.thandler.handle;
+    this.theInsideLayer.ontouchmove = this.thandler.handle;
+    this.theInsideLayer.ontouchend = this.thandler.handle;
+    this.theInsideLayer.ontouchcancel = this.thandler.handle;
     
     if (window.addEventListener)
-//      &&  navigator.product && navigator.product == "Gecko") 
         this.domObj.addEventListener( "DOMMouseScroll", kaMap_onmousewheel, false );
 
 
@@ -430,7 +439,6 @@ kaMap.prototype.createLayers = function() {
 
 kaMap.prototype.showLayers = function() {}
 kaMap.prototype.hideLayers = function() {}
-
 kaMap.prototype.getPlink = function() {return this.plink; }
 
 
@@ -702,8 +710,6 @@ kaMap.prototype.centerObject = function(obj) {
  */
 kaMap.prototype.updateObjects = function()
 {
-    var container = document.getElementById('OpenLayers.Map_14_OpenLayers_ViewPort');
-    var canvas = document.getElementById('canvas');  
     for (var i=0; i<this.aObjects.length;i++) {
         var obj = this.aObjects[i];
         var xOffset = (obj.xOffset) ? obj.xOffset : 0;
@@ -1008,11 +1014,11 @@ kaMap.prototype.addMap = function( oMap ) {
             }
   
             olLayer = new OpenLayers.Layer.KaMap
-                  (  oMap.title+" (ka-map)", "KaMap/tile.php",
+                  (  oMap.title+" (ka-map)", this.server+"KaMap/tile.php",
                      { i: kaLayer.imageformat,
                        g: kaLayer.name,
                        map: oMap.name },
-                     { scales: scales } );
+                     { scales: scales, buffer: 2 } );
             this.olMap.addLayer(olLayer);
         }
 
