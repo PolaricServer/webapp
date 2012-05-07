@@ -3,6 +3,7 @@
 <?php 
 $isMobile = false; 
 $isIframe = false; 
+$isDebug = false;
 
 // Try to detect if mobile browser or app is in to be used in an iframe
 $useragent=$_SERVER['HTTP_USER_AGENT'];
@@ -12,6 +13,9 @@ if((isset($_GET['mobile']) &&  preg_match('/true|TRUE/i', $_GET['mobile'])) ||
   
 if ((isset($_GET['iframe']) && preg_match('/true|TRUE/i', $_GET['iframe'])))
   $isIframe = true;
+  
+if ((isset($_GET['debug']) && preg_match('/true|TRUE/i', $_GET['debug'])))
+  $isDebug = true;
   
 include_once( 'webappconfig.php' ); 
 ?>
@@ -39,7 +43,7 @@ include_once( 'webappconfig.php' );
 
   // Add extra CSS stylesheets
   foreach ($cssIncludes as $inc) 
-     echo ('<link rel="stylesheet" href="'.$inc.'" type="text/css">');
+     echo ('<link rel="stylesheet" href="config/'.$inc.'" type="text/css">');
   
   // Add content of headinclude file
   $headInclude = "/etc/polaric-webapp/".$headInclude;
@@ -55,7 +59,7 @@ include_once( 'webappconfig.php' );
 <body onload="<?php if ($isMobile) echo("myOnLoad_mobile();");
                     else if ($isIframe) echo ("myOnLoad_iframe();");
                     else echo("myOnLoad();"); ?>">
-
+<div id="viewport">
 <?php
   if ($isMobile || $isIframe)
     include_once('form_small.php');
@@ -64,7 +68,7 @@ include_once( 'webappconfig.php' );
 ?>
 
 <img id="toolbarToggler" onclick="toggleToolbar(this);" alt="toggle toolbar" src="KaMap/images/a_pixel.gif">
-<div id="viewport"> 
+ 
 <?php
   if ($creditLogo!= ""  && !$isMobile && !$isIframe) 
       echo ('<img id="clogo" src="'.$creditLogo.'">');
@@ -85,16 +89,43 @@ include_once( 'webappconfig.php' );
 </div>
 
 <!--[if IE]><script type="text/javascript" src="KaMap/excanvas.js"></script><![endif]-->
+
 <?php
   if (!$isMobile) 
      echo('<script type="text/javascript" src="OpenLayers/lib/Firebug/firebug.js"></script>');
 ?>
-<script type="text/javascript" src="OpenLayers/OpenLayers.js"></script>
+<script type="text/javascript" src="jquery/jquery-min.js"></script>
+<script type="text/javascript" src="OpenLayers/openlayers-polaric.js"></script>
 <script type="text/javascript" src="proj4js-compressed.js"></script>
+<script type="text/javascript" src="Aprs/gpx.js"></script>
 <script type="text/javascript" src="mapconfig.js"></script>
-<script type="text/javascript" src="KaMap/kamap-core.js"></script>
-<script type="text/javascript" src="XMLOverlay/compiled.js"></script>
-<script type="text/javascript" src="Aprs/compiled.js"></script>
+
+
+<?php
+  if  (!$isDebug) {
+     echo('<script type="text/javascript" src="KaMap/kamap-core.js"></script>');
+     echo('<script type="text/javascript" src="XMLOverlay/compiled.js"></script>');
+     echo('<script type="text/javascript" src="Aprs/compiled.js"></script>');
+  }
+  else {
+     echo('<script type="text/javascript" src="KaMap/base64.js"></script>');
+     echo('<script type="text/javascript" src="KaMap/DHTMLapi.js"></script>');
+     echo('<script type="text/javascript" src="KaMap/xhr.js"></script>');
+     echo('<script type="text/javascript" src="KaMap/touchHandler.js"></script>');
+     echo('<script type="text/javascript" src="KaMap/kaMap.js"></script>');
+     echo('<script type="text/javascript" src="KaMap/kaTool.js"></script>');
+     echo('<script type="text/javascript" src="KaMap/kaQuery.js"></script>');
+     echo('<script type="text/javascript" src="KaMap/kaMouseTracker.js"></script>');
+     echo('<script type="text/javascript" src="KaMap/scalebar/scalebar.js"></script>');
+     echo('<script type="text/javascript" src="XMLOverlay/kaXmlOverlay.js"></script>');
+     echo('<script type="text/javascript" src="Aprs/gpx.js"></script>');
+     echo('<script type="text/javascript" src="Aprs/iscroll.js"></script>');
+     echo('<script type="text/javascript" src="Aprs/popup.js"></script>');
+     echo('<script type="text/javascript" src="Aprs/menu.js"></script>');
+     echo('<script type="text/javascript" src="Aprs/jscoord.js"></script>');
+     echo('<script type="text/javascript" src="Aprs/startUp.js"></script>');
+  }
+?>
 <script type="text/javascript" src="KaMap/tools/kaRubberZoom.js"></script>
 <script type="text/javascript" src="KaMap/tools/myKaRuler.js"></script> 
        
