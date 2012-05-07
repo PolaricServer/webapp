@@ -12,6 +12,12 @@ case "$1" in
            rm -R /var/www/aprs/KaMap/mapserv
         fi
         ln -s /etc/polaric-webapp/mapserv /var/www/aprs/KaMap/mapserv
+        
+        if [ -e "/var/www/aprs/img" ]; then
+           rm -R /var/www/aprs/img
+        fi
+        ln -s /var/www/aprs/OpenLayers/img /var/www/aprs/img
+        
         a2enmod proxy_http > /dev/null 2>&1
         a2enmod expires > /dev/null 2>&1
         a2ensite aprs > /dev/null 2>&1

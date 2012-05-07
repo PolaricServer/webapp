@@ -18,6 +18,9 @@ case "$1" in
           if [ -e "/etc/polaric-webapp/mapserv" ]; then
              rmdir /etc/polaric-webapp/mapserv
           fi
+          if [ -e "/var/www/aprs/img" ]; then
+             rm -R /var/www/aprs/img
+          fi
        fi  
     ;;
 
