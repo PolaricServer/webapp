@@ -31,65 +31,69 @@
  * DEALINGS IN THE SOFTWARE.
  *
  **********************************************************************/
+#tools * {
+    cursor: pointer;
+}
+
 #toolRuler {
     background-image: url(../KaMap/images/icon_set_nomad/ruler1.png);
+    background-size: 100%; 
     background-repeat: no-repeat;
     background-position: left top;
     width: 29px;
     height: 24px;
-    cursor: pointer;
 } 
 
 #toolQuery {
     background-image: url(../KaMap/images/icon_set_nomad/tool_query_1.png);
+    background-size: 100%; 
     background-repeat: no-repeat;
     background-position: left top;
     width: 22px;
     height: 22px;
-    cursor: pointer;
 }
 
 #toolPan {
     background-image: url(../KaMap/images/icon_set_nomad/tool_pan_1.png);
+    background-size: 100%; 
     background-repeat: no-repeat;
     background-position: left top;
     width: 22px;
     height: 22px;
-    cursor: pointer;
 }
 
 #toolZoomIn {
     background-image: url(../KaMap/images/icon_set_nomad/tool_zoomin_1.png);
+    background-size: 100%; 
     background-repeat: no-repeat;
     background-position: left top;
     width: 22px;
     height: 22px;
-    cursor: pointer;
 }
 
 #toolZoomOut {
     background-image: url(../KaMap/images/icon_set_nomad/tool_zoomout_1.png);
+    background-size: 100%; 
     background-repeat: no-repeat;
     background-position: left top;
     width: 22px;
     height: 22px;
-    cursor: pointer;
 }
 
 #toolZoomRubber {
     background-image: url(../KaMap/images/icon_set_nomad/tool_rubberzoom_1.png);
+    background-size: 100%; 
     background-repeat: no-repeat;
     background-position: left top;
     width: 22px;
     height: 22px;
-    cursor: pointer;
 }
 
 #toolZoomFull {
     background-image: url(../KaMap/images/icon_set_nomad/tool_zoomfull_1.png);
+    background-size: 100%; 
     background-repeat: no-repeat;
     background-position: left top;
     width: 22px;
     height: 22px;
-    cursor: pointer;
 }
