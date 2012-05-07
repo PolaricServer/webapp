@@ -31,15 +31,14 @@ Alias /aprsd/ "/usr/share/polaric/"
    Allow from all
 </Directory>
         
-        
-Alias /config/ "/etc/polaric-webapp"
-<Directory /etc/polaric-webapp>
+
+Alias /aprs/config/ "/etc/polaric-webapp/www/"
+<Directory /etc/polaric-webapp/www>
    Options Indexes FollowSymLinks MultiViews
    AllowOverride None
    Order allow,deny
    Allow from all
 </Directory>
-
 
 
 <Directory /var/www/aprs>
