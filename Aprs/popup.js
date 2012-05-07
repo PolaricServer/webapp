@@ -1,13 +1,16 @@
 
 
-var ie  = document.all
-var ns6 = document.getElementById&&!document.all
+var ie  = document.all;
+var ns6 = document.getElementById&&!document.all;
+var isGecko = (navigator.product == 'Gecko');
 
 var allowedPopups = 1;
 var isMenu        = false ;
 var activepopup   = null; 
 var psubdiv       = null;
 var myScroll      = null;
+var onCallback = null, offCallback = null; 
+
 
 function menuMouseSelect()
 {
@@ -22,70 +25,90 @@ function menuMouseSelect()
 }
 
 
-function _executeItem(elem, actn)
+function popupActive()
+   { return (activepopup != null); }
+
+
+function onPopup(on, off) 
+   { onCallback = on; offCallback = off; }
+  
+
+
+/************************************************************************
+ * Create executable link item (for menus typically) 
+ ************************************************************************/
+
+function createItem(text, actn)
 {
+  function _executeItem(elem, actn)
+  {
     removePopup();
     actn();
+  }
+  
+  var elem = document.createElement('div');
+  elem.origCls = '';
+  elem.onmouseup   = function(e) { _executeItem(elem, actn); }
+  elem.onmousedown = function(e) { _executeItem(elem, actn); }  
+  elem.onmouseover = function(e) { elem.origCls = elem.className; 
+  elem.className += ' ITEM_hover'; }
+  elem.onmouseout  = function(e) { elem.className = elem.origCls;}
+  
+  elem.appendChild(document.createTextNode(text));
+  return elem;
 }
 
 
+/************************************************************************
+ * PopupMenu class 
+ ************************************************************************/
 
-function _createItem(text, actn)
+function PopupMenu(title)
 {
-    var elem = document.createElement('div');
-    elem.origCls = '';
-    elem.onmouseup   = function(e) { _executeItem(elem, actn); }
-    elem.onmousedown = function(e) { _executeItem(elem, actn); }  
-    elem.onmouseover = function(e) { elem.origCls = elem.className; 
-                                     elem.className += ' ITEM_hover'; }
-    elem.onmouseout  = function(e) { elem.className = elem.origCls;}
-    
-    elem.appendChild(document.createTextNode(text));
-    return elem;
+    this.lastItem = null;
+    this.menudiv = document.createElement('div');
+    this.menudiv.style.display = 'none';
+    this.menudiv.className = 'POPUPMENU';
+}
+
+
+PopupMenu.prototype.add = function(txt, func)
+{
+   if (txt == null) 
+     this.lastItem.className = 'ITEM_sep';
+   else {
+     var atxt  = (txt == null ? '' : txt);
+     var alink = (func == null ? '' : func);
+     this.lastItem = createItem(atxt, alink);
+     this.menudiv.appendChild(this.lastItem);
+  }
 }
 
 
 
-
-function _createMenu(mnu, title) 
-{  
-    var menudiv = document.createElement('div');
-    var item = null;
-    menudiv.style.display = 'none';
-    menudiv.className = 'POPUPMENU';  
-    
-    for (i in mnu) {
-        if (mnu[i] == null) 
-            item.className = 'ITEM_sep';
-        else {
-           var atxt  = (mnu[i][0] == null ? '' : mnu[i][0]);
-           var alink = (mnu[i][1] == null ? '' : mnu[i][1]);
-           item = _createItem(atxt, alink); 
-           menudiv.appendChild(item);
-        }
-    } 
-    item.className = 'ITEM_last';
-    return menudiv; 
+PopupMenu.prototype.activate = function(onDiv, x, y)
+{
+    this.lastItem.className = 'ITEM_last';
+    isMenu = true;
+    popup(onDiv, this.menudiv, x, y, false);  
 }
+
+/************ End of PopupMenu class  *************/
+
 
 
 
 function removePopup()
 {
-    if (activepopup == null)
-       return;
-    isMenu = false;
-    allowedPopups++;
-    activepopup.style.display = "none" ;
-    activepopup.parentNode.removeChild(activepopup);
-}
-
-
-
-function popupmenu(onDiv, txt, tit, x, y)
-{
-    isMenu = true;
-    popup(onDiv, _createMenu(txt, tit), x, y, false);  
+  if (activepopup == null)
+    return;
+  if (offCallback != null)
+    offCallback(); 
+  isMenu = false;
+  allowedPopups++;
+  activepopup.style.display = "none" ;
+  activepopup.parentNode.removeChild(activepopup);
+  activepopup = null;
 }
 
 
@@ -99,7 +122,7 @@ function popupwindow(onDiv, ihtml, x, y, img, id, delay)
     if (delay) 
         setTimeout( function() {
           popup(onDiv, pdiv, x, y, img);
-        }, 700);
+        }, 900);
     else 
       popup(onDiv, pdiv, x, y, img);
     
@@ -134,13 +157,31 @@ function remotepopupwindowCSS(onDiv, url, x, y, css)
 
   
    
+function popupImage(onDiv, x, y) {
+  if (allowedPopups <= 0)
+    return;
+  image = document.createElement('img');
+  activepopup = document.createElement('div');
+  onDiv.appendChild(activepopup);
+  activepopup.appendChild(image);
+  image.src='images/cross.gif';
+  image.style.position='absolute';
+  image.style.left = x-11+'px';
+  image.style.top = y-11+'px';
+  image.style.zIndex = 1001;
+  allowedPopups--;
+  if (onCallback != null)
+     onCallback();
+}
+
+
    
 
 function popup(onDiv, menudiv, x, y, img)
 {
      if (allowedPopups <= 0)
          return;
-           
+     
      var image;
      psubdiv = activepopup = menudiv;  
      if (img != null && img) {
@@ -160,13 +201,15 @@ function popup(onDiv, menudiv, x, y, img)
      onDiv.appendChild(activepopup);
      var xoff=0;
      var yoff=0;
-     
+     var firstTime = true;
   
      activepopup.style.position   = 'absolute';
      activepopup.style.display    = 'block';
      activepopup.style.padding    = '2px';
      activepopup.style.cursor     = 'default';
-
+     if (document.body.clientWidth < 500 && menudiv.clientWidth > document.body.clientWidth)
+       activepopup.style.minWidth   = document.body.clientWidth+'px'; 
+     
      if (menudiv.clientHeight+10 > document.body.clientHeight) {
          activepopup.style.maxHeight = document.body.clientHeight-5 + "px";
          menudiv.id = 'wrapper';
@@ -182,20 +225,8 @@ function popup(onDiv, menudiv, x, y, img)
      else
        activepopup.style.overflowY = 'visible';
      
-     xoff = x + 10 + menudiv.clientWidth - document.body.clientWidth;
-     if (xoff > 0) {
-        x -= xoff;
-        if (image!=null)
-           image.style.left =(xoff-9)+'px';
-     }
-     yoff = y + 5 + menudiv.clientHeight - document.body.clientHeight;
-     if (yoff > 0) {
-        y -= yoff;
-        if (image!=null)
-           image.style.top =(yoff-12)+'px';
-     }
-     activepopup.style.left    = x+"px";
-     activepopup.style.top     = y+"px";
+     adjustPosition();
+     setTimeout(adjustPosition, 500); 
      activepopup.style.zIndex  = 1000;
 
      
@@ -206,8 +237,43 @@ function popup(onDiv, menudiv, x, y, img)
        onDiv.dispatchEvent(evObj);
      }
      allowedPopups--;
+     if (onCallback != null)
+       onCallback(); 
 
+ 
+    function adjustPosition()
+    {   
+      xoff = x + 4 + menudiv.clientWidth - document.body.clientWidth;
+      if (xoff > 0) {
+        x -= xoff;
+        if (x < 1) x=1;
+        if (image!=null)
+          image.style.left =(xoff-9)+'px';
+      }
+      yoff = y + 4 + menudiv.clientHeight - document.body.clientHeight;
+      if (yoff > 0) {
+        y -= yoff;
+        if (y < 1) y=1;
+        if (image!=null)
+          image.style.top =(yoff-12)+'px';
+      }
+      
+      if (firstTime || xoff > 0 || yoff > 0) { 
+         activepopup.style.left    = x-3+"px";
+         activepopup.style.top     = y-3+"px";
+      }  
+      firstTime = false;
+     }
 
 }
+
+
+// FIXME: Add position of window
+function fullPopupWindow(name, url, width, height) {
+   var ctrl = "resizable=yes,scrollbars=yes,width="+width+",height="+height;
+   eval( "this."+name+"=window.open('"+url+"','"+name+"','"+ctrl+"');" );
+   eval( "if( this."+name+") this."+name+".moveTo(0,0); this."+name+".moveBy(50,100); this."+name+".focus();" );
+}
+
 
 
