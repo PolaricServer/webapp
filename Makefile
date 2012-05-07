@@ -43,7 +43,7 @@ install: Aprs/compiled.js
 	install -m 644 jquery/jquery-min.js jquery/jquery-ui-min.js $(INSTALL_WEB)/jquery
 	install -m 644 jquery/smoothness/*.css $(INSTALL_WEB)/jquery/smoothness
 	install -m 644 jquery/smoothness/images/*.png $(INSTALL_WEB)/jquery/smoothness/images
-	install -m 644 Aprs/compiled.js $(INSTALL_WEB)/Aprs
+	install -m 644 Aprs/compiled.js Aprs/gpx.js Aprs/iframeApi.js $(INSTALL_WEB)/Aprs
 	install -m 644 XMLOverlay/compiled.js $(INSTALL_WEB)/XMLOverlay
 	install -m 644 KaMap/kamap-core.js KaMap/*.php $(INSTALL_WEB)/KaMap
 	install -m 644 KaMap/excanvas.js $(INSTALL_WEB)/KaMap
