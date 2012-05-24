@@ -192,16 +192,16 @@ function myInitialized() {
        view = args['view'];
     if (view == null)
        view = defaultView; 
-    
+    var ext0 = null, ext1 = null, ext2 = null, ext3 = null;
     if (!permalink)  {
-         var ext0 = storage[uid+'.extents.0'];
-         var ext1 = storage[uid+'.extents.1'];
-         var ext2 = storage[uid+'.extents.2'];
-         var ext3 = storage[uid+'.extents.3'];
-          
+         ext0 = storage[uid+'.extents.0'];
+         ext1 = storage[uid+'.extents.1'];
+         ext2 = storage[uid+'.extents.2'];
+         ext3 = storage[uid+'.extents.3'];
+         
          if (ext0 != null) {
-            myKaMap.zoomToExtents(parseInt(ext0, 10), parseInt(ext1, 10), parseInt(ext2, 10), parseInt(ext3, 10));
-            myKaMap.selectMap(view, true); 
+             myKaMap.zoomToExtents(parseInt(ext0, 10), parseInt(ext1, 10), parseInt(ext2, 10), parseInt(ext3, 10));
+             myKaMap.selectMap(view, true); 
          }
          else
             myKaMap.selectMap(view, false);
@@ -329,6 +329,7 @@ var retry = 0;
 function getXmlData(wait)
 {
    xmlSeqno++;
+
    var url = server_url + (getLogin() ? 'srv/sec-mapdata?' : 'srv/mapdata?');
    var i = myOverlay.loadXml(url+extentQuery() + "&scale="+currentScale+
                   (wait?"&wait=true":"") + (clientses!=null? "&clientses="+clientses : ""));
@@ -401,13 +402,16 @@ var currentScale = -1;
 function myScaleChanged( eventID, scale ) 
 {
     scale = Math.round(scale);   
+    var tscale = ""; 
     currentScale = scale;
     myScalebar.update(scale);    
     if (scale >= 1000000) {
         scale = scale / 1000000;
-        scale = scale + " Million";
+        tscale = scale + " Million";
     }
-    var outString = 'current scale 1 : '+ scale;
+    else
+        tscale = ""+scale;
+    var outString = 'current scale 1 : '+ tscale;
     getRawObject('scale').innerHTML = outString;
 }
 
@@ -499,7 +503,9 @@ function myObjectClicked(ident, e, href, title)
                       '<img class=\"popupimg\" src=\"'+href.substring(2)+'\">'
                       , x, y, null, 'obj_click', true);    
 	  else
-	      window.location = href; 
+	      if (!isMobileApp) 
+                   window.location = href; 
+              // FIXME: Could we detect that we are in an iframe? 
       }, 100);
       
     }
@@ -746,23 +752,8 @@ function drawPage() {
     var browserWidth = getInsideWindowWidth();
     var browserHeight = getInsideWindowHeight();
     var viewport = getRawObject('viewport');
-
-    //Set Viewport Width
-    if(myKaMap.isIE4) {
-        //terrible hack to avoid IE to show scrollbar
-        viewport.style.width = (browserWidth -2) + "px";
-    } else {
-        viewport.style.width = browserWidth + "px";
-    }
-
-    //Set Viewport Height
-    if(myKaMap.isIE4) {
-        //terrible hack to avoid IE to show scrollbar
-        viewport.style.height = (browserHeight -2) + "px";
-    } else {
-        viewport.style.height = browserHeight + "px";
-    }
-
+    viewport.style.width = browserWidth + "px";
+    viewport.style.height = browserHeight + "px";
     myKaMap.resize();
 }
 
