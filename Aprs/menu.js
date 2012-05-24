@@ -69,7 +69,7 @@ function showContextMenu(ident, e, ax, ay)
 	  
 	  if (isMobileApp) {          
 	     if (gpsTracker==null)
-	          txt.push(['Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); } ]);
+	          txt.push(['Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); gpsTracker.activate(); } ]);
 	     else
 	          txt.push(['De-aktiver GPS pos.', function() { gpsTracker.deactivate(); gpsTracker=null; } ]);
 	  }
@@ -81,7 +81,7 @@ function showContextMenu(ident, e, ax, ay)
           txt.push(null);
           txt.push(['Zoom inn', function() {myKaMap.zoomIn(); } ]);
           txt.push(['Zoom ut',  function() {myKaMap.zoomOut(); } ]);
-          if (isAdmin()|canUpdate()) {
+          if (isAdmin() || canUpdate()) {
              txt.push(null);
              if (sarUrl) 
                   txt.push(['SAR URL', sarUrl ]);
@@ -226,7 +226,7 @@ function showStationInfo(ident, edit, x, y)
            server_url + 'srv/station?simple=true&id='+ident+ (edit ? '&edit=true':''), x, y, 'infopopup');
   else {
       var url = server_url + (getLogin() ? 'srv/sec-station?id=' : 'srv/station?id=');
-      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 705, 450);
+      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 715, 480);
   } 
 }
 
