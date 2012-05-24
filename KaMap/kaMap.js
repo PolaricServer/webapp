@@ -325,7 +325,6 @@ kaMap.prototype.initializeCallback = function( szInit )
         eval(szInit);
     
     
-    
     /* OL controls, Permalink setup, etc.. */  
     this.olMap.events.register("changebaselayer", this, layerChange);
     this.olMap.events.register("zoomend", this, zoomEnd);
@@ -333,10 +332,10 @@ kaMap.prototype.initializeCallback = function( szInit )
     this.olMap.events.register("movestart", this, moveStart);
     if (!isMobile) 
          this.olMap.addControl( new OpenLayers.Control.PanZoomBar() );
+    
     this.olMap.addControl( new OpenLayers.Control.LayerSwitcher() );
     this.plink = new OpenLayers.Control.Permalink();
     this.plink.setMap(this.olMap);  
-    
     
     /* Map views */
     for (var i = 0; i < mapViews.length; i++) {
@@ -347,7 +346,6 @@ kaMap.prototype.initializeCallback = function( szInit )
     this.triggerEvent( KAMAP_MAP_INITIALIZED );
     this.olMap.render(this.domObj);   
 
-    
     var cont = document.getElementsByTagName("div");
     var elem; 
     while (elem = cont[i++]) 
@@ -364,7 +362,7 @@ kaMap.prototype.initializeCallback = function( szInit )
     document.getElementById('permolink').appendChild(this.plink.draw());
     this.plink.element.innerHTML="link to this view";    
     this.setBackgroundColor( backgroundColor ); 
-
+    
     this.triggerEvent( KAMAP_INITIALIZED );
     this.triggerEvent( KAMAP_SCALE_CHANGED, this.getCurrentScale());
     this.initializationState = 2;      
