@@ -9,6 +9,7 @@
    this.tstate = null;
    this.cMenu = false;
    this.moving = false;
+   this.multi = false; 
  };
  
  
@@ -17,45 +18,46 @@
  {   
    var touches = event.changedTouches,
    first = touches[0],
-   type = "";
+   type = "",
    t = this;
+   
+   if (touches[0] != null && touches[1] != null)
+      this.multi = true; 
    
    switch(event.type)
    {
-     case "touchstart": 
-       t.tstate = first;
-       setTimeout( function() {
-         if (t.tstate != null) {
-           t.cMenu = true;
-           sendEvent("contextmenu",t.tstate);
-           t.tstate = null;
-         }
-       }, 700);        
-           break;
+       case "touchstart": 
+         t.tstate = first;
+         setTimeout( function() {
+           if (t.tstate != null  && !t.moving && !t.multi) {
+             t.cMenu = true;
+             sendEvent("contextmenu", t.tstate);
+             t.tstate = null;
+           }
+         }, 700);   
+	 
+         break;
            
-     case "touchmove":  
-       if (!t.moving) {
-         t.moving = true; 
-         sendEvent("mousedown",t.tstate);
-       }
-       sendEvent("mousemove",first);
-       t.tstate = null; 
-       break;        
+       case "touchmove":  
+         if (!t.moving) 
+            t.moving = true; 
+         t.tstate = null; 
+         break;        
        
-     case "touchend":  
-       if (t.tstate != null)
-         sendEvent("click",first); 
-       if (!t.cMenu) 
-         sendEvent("mouseup",first);
-       t.cMenu = false;
-       t.tstate = null;
-       t.moving = false;
-       break;
+       case "touchend":
+         t.multi = false; 
+         if (t.tstate != null && !t.cMenu )  
+           sendEvent("click",first);
+	 if (!t.cMenu) 
+           sendEvent("mouseup",first); 
+         t.cMenu = false;
+         t.tstate = null;
+         t.moving = false;  
+         break;
        
-     default: return;
+       default: return;
    }
-   event.preventDefault();
-   event.cancelBubble = true;
+
    
    
    
