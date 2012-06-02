@@ -176,7 +176,7 @@ function myMapInitialized() {
 
 
 
-function myMapError(msg) {
+function myMapError(a, msg) {
     alert(msg);
 }
 
@@ -264,6 +264,14 @@ function myInitialized() {
     switchMode('toolPan');
     myKaMap.domObj.onmousedown  = menuMouseSelect;
            
+    
+    
+    if (isMobile)
+        document.getElementById('geoPosition').ontouchend = function(e)
+	{ if (gpsTracker != null) 
+	       gpsTracker.toggleSpeedDisplay(); 
+	};
+    
     if (!isIframe && !isMobile) {
       buttonMenu = document.getElementById('buttonMenu');
       buttonMenu.onclick = function(e)       
