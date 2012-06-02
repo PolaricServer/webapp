@@ -24,6 +24,9 @@ case "$1" in
          if [ -e "/var/www/aprs/theme" ]; then
              rm -R /var/www/aprs/theme
          fi
+         if [ -d "/var/log/polaric/kamap" ]; then
+             rm -R /var/log/polaric 
+         fi
       fi
     ;;
 
