@@ -271,13 +271,12 @@ kaMap.prototype.initialize = function() {
 kaMap.prototype.initializeCallback = function( szInit ) 
 {
     // szInit contains /*init*/ if it worked, or some php error otherwise
-    if (use_kaMap_maps && szInit.substr(0, 1) != "/") {
-        this.triggerEvent( KAMAP_ERROR, 'ERROR: ka-Map! initialization '+
-                          'failed on the server.  Message returned was:\n' +
-                          szInit);
-        return false;
+    if (use_kaMap_maps && /\/\*init\*\$/.test(szInit.substr(0, 10))) { 
+      this.triggerEvent( KAMAP_ERROR, 'ERROR: ka-Map! initialization '+
+      'failed on the server.  Message returned was:\n' +
+      szInit);
+      return false;
     }
-    
     /*
      * OpenLayers integration.
      * The options and the layers are defined in mapconfig.js
