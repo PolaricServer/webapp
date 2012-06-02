@@ -11,10 +11,7 @@
  * author: Paul Spencer (pspencer@dmsolutions.ca)
  *
  * modifications by Daniel Morissette (dmorissette@dmsolutions.ca)
- *
- * TODO:
- *
- *   - remove debugging stuff (not really needed now)
+ * modifications by LA7ECA, Øyvind Hanssen (ohanssen@acm.org)
  *
  **********************************************************************
  *
@@ -109,6 +106,7 @@ if (isset($oAuth) && !$oAuth->testPrivilege('__all__'))
     exit;
 }
 
+
 /* Check that user has the rights to see requested group(s).
  */
 if (isset($oAuth) && $groups)
@@ -125,6 +123,7 @@ if (isset($oAuth) && $groups)
         }
     }
 }
+
 
 /* bug 1253 - root permissions required to delete cached files */
 $orig_umask = umask(0);
@@ -161,26 +160,67 @@ clearstatcache();
 $szMetaDir = $szCacheDir."/meta";
 if (!@is_Dir($szMetaDir))
     makeDirs($szMetaDir);
-    
-/* timestamp checking - ignore requests more than the interval in the future (bad client)*/
-$now = gmttime();
-if ($timestamp != '' && $now >= $timestamp - $interval) {
-    //get the metatile cache timestamp
-    $ts_file = $szMetaDir."/timestamp";
-    clearstatcache();
-    if (!file_exists($ts_file)) {
-        $bForce = true;
-    } else {
-        $h = fopen($ts_file,"r");
-        $meta_timestamp = fread($h,filesize($ts_file));
-        fclose($h);
-        if ($timestamp > $meta_timestamp + $interval) {
-            $bForce = true;
-        }    
-    }
-}
 
-if ($version != '') {
+    
+/* simple locking in case there are several requests for the same meta
+   tile at the same time - only draw it once to help with performance 
+   At this stage: acquire a shared lock.
+ */
+clearstatcache();
+$szLockFile = $szMetaDir."/lock_".$metaTop."_".$metaLeft;
+$fpLockFile = fopen($szLockFile, "a+"); 
+
+
+/* timestamp checking */
+$now = gmttime();
+$nows = strftime("%e-%b-%G %R GMT", $now);
+
+$ts_file = $szMetaDir."/timestamp";
+$refresh_file = $szMetaDir.'/refreshing';
+$tsRefresh = false;
+
+/* 
+ * Some tests to determine if we should re-render the metatile even if
+ * the requested tile exists.
+ */
+ 
+  clearstatcache();
+  if ($tsRefreshInterval > 0 && file_exists($ts_file) && !file_exists($refresh_file)) {
+     $h = fopen($ts_file,"r");
+     $meta_timestamp = fread($h,filesize($ts_file));
+     fclose($h);
+     if ($now > $meta_timestamp + $tsRefreshInterval ) { 
+        $bForce = true;
+        $tsRefresh = true;
+     }
+  }
+  
+  
+  /* 
+   * If error metadata file exists, and this is older than 
+   * a certain time ($retryWait is configurable), force re-rendering
+   */
+  clearstatcache();
+  if (file_exists($szMetaDir."/error")) {
+      $h = fopen($ts_file,"r");
+      $meta_timestamp = fread($h,filesize($ts_file));
+      fclose($h);
+      if ($now > $meta_timestamp + $retryWait) {
+          $bForce = true;
+          unlink($szMetaDir."/error");
+      }
+  } else if (file_exists($szMetaDir."/refreshError")) {
+      $h = fopen($ts_file,"r");
+      $meta_timestamp = fread($h,filesize($ts_file));
+      fclose($h);
+      if ($now > $meta_timestamp + $retryWaitRefresh) {
+          $bForce = true;
+          $tsRefresh = true;
+          unlink($szMetaDir."/refreshError");
+      }
+  }
+
+  if ($version != '') {
     $version_file = $szMetaDir."/version";
     clearstatcache();
     if (!file_exists($version_file)) {
@@ -193,12 +233,9 @@ if ($version != '') {
             $bForce = true;
         }
     }
-}
+  }
 
-/* simple locking in case there are several requests for the same meta
-   tile at the same time - only draw it once to help with performance */
-$szLockFile = $szMetaDir."/lock_".$metaTop."_".$metaLeft;
-$fpLockFile = fopen($szLockFile, "a+");
+
 clearstatcache();
 if (!file_exists($szCacheFile) || $bForce)
 {
@@ -208,8 +245,17 @@ if (!file_exists($szCacheFile) || $bForce)
     //check once more to see if the cache file was created while waiting for
     //the lock
     clearstatcache();
-    if (!file_exists($szCacheFile) || $bForce)
+    if (!file_exists($szCacheFile) || ($bForce && !file_exists($refresh_file) ) )
     {
+        if ($tsRefresh) {
+           $h = fopen($refresh_file, 'w+');
+           fwrite($h, " ");
+           fclose($h);
+           error_log($nows.": REFRESH (old cache): ".$szCacheDir."\n", 3, $logFile); 
+        }
+        else 
+           unlink( $refresh_file );
+        
         if (!extension_loaded('MapScript'))
         {
             dl( $szPHPMapScriptModule );
@@ -281,30 +327,60 @@ if (!file_exists($szCacheFile) || $bForce)
         {
             $oMap->outputformat->set("transparent", MS_OFF );
         }
-
-        //record timestamp for this metatile
-        $h = fopen($szMetaDir.'/timestamp', 'w+');
-        fwrite($h, $now);
-        fclose($h);
         
-        //record mapfile version for this metatile
-        $h = fopen($szMetaDir.'/version', 'w+');
-        fwrite($h, $version);
-        fclose($h);
-        
+            
+        /* Generate metatile **/
         $szMetaImg = $szMetaDir."/t".$metaTop."l".$metaLeft.$szImageExtension;
         $oImg = $oMap->draw();
         $oImg->saveImage($szMetaImg);
         eval("\$oGDImg = ".$szMapImageCreateFunction."('".$szMetaImg."');");
-        if ($bDebug)
-        {
-            $blue = imagecolorallocate($oGDImg, 0, 0, 255);
-            imagerectangle($oGDImg, 0, 0, $tileWidth * $metaWidth - 1, $tileHeight * $metaHeight - 1, $blue );
+        
+               
+        /* Try to detect errors in map generating. A black or gray image usually 
+         * means there is an error or data is not available for that area. We test all 4 
+         * corners, a partly black image is not an error. 
+         */
+        $generateTiles = true; 
+        $sample1 = imagecolorat($oGDImg, 200, 200);
+        $sample2 = imagecolorat($oGDImg, 1000, 1000);
+        $sample3 = imagecolorat($oGDImg, 100, 1000);
+        $sample4 = imagecolorat($oGDImg, 1000, 100);
+        if (($sample1 == 0 && $sample2 == 0 && $sample3 == 0 && $sample4 == 0) ||
+            ($sample1 == 0xc0c0c0 && $sample2 == 0xc0c0c0 && $sample3 == 0xc0c0c0 && $sample4 == 0xc0c0c0)  ) {
+
+           if ($tsRefresh) {
+              $h = fopen($szMetaDir.'/refreshError', 'w+');
+              fwrite($h, " ");
+              fclose($h);
+              $generateTiles = false; 
+           }
+           else {
+              $h = fopen($szMetaDir.'/error', 'w+');
+              fwrite($h, " ");
+              fclose($h);
+           }
+           
+           error_log($nows.": RENDER ERROR: ".$szCacheDir."\n", 3, $logFile);
         }
-        for($i=0;$i<$metaWidth;$i++)
-        {
-            for ($j=0;$j<$metaHeight;$j++)
-            {
+        else
+           error_log($nows.": RENDER OK: ".$szCacheDir."\n", 3, $logFile);
+       
+
+       //record timestamp for this metatile
+       $h = fopen($szMetaDir.'/timestamp', 'w+');
+       fwrite($h, $now);
+       fclose($h);
+       
+       if ($generateTiles) {       
+          //record mapfile version for this metatile
+          $h = fopen($szMetaDir.'/version', 'w+');
+          fwrite($h, $version);
+          fclose($h);   
+        
+          for($i=0;$i<$metaWidth;$i++)
+          {
+             for ($j=0;$j<$metaHeight;$j++)
+             {
                 eval("\$oTile = ".$szImageCreateFunction."( ".$tileWidth.",".$tileHeight." );");
                 // Allocate BG color for the tile (in case the metatile has transparent BG)
 		if (!$useAlphaCh) {
@@ -321,36 +397,24 @@ if (!file_exists($szCacheFile) || $bForce)
 		  imagesavealpha($oTile, true);
 		}
                 imagecopy( $oTile, $oGDImg, 0, 0, $tileLeft, $tileTop, $tileWidth, $tileHeight );
-                /* debugging stuff */
-                if ($bDebug)
-                {
-                    $black = imagecolorallocate($oTile, 1, 1, 1);
-                    $green = imagecolorallocate($oTile, 0, 128, 0 );
-                    $red = imagecolorallocate($oTile, 255, 0, 0);
-                    imagerectangle( $oTile, 1, 1, $tileWidth-2, $tileHeight-2, $green );
-                    imageline( $oTile, 0, $tileHeight/2, $tileWidth-1, $tileHeight/2, $red);
-                    imageline( $oTile, $tileWidth/2, 0, $tileWidth/2, $tileHeight-1, $red);
-                    imagestring ( $oTile, 3, 10, 10, ($metaLeft+$tileLeft)." x ".($metaTop+$tileTop), $black );
-                    imagestring ( $oTile, 3, 10, 30, ($minx+ ($metaBuffer * $geoWidth) +
-                    ($i * $tileWidth *$geoWidth)) ." x ". (  $maxy - (  ($metaBuffer *
-                    $geoWidth) + ($j * $tileHeight * $geoHeight) )  ), $black );
-                }
+                
                 $szTileImg = $szCacheDir."/t".($metaTop+$tileTop)."l".($metaLeft+$tileLeft).$szImageExtension;
                 eval("$szImageOutputFunction( \$oTile, '".$szTileImg."' );");
                 imagedestroy($oTile);
                 $oTile = null;
             }
+          }
         }
+        
         if ($oGDImg != null)
         {
             imagedestroy($oGDImg);
             $oGDImg = null;
         }
-        if (!$bDebug)
-        {
-            unlink( $szMetaImg );
-        }
+
+        unlink( $szMetaImg );
     }
+   
     //release the exclusive lock
     flock($fpLockFile, LOCK_UN );
 }
@@ -362,8 +426,8 @@ flock($fpLockFile, LOCK_SH);
 $h = fopen($szCacheFile, "r");
 header("Content-Type: ".$szImageHeader);
 header("Content-Length: " . filesize($szCacheFile));
-header("Expires: " . date( "D, d M Y H:i:s GMT", time() + 31536000 ));
-header("Cache-Control: max-age=31536000, must-revalidate" );
+header("Expires: " . date( "D, d M Y H:i:s GMT", time() + $clientCacheTime ));
+header("Cache-Control: max-age=".$clientCacheTime.", must-revalidate" );
 fpassthru($h);
 fclose($h);
 
@@ -376,6 +440,7 @@ umask($orig_umask);
 exit;
 
 function gmttime() {
+   date_default_timezone_set('GMT');
    $aNow = localtime();
    $iDelta = gmmktime(1, 1, 1, 1, 1, 1980, $aNow[8]) - mktime(1, 1, 1, 1, 1, 1980, $aNow[8]);
    $theTime = localtime(time() - $iDelta, 0);
