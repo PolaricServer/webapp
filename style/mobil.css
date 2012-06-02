@@ -45,6 +45,8 @@ td {
 #tools { height: 33px; border: solid #999 1px; }
 #toolbarBackground { height: 39px;}
 #toolbarToggler { left: 18px; top: 45px;}
+#speedDisplay {font-size: 22px; font-weight: bold}
+#speedDisplay span.speed {font-size: 26px}
 
 
 @media screen and (min-device-width: 1200px) and (min-resolution: 120dpi),
@@ -79,7 +81,7 @@ screen and (min-device-height: 1200px) and (-webkit-device-pixel-ratio: 1.5)
     font-size: 15px;
   }
   #scale { font-size: 12px; }
-  .sbNumbersBox {font-size: o.76em }
+  .sbNumbersBox {font-size: 0.76em }
   .sbLabelBox {font-size: 0.9em }
   
 }
