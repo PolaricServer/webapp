@@ -272,11 +272,12 @@ kaMap.prototype.initializeCallback = function( szInit )
 {
     // szInit contains /*init*/ if it worked, or some php error otherwise
     if (use_kaMap_maps && /\/\*init\*\$/.test(szInit.substr(0, 10))) { 
-      this.triggerEvent( KAMAP_ERROR, 'ERROR: ka-Map! initialization '+
-      'failed on the server.  Message returned was:\n' +
-      szInit);
-      return false;
+        this.triggerEvent( KAMAP_ERROR, 'ERROR: ka-Map! initialization '+
+                          'failed on the server.  Message returned was:\n' +
+                          szInit);
+        return false;
     }
+    
     /*
      * OpenLayers integration.
      * The options and the layers are defined in mapconfig.js
@@ -369,6 +370,8 @@ kaMap.prototype.initializeCallback = function( szInit )
 };
 
 
+
+
 /**
  * kaMap.setBackgroundColor( color )
  *
@@ -393,6 +396,7 @@ kaMap.prototype.setBackgroundColor = function( color ) {
  * kaMap to draw and move the map image.
  */
 kaMap.prototype.createLayers = function() {
+    var t = this;
     this.theInsideLayer = document.createElement('div');
     this.theInsideLayer.id = 'theInsideLayer';
     this.theInsideLayer.style.position = 'absolute';
@@ -406,32 +410,41 @@ kaMap.prototype.createLayers = function() {
     
     // this.domObj.appendChild(this.theInsideLayer);
     this.domObj.kaMap = this;
-    this.theInsideLayer.onclick = kaMap_onclick;
-    this.theInsideLayer.onmousedown = kaMap_onmousedown;
-    this.theInsideLayer.onmouseup = kaMap_onmouseup;
-    this.theInsideLayer.onmousemove = kaMap_onmousemove;
-    this.theInsideLayer.onmouseover = kaMap_onmouseover;
-    this.domObj.onmouseout = kaMap_onmouseout;
-    this.theInsideLayer.onkeypress = kaMap_onkeypress;
-    this.theInsideLayer.ondblclick = kaMap_ondblclick;
-    this.theInsideLayer.oncontextmenu = kaMap_oncontextmenu;
-    this.theInsideLayer.onmousewheel = kaMap_onmousewheel;
+    this.theInsideLayer.onclick = function (e) { t.onclick(e); }
+    this.theInsideLayer.onmousedown = function (e) { t.onmousedown(e); }
+    this.theInsideLayer.onmouseup = function (e) { t.onmouseup(e); }
+    this.theInsideLayer.onmousemove = function (e) { t.onmousemove(e); }
+    this.theInsideLayer.onmouseover = function (e) { t.onmouseover(e); } 
+    this.domObj.onmouseout = function (e) { t.onmouseout(e); }
+    this.theInsideLayer.onkeypress = function (e) { t.onkeypress(e); }
+    this.theInsideLayer.ondblclick = function (e) { t.ondblclick(e); }
+    this.theInsideLayer.oncontextmenu = function (e) { t.oncontextmenu(e); }
+    this.theInsideLayer.onmousewheel = function (e) { t.onmousewheel(e); }
     
         /* Map touch events */
-    this.theInsideLayer.ontouchstart = this.thandler.handle;
-    this.theInsideLayer.ontouchmove = this.thandler.handle;
-    this.theInsideLayer.ontouchend = this.thandler.handle;
-    this.theInsideLayer.ontouchcancel = this.thandler.handle;
+    this.theInsideLayer.ontouchstart = function (e) 
+            { t.thandler.handle(e); 
+              t.onmousedown(e);}
+    this.theInsideLayer.ontouchmove = function (e) 
+            { t.thandler.handle(e); 
+              t.onmousemove(e);  }
+    this.theInsideLayer.ontouchend = function (e) 
+            { t.thandler.handle(e); t.onmouseup(e);}       
+    this.theInsideLayer.ontouchcancel = function (e) 
+            { t.thandler.handle(e); }
     
     if (window.addEventListener)
-        this.domObj.addEventListener( "DOMMouseScroll", kaMap_onmousewheel, false );
+        this.domObj.addEventListener( "DOMMouseScroll", 
+             function(e) {t.onmousewheel(e);} , false );
 
 
-    //this is to prevent problems in IE
-    // FIXME: Is this needed? I dont care about IE6 and 7 anymore!!
-    this.theInsideLayer.ondragstart = new Function([], 'var e=e?e:event;e.cancelBubble=true;e.returnValue=false;return false;');
     this.olMap = null;
 };
+
+
+kaMap_ontouchstart = null;
+kaMap_ontouchmove = null;
+kaMap_ontouchend = null;
 
 
 kaMap.prototype.showLayers = function() {}
@@ -790,85 +803,86 @@ kaMap.prototype.resize = function( ) {
 
 /**
  * internal function to handle various events that are passed to the
- * current tool
+ * current tool. 
+ * FIXME: Move to a separate class??? 
  */
-kaMap_onkeypress = function( e ) {
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onkeypress( e );
+kaMap.prototype.onkeypress = function( e ) {
+    if (this.currentTool) {
+        this.currentTool.onkeypress( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
-        for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].onkeypress(e);
+    if (this.aInfoTools.length > 0) {
+        for (var i=0; i<this.aInfoTools.length; i++) {
+            this.aInfoTools[i].onkeypress(e);
         }
     }
 };
 
 
-kaMap_onmousemove = function( e ) {
+kaMap.prototype.onmousemove = function( e ) {
     e = (e)?e:((event)?event:null);
     if (e.button==2) {
-        this.kaMap.triggerEvent( KAMAP_CONTEXT_MENU );
+        this.triggerEvent( KAMAP_CONTEXT_MENU );
     }
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onmousemove( e );
+    if (this.currentTool) {
+        this.currentTool.onmousemove( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
-        for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].onmousemove(e);
+    if (this.aInfoTools.length > 0) {
+        for (var i=0; i<this.aInfoTools.length; i++) {
+            this.aInfoTools[i].onmousemove(e);
         }
     }
 };
 
 
-kaMap_onmousedown = function( e ) { 
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onmousedown( e );
+kaMap.prototype.onmousedown = function( e ) { 
+    if (this.currentTool) {
+        this.currentTool.onmousedown( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
-        for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].onmousedown(e);
+    if (this.aInfoTools.length > 0) {
+        for (var i=0; i<this.aInfoTools.length; i++) {
+            this.aInfoTools[i].onmousedown(e);
         }
     }
 };
 
 
-kaMap_onmouseup = function( e ) {
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onmouseup( e );
+kaMap.prototype.onmouseup = function( e ) {
+    if (this.currentTool) {
+        this.currentTool.onmouseup( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
-        for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].onmouseup(e);
+    if (this.aInfoTools.length > 0) {
+        for (var i=0; i<this.aInfoTools.length; i++) {
+            this.aInfoTools[i].onmouseup(e);
         }
     }
 };
 
 
-kaMap_onmouseover = function( e ) {
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onmouseover( e );
+kaMap.prototype.onmouseover = function( e ) {
+    if (this.currentTool) {
+        this.currentTool.onmouseover( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
-        for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].onmouseover(e);
+    if (this.aInfoTools.length > 0) {
+        for (var i=0; i<this.aInfoTools.length; i++) {
+            this.aInfoTools[i].onmouseover(e);
         }
     }
 };
 
 
-kaMap_onmouseout = function( e ) {
-     if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onmouseout( e );
+kaMap.prototype.onmouseout = function( e ) {
+     if (this.currentTool) {
+        this.currentTool.onmouseout( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
-        for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].onmouseout(e);
+    if (this.aInfoTools.length > 0) {
+        for (var i=0; i<this.aInfoTools.length; i++) {
+            this.aInfoTools[i].onmouseout(e);
         }
     }
 };
 
 
-kaMap_oncontextmenu = function( e ) {
+kaMap.prototype.oncontextmenu = function( e ) {
     e = e?e:event;
     if (e.preventDefault) {
         e.preventDefault();
@@ -877,29 +891,29 @@ kaMap_oncontextmenu = function( e ) {
 };
 
 
-kaMap_onclick = function( e ) {
+kaMap.prototype.onclick = function( e ) {
     e = e?e:event;
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onclick( e );
+    if (this.currentTool) {
+        this.currentTool.onclick( e );
     }
 };
 
 
-kaMap_ondblclick = function( e ) {
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.ondblclick( e );
+kaMap.prototype.ondblclick = function( e ) {
+    if (this.currentTool) {
+        this.currentTool.ondblclick( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
+    if (this.aInfoTools.length > 0) {
         for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].ondblclick(e);
+            this.aInfoTools[i].ondblclick(e);
         }
     }
 };
 
 
-kaMap_onmousewheel = function( e ) {
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onmousewheel( e );
+kaMap.prototype.onmousewheel = function( e ) {
+    if (this.currentTool) {
+        this.currentTool.onmousewheel( e );
     }
 };
 
@@ -912,6 +926,11 @@ kaMap.prototype.cancelEvent = function(e) {
     }
     return false;
 };
+
+
+
+
+
 
 
 kaMap.prototype.registerTool = function( toolObj ) {
