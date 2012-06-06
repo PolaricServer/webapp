@@ -8,10 +8,8 @@
  function touchHandler() {
    this.tstate = null;
    this.cMenu = false;
-   this.moving = false;
-   this.multi = false; 
+   this.moving = false; 
  };
- 
  
  
  touchHandler.prototype.handle = function(event)
@@ -20,9 +18,8 @@
    first = touches[0],
    type = "",
    t = this;
-   
-   if (touches[0] != null && touches[1] != null)
-      this.multi = true; 
+   event.clientX = touches[0].clientX; 
+   event.clientY = touches[0].clientY;
    
    switch(event.type)
    {
@@ -34,8 +31,7 @@
              sendEvent("contextmenu", t.tstate);
              t.tstate = null;
            }
-         }, 700);   
-	 
+         }, 800);   
          break;
            
        case "touchmove":  
@@ -45,7 +41,6 @@
          break;        
        
        case "touchend":
-         t.multi = false; 
          if (t.tstate != null && !t.cMenu )  
            sendEvent("click",first);
 	 if (!t.cMenu) 
