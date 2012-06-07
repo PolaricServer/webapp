@@ -365,8 +365,8 @@ kaXmlOverlay.prototype.removePointExcept = function( pid ) {
            delete this.ovrObjects[i];
            this.ovrObjects[i] = null;
         }
-     }
-     this.ovrObjects.splice(i,1); 
+     } else
+        this.ovrObjects.splice(i,1); 
   }       
 }  
   
@@ -393,9 +393,8 @@ kaXmlOverlay.prototype.removePoint = function( pid ) {
                     this.ovrObjects[i] = null;
                     this.ovrObjects.splice(i,1);
                 }
-            } else {
-                this.ovrObjects.splice(i,1);
-            }
+            } else 
+                this.ovrObjects.splice(i,1);         
         }
     }
 }
