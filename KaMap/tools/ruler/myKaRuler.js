@@ -111,9 +111,9 @@ myKaRuler.prototype.activate = function() {
     document.kaCurrentTool = this;
 
     this.domObj.innerHTML 
-       = "<label class='sleftlab'>Segment :</label> <input type='text' id='measureSeg'  />"
-         +"<br><label class='sleftlab'>Totalt :</label> <input type='text' id='measureTot' />"       
-         ;  
+       = "<div class='trblock'><label class='sleftlab'>Segment:</label> <input type='text' id='measureSeg'  /></div>"
+         +"<div cass='trblock'><label class='sleftlab'>Totalt:</label> <input type='text' id='measureTot' /></div>"       
+         ;
     this.measureSeg = document.getElementById("measureSeg"); 
     this.measureTot = document.getElementById("measureTot");   
     
