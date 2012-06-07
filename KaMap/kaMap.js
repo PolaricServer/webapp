@@ -271,7 +271,7 @@ kaMap.prototype.initialize = function() {
 kaMap.prototype.initializeCallback = function( szInit ) 
 {
     // szInit contains /*init*/ if it worked, or some php error otherwise
-    if (use_kaMap_maps && szInit.substr(0, 1) != "/") {
+    if (use_kaMap_maps && /\/\*init\*\$/.test(szInit.substr(0, 10))) { 
         this.triggerEvent( KAMAP_ERROR, 'ERROR: ka-Map! initialization '+
                           'failed on the server.  Message returned was:\n' +
                           szInit);
@@ -325,7 +325,6 @@ kaMap.prototype.initializeCallback = function( szInit )
         eval(szInit);
     
     
-    
     /* OL controls, Permalink setup, etc.. */  
     this.olMap.events.register("changebaselayer", this, layerChange);
     this.olMap.events.register("zoomend", this, zoomEnd);
@@ -333,10 +332,10 @@ kaMap.prototype.initializeCallback = function( szInit )
     this.olMap.events.register("movestart", this, moveStart);
     if (!isMobile) 
          this.olMap.addControl( new OpenLayers.Control.PanZoomBar() );
+    
     this.olMap.addControl( new OpenLayers.Control.LayerSwitcher() );
     this.plink = new OpenLayers.Control.Permalink();
     this.plink.setMap(this.olMap);  
-    
     
     /* Map views */
     for (var i = 0; i < mapViews.length; i++) {
@@ -347,7 +346,6 @@ kaMap.prototype.initializeCallback = function( szInit )
     this.triggerEvent( KAMAP_MAP_INITIALIZED );
     this.olMap.render(this.domObj);   
 
-    
     var cont = document.getElementsByTagName("div");
     var elem; 
     while (elem = cont[i++]) 
@@ -364,12 +362,14 @@ kaMap.prototype.initializeCallback = function( szInit )
     document.getElementById('permolink').appendChild(this.plink.draw());
     this.plink.element.innerHTML="link to this view";    
     this.setBackgroundColor( backgroundColor ); 
-
+    
     this.triggerEvent( KAMAP_INITIALIZED );
     this.triggerEvent( KAMAP_SCALE_CHANGED, this.getCurrentScale());
     this.initializationState = 2;      
 
 };
+
+
 
 
 /**
@@ -396,6 +396,7 @@ kaMap.prototype.setBackgroundColor = function( color ) {
  * kaMap to draw and move the map image.
  */
 kaMap.prototype.createLayers = function() {
+    var t = this;
     this.theInsideLayer = document.createElement('div');
     this.theInsideLayer.id = 'theInsideLayer';
     this.theInsideLayer.style.position = 'absolute';
@@ -409,33 +410,35 @@ kaMap.prototype.createLayers = function() {
     
     // this.domObj.appendChild(this.theInsideLayer);
     this.domObj.kaMap = this;
-    this.theInsideLayer.onclick = kaMap_onclick;
-    this.theInsideLayer.onmousedown = kaMap_onmousedown;
-    this.theInsideLayer.onmouseup = kaMap_onmouseup;
-    this.theInsideLayer.onmousemove = kaMap_onmousemove;
-    this.theInsideLayer.onmouseover = kaMap_onmouseover;
-    this.domObj.onmouseout = kaMap_onmouseout;
-    this.theInsideLayer.onkeypress = kaMap_onkeypress;
-    this.theInsideLayer.ondblclick = kaMap_ondblclick;
-    this.theInsideLayer.oncontextmenu = kaMap_oncontextmenu;
-    this.theInsideLayer.onmousewheel = kaMap_onmousewheel;
+    this.theInsideLayer.onclick = function (e) { t.onclick(e); }
+    this.theInsideLayer.onmousedown = function (e) { t.onmousedown(e); }
+    this.theInsideLayer.onmouseup = function (e) { t.onmouseup(e); }
+    this.theInsideLayer.onmousemove = function (e) { t.onmousemove(e); }
+    this.theInsideLayer.onmouseover = function (e) { t.onmouseover(e); } 
+    this.domObj.onmouseout = function (e) { t.onmouseout(e); }
+    this.theInsideLayer.onkeypress = function (e) { t.onkeypress(e); }
+    this.theInsideLayer.ondblclick = function (e) { t.ondblclick(e); }
+    this.theInsideLayer.oncontextmenu = function (e) { t.oncontextmenu(e); }
+    this.theInsideLayer.onmousewheel = function (e) { t.onmousewheel(e); }
     
         /* Map touch events */
-    this.theInsideLayer.ontouchstart = this.thandler.handle;
-    this.theInsideLayer.ontouchmove = this.thandler.handle;
-    this.theInsideLayer.ontouchend = this.thandler.handle;
-    this.theInsideLayer.ontouchcancel = this.thandler.handle;
+    this.theInsideLayer.ontouchstart = function (e) 
+            { t.thandler.handle(e); 
+              t.onmousedown(e);}
+    this.theInsideLayer.ontouchmove = function (e) 
+            { t.thandler.handle(e); 
+              t.onmousemove(e);  }
+    this.theInsideLayer.ontouchend = function (e) 
+            { t.thandler.handle(e); t.onmouseup(e);}       
+    this.theInsideLayer.ontouchcancel = function (e) 
+            { t.thandler.handle(e); }
     
     if (window.addEventListener)
-        this.domObj.addEventListener( "DOMMouseScroll", kaMap_onmousewheel, false );
+        this.domObj.addEventListener( "DOMMouseScroll", 
+             function(e) {t.onmousewheel(e);} , false );
 
-
-    //this is to prevent problems in IE
-    // FIXME: Is this needed? I dont care about IE6 and 7 anymore!!
-    this.theInsideLayer.ondragstart = new Function([], 'var e=e?e:event;e.cancelBubble=true;e.returnValue=false;return false;');
-    this.olMap = null;
+   this.olMap = null;
 };
-
 
 kaMap.prototype.showLayers = function() {}
 kaMap.prototype.hideLayers = function() {}
@@ -793,85 +796,86 @@ kaMap.prototype.resize = function( ) {
 
 /**
  * internal function to handle various events that are passed to the
- * current tool
+ * current tool. 
+ * FIXME: Move to a separate class??? 
  */
-kaMap_onkeypress = function( e ) {
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onkeypress( e );
+kaMap.prototype.onkeypress = function( e ) {
+    if (this.currentTool) {
+        this.currentTool.onkeypress( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
-        for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].onkeypress(e);
+    if (this.aInfoTools.length > 0) {
+        for (var i=0; i<this.aInfoTools.length; i++) {
+            this.aInfoTools[i].onkeypress(e);
         }
     }
 };
 
 
-kaMap_onmousemove = function( e ) {
+kaMap.prototype.onmousemove = function( e ) {
     e = (e)?e:((event)?event:null);
     if (e.button==2) {
-        this.kaMap.triggerEvent( KAMAP_CONTEXT_MENU );
+        this.triggerEvent( KAMAP_CONTEXT_MENU );
     }
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onmousemove( e );
+    if (this.currentTool) {
+        this.currentTool.onmousemove( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
-        for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].onmousemove(e);
+    if (this.aInfoTools.length > 0) {
+        for (var i=0; i<this.aInfoTools.length; i++) {
+            this.aInfoTools[i].onmousemove(e);
         }
     }
 };
 
 
-kaMap_onmousedown = function( e ) { 
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onmousedown( e );
+kaMap.prototype.onmousedown = function( e ) { 
+    if (this.currentTool) {
+        this.currentTool.onmousedown( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
-        for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].onmousedown(e);
+    if (this.aInfoTools.length > 0) {
+        for (var i=0; i<this.aInfoTools.length; i++) {
+            this.aInfoTools[i].onmousedown(e);
         }
     }
 };
 
 
-kaMap_onmouseup = function( e ) {
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onmouseup( e );
+kaMap.prototype.onmouseup = function( e ) {
+    if (this.currentTool) {
+        this.currentTool.onmouseup( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
-        for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].onmouseup(e);
+    if (this.aInfoTools.length > 0) {
+        for (var i=0; i<this.aInfoTools.length; i++) {
+            this.aInfoTools[i].onmouseup(e);
         }
     }
 };
 
 
-kaMap_onmouseover = function( e ) {
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onmouseover( e );
+kaMap.prototype.onmouseover = function( e ) {
+    if (this.currentTool) {
+        this.currentTool.onmouseover( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
-        for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].onmouseover(e);
+    if (this.aInfoTools.length > 0) {
+        for (var i=0; i<this.aInfoTools.length; i++) {
+            this.aInfoTools[i].onmouseover(e);
         }
     }
 };
 
 
-kaMap_onmouseout = function( e ) {
-     if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onmouseout( e );
+kaMap.prototype.onmouseout = function( e ) {
+     if (this.currentTool) {
+        this.currentTool.onmouseout( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
-        for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].onmouseout(e);
+    if (this.aInfoTools.length > 0) {
+        for (var i=0; i<this.aInfoTools.length; i++) {
+            this.aInfoTools[i].onmouseout(e);
         }
     }
 };
 
 
-kaMap_oncontextmenu = function( e ) {
+kaMap.prototype.oncontextmenu = function( e ) {
     e = e?e:event;
     if (e.preventDefault) {
         e.preventDefault();
@@ -880,29 +884,29 @@ kaMap_oncontextmenu = function( e ) {
 };
 
 
-kaMap_onclick = function( e ) {
+kaMap.prototype.onclick = function( e ) {
     e = e?e:event;
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onclick( e );
+    if (this.currentTool) {
+        this.currentTool.onclick( e );
     }
 };
 
 
-kaMap_ondblclick = function( e ) {
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.ondblclick( e );
+kaMap.prototype.ondblclick = function( e ) {
+    if (this.currentTool) {
+        this.currentTool.ondblclick( e );
     }
-    if (this.kaMap.aInfoTools.length > 0) {
+    if (this.aInfoTools.length > 0) {
         for (var i=0; i<this.kaMap.aInfoTools.length; i++) {
-            this.kaMap.aInfoTools[i].ondblclick(e);
+            this.aInfoTools[i].ondblclick(e);
         }
     }
 };
 
 
-kaMap_onmousewheel = function( e ) {
-    if (this.kaMap.currentTool) {
-        this.kaMap.currentTool.onmousewheel( e );
+kaMap.prototype.onmousewheel = function( e ) {
+    if (this.currentTool) {
+        this.currentTool.onmousewheel( e );
     }
 };
 
@@ -915,6 +919,11 @@ kaMap.prototype.cancelEvent = function(e) {
     }
     return false;
 };
+
+
+
+
+
 
 
 kaMap.prototype.registerTool = function( toolObj ) {
@@ -1151,13 +1160,6 @@ kaMap.prototype.zoomByFactor = function( nZoomFactor ) {
 kaMap.prototype.getCurrentScale = function() {
     return this.olMap==null ? null : this.olMap.getScale();
 };
-
-
-
-kaMap.prototype.setLayerQueryable = function( name, bQueryable ) {
-    this.aMaps[this.currentMap].setLayerQueryable( name, bQueryable );
-};
-
 
 
 kaMap.prototype.registerEventID = function( eventID ) {
@@ -1398,141 +1400,3 @@ _layer.prototype.setZIndex = function( zIndex ) {
 };
 
 
-
-/******************************************************************************
- * Event Manager class
- *
- * an internal class for managing generic events.  kaMap! uses the event
- * manager internally and exposes certain events to the application.
- *
- * the kaMap class provides wrapper functions that hide this implementation
- * useage:
- *
- * myKaMap.registerForEvent( gnSomeEventID, myObject, myFunction );
- * myKaMap.registerForEvent( 'SOME_EVENT', myObject, myFunction );
- *
- * myKaMap.deregisterForEvent( gnSomeEventID, myObject, myFunction );
- * myKaMap.deregisterForEvent( 'SOME_EVENT', myObject, myFunction );
- *
- * myObject is normally null but can be a javascript object to have myFunction
- * executed within the context of an object (becomes 'this' in the function).
- *
- *****************************************************************************/
-function _eventManager( )
-{
-    this.events = [];
-    this.lastEventID = 0;
-}
-
-_eventManager.prototype.registerEventID = function( eventID ) {
-    var ev = new String(eventID);
-    if (!this.events[eventID]) {
-        this.events[eventID] = [];
-    }
-};
-
-_eventManager.prototype.registerForEvent = function(eventID, obj, func) {
-    var ev = new String(eventID);
-    this.events[eventID].push( [obj, func] );
-};
-
-_eventManager.prototype.deregisterForEvent = function( eventID, obj, func ) {
-    var ev = new String(eventID);
-    var bResult = false;
-    if (!this.events[eventID]) {
-        return false;
-    }
-
-    for (var i=0;i<this.events[eventID].length;i++) {
-
-        if (this.events[eventID][i][0] == obj &&
-            this.events[eventID][i][1] == func) {
-            this.events[eventID].splice(i,1);
-            bResult = true;
-        }
-    }
-    return bResult;
-};
-
-_eventManager.prototype.triggerEvent = function( eventID ) {
-    var ev = new String(eventID);
-    if (!this.events[eventID]) {
-        return false;
-    }
-
-    var args = new Array();
-    for(i=1; i<arguments.length; i++) {
-        args[args.length] = arguments[i];
-    }
-
-    for (var i=0; i<this.events[eventID].length; i++) {
-        this.events[eventID][i][1].apply( this.events[eventID][i][0],
-                                          arguments );
-    }
-    return true;
-};
-
-/******************************************************************************
- * Queue Manager class
- *
- * an internal class for managing delayed execution of code.  This uses the
- * window.setTimeout interface but adds support for execution of functions
- * on objects
- *
- * The problem with setTimeout is that you need a reference to a global object
- * to do something useful in an object-oriented environment, and we don't
- * really have that here.  So the Queue Manager handles a stack of pending
- * delayed execution code and evaluates it when it comes due.  It can be
- * used exactly like window.setTimeout in that it returns an id that can
- * subsequently be used to clear the delayed code.
- *
- * To add something to the queue, call
- * var id = goQueueManager.enqueue( timeout, obj, func, args );
- *
- * timeout - time to delay (milliseconds)
- * obj - the object to execute the function within.  Can be null for global
- *       scope
- * func - the function to execute.  Note this is the function, not a string
- *        containing the function.
- * args - an array of values to be passed to the function.
- *
- * To remove a function from the queue, call goQueueManager.dequeue( id );
- *****************************************************************************/
-var goQueueManager = new _queueManager();
-
-function _queueManager() {
-    this.queue = new Array();
-}
-
-_queueManager.prototype.enqueue = function( timeout, obj, func, args ) {
-    var pos = this.queue.length;
-    for (var i=0; i< this.queue.length; i++) {
-        if (this.queue[i] == null) {
-            pos = i;
-            break;
-        }
-    }
-    var id = window.setTimeout( "_queueManager_execute("+pos+")", timeout );
-    this.queue[pos] = new Array( id, obj, func, args );
-    return pos;
-};
-
-_queueManager.prototype.dequeue = function( pos ) {
-    if (this.queue[pos] != null) {
-        window.clearTimeout( this.queue[pos][0] );
-        this.queue[pos] = null;
-    }
-};
-
-function _queueManager_execute( pos) {
-    if (goQueueManager.queue[pos] != null) {
-        var obj = goQueueManager.queue[pos][1];
-        var func = goQueueManager.queue[pos][2];
-        if (goQueueManager.queue[pos][3] != null) {
-            func.apply( obj, goQueueManager.queue[pos][3] );
-        } else {
-            func.apply( obj );
-        }
-        goQueueManager.queue[pos] = null;
-    }
-};
