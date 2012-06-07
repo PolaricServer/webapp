@@ -12,16 +12,22 @@
 function GpsTracker ()
 {
    this.my_point = null; 
-   this.watchID = null;
+   this.watchID = null; 
+}   
+   
 
+GpsTracker.prototype.activate = function ()   
+{
+   var t = this; 
+   
    /*
     * Called when we get a new position from GPS
     */
    function gps_onSuccess(position) {
      if (position.coords.accuracy > 60) {
-        if (this.my_point != null) {
-           this.my_point.removeFromMap();
-           this.my_point = null;
+        if (t.my_point != null) {
+           t.my_point.removeFromMap();
+           t.my_point = null;
         }
         setStatus('&nbsp; GPS upresis posisjon ('+position.coords.accuracy+' m)');
         return;
@@ -33,12 +39,12 @@ function GpsTracker ()
      myZoomToGeo(uref_map.easting, uref_map.northing, 0.2);
      setStatus('&nbsp; GPS posisjon ok <br>' + uref + '&nbsp;/&nbsp;'+ speedHeading(position.coords));
      
-     if (this.my_point == null) {
-        this.my_point = myOverlay.addNewPoint('my_gps_position', uref_map.easting, uref_map.northing);  
-        var t = new kaXmlIcon();
-        t.setImage(this.my_point, "images/position.png", 54, 54); 
-        this.my_point.addGraphic(t);
-        this.my_point.div.appendChild(t.ldiv);  
+     if (t.my_point == null) {
+        t.my_point = myOverlay.addNewPoint('my_gps_position', uref_map.easting, uref_map.northing);  
+        var icon = new kaXmlIcon();
+        icon.setImage(this.my_point, "images/position.png", 54, 54); 
+        t.my_point.addGraphic(icon);
+        t.my_point.div.appendChild(icon.ldiv);  
      }
      else
         this.my_point.setPosition(uref_map.easting, uref_map.northing);
@@ -81,5 +87,5 @@ GpsTracker.prototype.deactivate = function ()
    this.my_point = null;
    navigator.geolocation.clearWatch(this.watchID);
    setStatus('&nbsp; GPS <u>av</u>slått');
-   
+   myKaMap.updateObjects();
 }
