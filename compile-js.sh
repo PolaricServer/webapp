@@ -7,7 +7,7 @@
 PATH=$PATH:/home/oivindh/bin
 
 cd KaMap
-ccompile --js base64.js --js DHTMLapi.js --js xhr.js --js touchHandler.js --js kaMap.js --js kaTool.js --js kaQuery.js --js kaMouseTracker.js --js scalebar/scalebar.js > kamap-core.js
+ccompile --js eventManager.js --js base64.js --js DHTMLapi.js --js xhr.js --js touchHandler.js --js kaMap.js --js kaTool.js --js kaQuery.js --js kaMouseTracker.js --js scalebar/scalebar.js > kamap-core.js
 cd ..
 cd XMLOverlay
 ccompile --js kaXmlOverlay.js > compiled.js
