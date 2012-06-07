@@ -499,7 +499,8 @@ function myObjectClicked(ident, e, href, title)
                       '<img class=\"popupimg\" src=\"'+href.substring(2)+'\">'
                       , x, y, null, 'obj_click', true);    
 	  else
-	      window.location = href; 
+	      if (!isMobileApp) 
+                   window.location = href; 
       }, 100);
       
     }
@@ -746,23 +747,8 @@ function drawPage() {
     var browserWidth = getInsideWindowWidth();
     var browserHeight = getInsideWindowHeight();
     var viewport = getRawObject('viewport');
-
-    //Set Viewport Width
-    if(myKaMap.isIE4) {
-        //terrible hack to avoid IE to show scrollbar
-        viewport.style.width = (browserWidth -2) + "px";
-    } else {
-        viewport.style.width = browserWidth + "px";
-    }
-
-    //Set Viewport Height
-    if(myKaMap.isIE4) {
-        //terrible hack to avoid IE to show scrollbar
-        viewport.style.height = (browserHeight -2) + "px";
-    } else {
-        viewport.style.height = browserHeight + "px";
-    }
-
+    viewport.style.width = browserWidth + "px";
+    viewport.style.height = browserHeight + "px";
     myKaMap.resize();
 }
 
