@@ -8,54 +8,51 @@
  function touchHandler() {
    this.tstate = null;
    this.cMenu = false;
-   this.moving = false;
+   this.moving = false; 
  };
- 
  
  
  touchHandler.prototype.handle = function(event)
  {   
    var touches = event.changedTouches,
    first = touches[0],
-   type = "";
+   type = "",
    t = this;
+   event.clientX = touches[0].clientX; 
+   event.clientY = touches[0].clientY;
    
    switch(event.type)
    {
-     case "touchstart": 
-       t.tstate = first;
-       setTimeout( function() {
-         if (t.tstate != null) {
-           t.cMenu = true;
-           sendEvent("contextmenu",t.tstate);
-           t.tstate = null;
-         }
-       }, 700);        
-           break;
+       case "touchstart": 
+         t.tstate = first;
+         setTimeout( function() {
+           if (t.tstate != null  && !t.moving && !t.multi) {
+             t.cMenu = true;
+             sendEvent("contextmenu", t.tstate);
+             t.tstate = null;
+           }
+         }, 800);   
+         break;
            
-     case "touchmove":  
-       if (!t.moving) {
-         t.moving = true; 
-         sendEvent("mousedown",t.tstate);
-       }
-       sendEvent("mousemove",first);
-       t.tstate = null; 
-       break;        
+       case "touchmove":  
+         if (!t.moving) 
+            t.moving = true; 
+         t.tstate = null; 
+         break;        
        
-     case "touchend":  
-       if (t.tstate != null)
-         sendEvent("click",first); 
-       if (!t.cMenu) 
-         sendEvent("mouseup",first);
-       t.cMenu = false;
-       t.tstate = null;
-       t.moving = false;
-       break;
+       case "touchend":
+         if (t.tstate != null && !t.cMenu )  
+           sendEvent("click",first);
+	 if (!t.cMenu) 
+           sendEvent("mouseup",first); 
+         t.cMenu = false;
+         t.tstate = null;
+         t.moving = false;  
+         break;
        
-     default: return;
+       default: return;
    }
-   event.preventDefault();
-   event.cancelBubble = true;
+
    
    
    
