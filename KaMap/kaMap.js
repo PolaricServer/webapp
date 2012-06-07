@@ -437,15 +437,8 @@ kaMap.prototype.createLayers = function() {
         this.domObj.addEventListener( "DOMMouseScroll", 
              function(e) {t.onmousewheel(e);} , false );
 
-
-    this.olMap = null;
+   this.olMap = null;
 };
-
-
-kaMap_ontouchstart = null;
-kaMap_ontouchmove = null;
-kaMap_ontouchend = null;
-
 
 kaMap.prototype.showLayers = function() {}
 kaMap.prototype.hideLayers = function() {}
@@ -1169,13 +1162,6 @@ kaMap.prototype.getCurrentScale = function() {
 };
 
 
-
-kaMap.prototype.setLayerQueryable = function( name, bQueryable ) {
-    this.aMaps[this.currentMap].setLayerQueryable( name, bQueryable );
-};
-
-
-
 kaMap.prototype.registerEventID = function( eventID ) {
     return this.eventManager.registerEventID(eventID);
 };
@@ -1414,141 +1400,3 @@ _layer.prototype.setZIndex = function( zIndex ) {
 };
 
 
-
-/******************************************************************************
- * Event Manager class
- *
- * an internal class for managing generic events.  kaMap! uses the event
- * manager internally and exposes certain events to the application.
- *
- * the kaMap class provides wrapper functions that hide this implementation
- * useage:
- *
- * myKaMap.registerForEvent( gnSomeEventID, myObject, myFunction );
- * myKaMap.registerForEvent( 'SOME_EVENT', myObject, myFunction );
- *
- * myKaMap.deregisterForEvent( gnSomeEventID, myObject, myFunction );
- * myKaMap.deregisterForEvent( 'SOME_EVENT', myObject, myFunction );
- *
- * myObject is normally null but can be a javascript object to have myFunction
- * executed within the context of an object (becomes 'this' in the function).
- *
- *****************************************************************************/
-function _eventManager( )
-{
-    this.events = [];
-    this.lastEventID = 0;
-}
-
-_eventManager.prototype.registerEventID = function( eventID ) {
-    var ev = new String(eventID);
-    if (!this.events[eventID]) {
-        this.events[eventID] = [];
-    }
-};
-
-_eventManager.prototype.registerForEvent = function(eventID, obj, func) {
-    var ev = new String(eventID);
-    this.events[eventID].push( [obj, func] );
-};
-
-_eventManager.prototype.deregisterForEvent = function( eventID, obj, func ) {
-    var ev = new String(eventID);
-    var bResult = false;
-    if (!this.events[eventID]) {
-        return false;
-    }
-
-    for (var i=0;i<this.events[eventID].length;i++) {
-
-        if (this.events[eventID][i][0] == obj &&
-            this.events[eventID][i][1] == func) {
-            this.events[eventID].splice(i,1);
-            bResult = true;
-        }
-    }
-    return bResult;
-};
-
-_eventManager.prototype.triggerEvent = function( eventID ) {
-    var ev = new String(eventID);
-    if (!this.events[eventID]) {
-        return false;
-    }
-
-    var args = new Array();
-    for(i=1; i<arguments.length; i++) {
-        args[args.length] = arguments[i];
-    }
-
-    for (var i=0; i<this.events[eventID].length; i++) {
-        this.events[eventID][i][1].apply( this.events[eventID][i][0],
-                                          arguments );
-    }
-    return true;
-};
-
-/******************************************************************************
- * Queue Manager class
- *
- * an internal class for managing delayed execution of code.  This uses the
- * window.setTimeout interface but adds support for execution of functions
- * on objects
- *
- * The problem with setTimeout is that you need a reference to a global object
- * to do something useful in an object-oriented environment, and we don't
- * really have that here.  So the Queue Manager handles a stack of pending
- * delayed execution code and evaluates it when it comes due.  It can be
- * used exactly like window.setTimeout in that it returns an id that can
- * subsequently be used to clear the delayed code.
- *
- * To add something to the queue, call
- * var id = goQueueManager.enqueue( timeout, obj, func, args );
- *
- * timeout - time to delay (milliseconds)
- * obj - the object to execute the function within.  Can be null for global
- *       scope
- * func - the function to execute.  Note this is the function, not a string
- *        containing the function.
- * args - an array of values to be passed to the function.
- *
- * To remove a function from the queue, call goQueueManager.dequeue( id );
- *****************************************************************************/
-var goQueueManager = new _queueManager();
-
-function _queueManager() {
-    this.queue = new Array();
-}
-
-_queueManager.prototype.enqueue = function( timeout, obj, func, args ) {
-    var pos = this.queue.length;
-    for (var i=0; i< this.queue.length; i++) {
-        if (this.queue[i] == null) {
-            pos = i;
-            break;
-        }
-    }
-    var id = window.setTimeout( "_queueManager_execute("+pos+")", timeout );
-    this.queue[pos] = new Array( id, obj, func, args );
-    return pos;
-};
-
-_queueManager.prototype.dequeue = function( pos ) {
-    if (this.queue[pos] != null) {
-        window.clearTimeout( this.queue[pos][0] );
-        this.queue[pos] = null;
-    }
-};
-
-function _queueManager_execute( pos) {
-    if (goQueueManager.queue[pos] != null) {
-        var obj = goQueueManager.queue[pos][1];
-        var func = goQueueManager.queue[pos][2];
-        if (goQueueManager.queue[pos][3] != null) {
-            func.apply( obj, goQueueManager.queue[pos][3] );
-        } else {
-            func.apply( obj );
-        }
-        goQueueManager.queue[pos] = null;
-    }
-};
