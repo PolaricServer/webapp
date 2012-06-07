@@ -8,6 +8,9 @@ INIFILE=/etc/polaric-aprsd/server.ini
 
 case "$1" in
     configure|reconfigure)
+        if [ -e "/etc/cron.daily/polaric-webapp.dpkg-old" ]; then
+           rm -R /etc/cron.daily/polaric-webapp.dpkg-old
+        fi 
         if [ -e "/var/www/aprs/KaMap/mapserv" ]; then
            rm -R /var/www/aprs/KaMap/mapserv
         fi
@@ -17,11 +20,16 @@ case "$1" in
            rm -R /var/www/aprs/img
         fi
         ln -s /var/www/aprs/OpenLayers/img /var/www/aprs/img
+        if [ -e "/var/www/aprs/theme" ]; then
+           rm -R /var/www/aprs/theme
+        fi
         
         a2enmod proxy_http > /dev/null 2>&1
         a2enmod expires > /dev/null 2>&1
-        a2ensite aprs > /dev/null 2>&1
-        chown www-data:www-data /var/www/aprs/kacache2
+        a2enmod deflate > /dev/null 2>&1
+        a2ensite aprs > /dev/null 2>&1        
+        chown www-data:www-data /var/www/aprs/kacache2 /var/log/polaric/kamap
+        chmod 755 /var/log/polaric/kamap
         db_stop
     ;;
 
