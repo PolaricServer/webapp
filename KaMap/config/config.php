@@ -73,11 +73,17 @@ $tileWidth = 256;
 $tileHeight =256;
 $metaWidth = 5;
 $metaHeight = 5;
+
 /* $metaBuffer = Buffer size in pixels to add around metatiles to avoid
  * rendering issues along the edge of the map image
  */
 $metaBuffer = 10; 
- 
+
+/* how long to wait before trying to re-render metatiles after rendering
+ * failures (in seconds).  
+ */
+$retryWait = 1800;
+
 /******************************************************************************
  * in-image debugging information - tile location, outlines etc.
  * to use this, you need to remove images from your cache first.  This also
