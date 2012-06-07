@@ -69,7 +69,7 @@ function showContextMenu(ident, e, ax, ay)
 	  
 	  if (isMobileApp) {          
 	     if (gpsTracker==null)
-	          txt.add('Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); });
+	          txt.add('Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); gpsTracker.activate();});
 	     else
 	          txt.add('De-aktiver GPS pos.', function() { gpsTracker.deactivate(); gpsTracker=null; });
 	  }
