@@ -108,6 +108,7 @@ include_once( 'webappconfig.php' );
      echo('<script type="text/javascript" src="Aprs/compiled.js"></script>');
   }
   else {
+     echo('<script type="text/javascript" src="KaMap/eventManager.js"></script>');
      echo('<script type="text/javascript" src="KaMap/base64.js"></script>');
      echo('<script type="text/javascript" src="KaMap/DHTMLapi.js"></script>');
      echo('<script type="text/javascript" src="KaMap/xhr.js"></script>');
