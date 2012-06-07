@@ -15,6 +15,11 @@ UNITS METERS
 SHAPEPATH "Kartverket_Topo2"
 IMAGECOLOR 161 193 201
 
+WEB
+     IMAGEPATH "/tmp/wms"
+     IMAGEURL "/tmp/wms"
+END
+
 
 # you may need to change this to match your MapServer build
 IMAGETYPE JPEG
@@ -32,17 +37,7 @@ PROJECTION
   "no_defs"
 END
 
-WEB
-     IMAGEPATH "/tmp/wms"
-     IMAGEURL "/tmp/wms"
-END
 
-QUERYMAP
-  SIZE 200 200
-  STATUS ON
-  STYLE HILITE
-  COLOR 255 0 0
-END
 
 #
 #
@@ -84,7 +79,7 @@ LAYER
    CONNECTION "http://openwms.statkart.no/skwms1/wms.europa?REQUEST=GetMap&"
    CONNECTIONTYPE WMS
    DEBUG ON
-   MINSCALE 300000
+   MINSCALE 150000
 
    METADATA
       "wms_srs"             "EPSG:32633"
