@@ -46,8 +46,11 @@ function showContextMenu(ident, e, ax, ay)
      var d = myKaMap.domObj;
      if (ident == null) {
           var txt = new Array( ['Vis kartreferanse',  function () { setTimeout('showPosInfoPix('+x+', '+y+');',100); } ]);
+          if (WXreport_enable)
+               txt.push(['Værmelding', function() { setTimeout('showWxInfoPix('+x+', '+y+');',100); } ]);
+          
           if (canUpdate()) 
-             txt.push(['Legg på APRS objekt',function () { editObjectInfo(x, y);} ]);
+             txt.push(['Legg på APRS objekt', function () { editObjectInfo(x, y);} ]);
 	  if (isAdmin())
 	     txt.push(['Sett egen posisjon', function () { setOwnPosition(x, y);} ]);
 	  
@@ -73,14 +76,15 @@ function showContextMenu(ident, e, ax, ay)
 	     else
 	          txt.push(['De-aktiver GPS pos.', function() { gpsTracker.deactivate(); gpsTracker=null; } ]);
 	  }
-	  
+	  txt.push(null);
           if (!traceIsHidden('ALL'))
             txt.push(['Skjul sporlogger', function() { myOverlay.hidePointTrace('ALL'); } ]);
           else
             txt.push(['Vis sporlogger', function() { myOverlay.showPointTrace('ALL'); } ]);
           txt.push(null);
-          txt.push(['Zoom inn', function() {myKaMap.zoomIn(); } ]);
-          txt.push(['Zoom ut',  function() {myKaMap.zoomOut(); } ]);
+          txt.push(['Skriftstørrelse +',           function() { labelStyle.next(); } ]);
+          txt.push(['Skriftstørrelse -',           function() { labelStyle.previous(); } ]);
+          
           if (isAdmin() || canUpdate()) {
              txt.push(null);
              if (sarUrl) 
@@ -452,6 +456,8 @@ function showPosInfo(coords)
 }
 
 
+var wps = new statkartWPS(statkartWPS_url);
+
 function showPosInfoUtm(uref, iconOnly)
 {
     var llref = uref.toLatLng();
@@ -467,17 +473,92 @@ function showPosInfoUtm(uref, iconOnly)
        return;
     }
     var w = popupwindow(myKaMap.domObj, 
-                 "<span class=\"sleftlab\">UTM:</span>" + ustring +"<br>" +
-                 "<nobr><span class=\"sleftlab\">Latlong:</span>" + showDMstring(llref.lat)+"N, "+showDMstring(llref.lng)+"E" +"<br>"  + 
-                 "</nobr><span class=\"sleftlab\">Loc:</span>" + ll2Maidenhead(llref.lat, llref.lng),                 
-                 nPixPos[0], nPixPos[1], true); 
+                 '<span class="sleftlab">UTM:</span>' + ustring +'<br>' +
+                 '<nobr><span class="sleftlab">Latlong:</span>' + showDMstring(llref.lat)+"N, "+showDMstring(llref.lng)+"E" +"<br>"  + 
+                 '</nobr><span class="sleftlab">Loc:</span>' + ll2Maidenhead(llref.lat, llref.lng) +
+                 '<div title="kilde: kartverket (WPS)" id="wpsresult"></div>',                 
+                 nPixPos[0], nPixPos[1], true);
+
+    if (statkartWPS_enable) 
+      wps.doElevation(uref, function(wdata) {
+         if (!wdata.terrain && !wdata.placename && !wdata.elevation)
+             return; 
+         var txt = ""; 
+         if (wdata.placename) 
+             txt += '<span class="sleftlab">Sted:</span>' + wdata.placename +'<br>';
+         txt += '<span class="sleftlab">Terreng:</span>' + wdata.terrain +'<br>';
+         if (wdata.elevation) 
+             txt += '<span class="sleftlab">Høyde:</span>' + Math.round(wdata.elevation) +' moh<br>';
+         document.getElementById("wpsresult").innerHTML = txt; 
+      });
+    
     if (canUpdate()) {
-       var hr = w.appendChild(document.createElement("hr"));
-       hr.style.marginBottom = "0";
-       hr.style.marginTop = "0.2em";
-       var m = w.appendChild(_createItem("Opprett APRS objekt her", 
-                              function () { editObjectInfo(nPixPos[0], nPixPos[1]);menuMouseSelect();}));
-       m.style.width = "12em";
+      var hr = w.appendChild(document.createElement("hr"));
+      hr.style.marginBottom = "0";
+      hr.style.marginTop = "0.2em";
+      var m = w.appendChild(_createItem("Opprett APRS objekt her", function () 
+      { editObjectInfo(nPixPos[0], nPixPos[1]);menuMouseSelect();}));
+      m.style.width = "12em";
     }
 }
 
+
+/* Weather report from met.no */
+
+var wx = new WXreport(WXreport_url);
+
+function showWxInfoPix(x, y) {
+  var coord = myKaMap.pixToGeo(x, y);
+  var u = new UTMRef(coord[0], coord[1], this.utmnzone, this.utmzone);
+  showWxInfo(u);
+}
+
+
+function showWxInfo(uref) {
+  var llref = uref.toLatLng();
+  var nPixPos = myKaMap.geoToPix(uref.easting, uref.northing);
+  
+  var w = popupwindow(myKaMap.domObj, 
+        '<img title="Kilde: Meteorologisk institutt (metno)" src="images/met.gif" align="right">'+
+        '<h3>Værmelding fra met.no</h3>' +
+        '<div id="wxresult"></div>', 
+         nPixPos[0], nPixPos[1], false);
+                      
+  wx.doTextReport(uref, function(wdata) {
+    var txt = writefcast(wdata[0]); 
+    txt += writefcast(wdata[1]);
+    if (!isMobileApp)
+        txt += writefcast(wdata[2]);
+    var z = document.getElementById("wxresult"); 
+    z.innerHTML = txt;
+    
+    function writefcast(x) { return '<h4 head="wxhead">'+dateFormat(x.from, x.to) 
+                                  +" ("+x.name+")</h4>" + x.fcast; }
+  });
+}
+
+
+function dateFormat(d1, d2) {
+  var txt = "";
+  var days = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag']; 
+  var today = new Date();
+  var h1 = d1.getHours(), h2 = d2.getHours();
+  if (h1 < 10) h1 = '0'+h1;
+  if (h2 < 10) h2 = '0'+h2;
+  txt = days[d1.getDay()];
+  if (d1.getDate() > today.getDate() && d1.getHours() > 0)
+    txt = txt + " kl." + h1;
+  if ( (d2.getDate() > d1.getDate()+1 || d2.getHours() > 0) ) {
+    if (d2.getHours() == 0)
+      txt = txt + " til " + days[ prevDay(d2.getDay())]; 
+    else
+      txt = txt + " til " + (d1.getDate() != d2.getDate() ? days[ d2.getDay()] : "") + " kl. "+h2;
+  }
+  return txt;
+  
+  function prevDay(x) {
+    if (x == 1) return 7;
+    else
+      return x -1; 
+  }
+}
