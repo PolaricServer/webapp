@@ -37,9 +37,15 @@ GpsTracker.prototype.activate = function ()
      var ll = new LatLng(position.coords.latitude, position.coords.longitude);
      var uref = ll.toUTMRef();
      var uref_map = uref.toLatLng().toUTMRef(utmnzone, utmzone);
+     
      myZoomToGeo(uref_map.easting, uref_map.northing, 0.2);
-     if (t.speedDisplay)
-        setStatus('&nbsp;<span id="speedDisplay">' + speedHeading(position.coords) + '</span>');
+     if (t.speedDisplay) {
+         setStatus('<div id="speedDisplay">'
+	       +(position.coords.speed > 0.3 ? '<div id="gpsheadd"><img id="gpsheading" src="images/ptr1.png"></div>' : '')  
+	       + speedHeading(position.coords) + '</div>');
+         var hd = new ImgRotate('gpsheading');
+	 hd.rotate(position.coords.heading);
+     }
      else
         setStatus('&nbsp; GPS posisjon ok <br>' + uref + '&nbsp;/&nbsp;'+ speedHeading(position.coords));
      
@@ -60,6 +66,7 @@ GpsTracker.prototype.activate = function ()
       setStatus('&nbsp; GPS feil<br>' + error.message);
       navigator.notification.alert ("ERROR:"+error.message, null, 'PolaricDroid');
    }
+   
    
    function speedHeading(x)
    {
@@ -98,4 +105,10 @@ GpsTracker.prototype.deactivate = function ()
 GpsTracker.prototype.toggleSpeedDisplay = function ()
 {
     this.speedDisplay = !this.speedDisplay;
+    if (this.speedDisplay) 
+       setStatus('&nbsp; Vise <u>fart</u>: vent litt...');
+    else if (this.my_point)
+       setStatus('&nbsp; GPS <u>på</u>slått');
+    else
+       setStatus('&nbsp; GPS <u>av</u>slått');
 }
