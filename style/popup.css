@@ -2,7 +2,13 @@ div.trblock, label {display: block; overflow: hidden;
 margin-bottom: 0.07em; max-width: 45em; vertical-align: top}
 
 div.trblock {margin-bottom: 0.2em}
-div#traffic {margin-top: 0.4em}
+div#traffic, div#wpsresult {margin-top: 0.4em}
+div#wpsresult { background: #ddc; margin-top: 0.3em; margin-bottom: 0.3em}
+
+
+div#wxresult{max-width: 30em; min-width: 20em; margin-bottom: 0.5em}
+#wxresult h4 {background: #ccc; margin-bottom: 0.5em; margin-top: 0.9em}
+
 
 #measureSeg, #measureTot { 
   width: 6em; 
@@ -62,7 +68,7 @@ div.POPUPMENU {
 }
 
 .sleftlab, label.lleftlab {
-    width: 4.6em;
+    width: 4.5em;
 } 
 
 div.POPUP img { max-width: 500px; }
