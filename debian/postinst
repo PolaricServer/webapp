@@ -29,6 +29,7 @@ case "$1" in
         a2enmod expires > /dev/null 2>&1
         a2enmod deflate > /dev/null 2>&1
         a2ensite aprs > /dev/null 2>&1
+    
         chown www-data:www-data /var/www/aprs/kacache2 /var/log/polaric/kamap
         chmod 755 /var/log/polaric/kamap
         
