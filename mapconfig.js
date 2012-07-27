@@ -65,12 +65,6 @@ var backgroundColor = '#A1C1C9'
              {  attribution: _kv_attr }
         ),   
     new OpenLayers.Layer.WMS(
-            "Norge i bilder (flyfoto)", "http://cache.norgeibilder.no/geowebcache/service/wms?",
-            {  layers: 'NiB',
-               format: 'image/jpeg'},
-            {  attribution: "Skog og landskap, Statens vegvesen og Statens kartverk" }
-        ),
-    new OpenLayers.Layer.WMS(
              "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
              {  layers: 'sjo_hovedkart2',
                 format: 'image/png'},
@@ -131,3 +125,31 @@ var defaultFilterView = 'track2';
 
 /* Set to true to enable SAR URL */
 var sarUrl = false; 
+
+
+
+/* Use WPS service from Statkart to get elevation data. 
+ * For now, you have to set up a proxy for this on the server
+ * with the same domain name as your service. It is VERY important 
+ * to remove all Authorization headers from proxied requests, to 
+ * avoid leaking authentication info. 
+ * 
+ * To activate this, you should know what you are doing!
+ */
+
+var statkartWPS_enable = false;
+var statkartWPS_url = "/wps";
+
+
+
+/* Use service from met.no go get weather forecasts.
+ * For now, you have to set up a proxy for this on the server
+ * with the same domain name as your service. It is VERY important 
+ * to remove all Authorization headers from proxied requests, to 
+ * avoid leaking authentication info. 
+ * 
+ * To activate this, you should know what you are doing!
+ */
+
+var WXreport_enable = false;
+var WXreport_url = "/wxdata";
