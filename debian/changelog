@@ -1,8 +1,15 @@
-polaric-webapp (1.0.7+) UNRELEASED; urgency=low
+polaric-webapp (1.0.8+) UNRELEASED; urgency=low
 
-  * testing 
+  * Testing: WPS, change font size of labels, etc... 
 
- -- Øyvind hanssen <ohanssen@acm.org>  Tue, 22 May 2012 21:37:30 +0200
+ -- Øyvind hanssen <ohanssen@acm.org>  Wed, 20 Jun 2012 21:07:28 +0200
+
+polaric-webapp (1.0.8) stable; urgency=low
+
+  * Improve rendering/caching KaMap backend.  
+  * Multitouch etc...  
+
+ -- Øyvind hanssen <ohanssen@acm.org>  Thu, 07 Jun 2012 20:17:12 +0200
 
 polaric-webapp (1.0.7) stable; urgency=low
 
