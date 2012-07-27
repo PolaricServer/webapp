@@ -49,6 +49,7 @@ LAYER
    MINSCALE 150000
 
    METADATA
+      "wms_connectiontimeout" "120"
       "wms_srs"             "EPSG:32633"
       "wms_name"            "Europa_WMS"
       "wms_title"           "Europa_WMS"
@@ -69,6 +70,7 @@ LAYER
    DEBUG ON
 
    METADATA
+      "wms_connectiontimeout" "120"
       "wms_srs"             "EPSG:32633"
       "wms_name"            "topo2_WMS"
       "wms_title"           "topo2_WMS"
