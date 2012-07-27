@@ -1,16 +1,19 @@
 div.trblock {display: block; overflow: hidden; margin-bottom: 0.2em}
 div#traffic {margin-top: 0.4em}
 
+div.point {top: -11px; left: -11px; }
+div.point img {margin-top: 11px; margin-left: 11px;}
+
+
 div.lstill, div.lobject, div.lmoving {
    border: 1px solid #766;   
-   top: -10px;
-   left: 12px;
+   left: 24px;
    position: absolute; 
    font-family: Arial, sans-serif;   
    font-weight: bold;
    font-size: 100%;
    white-space: nowrap;
-   padding: 1px 3px 1px 3px; 
+   padding: 2px 3px 1px 3px; 
    align: center;
    opacity: 0.88;
    -moz-border-radius: 0.3em;
@@ -48,6 +51,8 @@ div.tracked {
 }
 div.igate { background: #dfc; border: 2px solid #262}
 div.wdigi { background: #fcc; border: 2px solid #522}
+div.own   { background: #bbffbb; color: #0000cc }
+
 
 div.olControlAttribution, div.olControlAttribution a {
     left: 10px  !important;
