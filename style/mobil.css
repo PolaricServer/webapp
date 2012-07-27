@@ -25,8 +25,6 @@ td {
 
 
 
-
-
 #tools * {
   cursor: pointer;
   margin-right:3px
@@ -45,9 +43,10 @@ td {
 #tools { height: 33px; border: solid #999 1px; }
 #toolbarBackground { height: 39px;}
 #toolbarToggler { left: 18px; top: 45px;}
-#speedDisplay {font-size: 22px; font-weight: bold}
-#speedDisplay span.speed {font-size: 26px}
 
+#speedDisplay {font-size: 22px; font-weight: bold; vertical-align: middle;}
+#speedDisplay span.speed {font-size: 26px}
+#gpsheadd {float: left; margin-left: 20px; margin-right: 10px; }
 
 @media screen and (min-device-width: 1200px) and (min-resolution: 120dpi),
 screen and (min-device-width: 1200px) and (-webkit-device-pixel-ratio: 1.0), 
@@ -80,10 +79,12 @@ screen and (min-device-height: 1200px) and (-webkit-device-pixel-ratio: 1.5)
     height: 44px; 
     font-size: 15px;
   }
-  #scale { font-size: 12px; }
+  #scale { font-size: 13px; }
   .sbNumbersBox {font-size: 0.76em }
   .sbLabelBox {font-size: 0.9em }
   
+  #speedDisplay {font-size: 24px; font-weight: bold}
+  #speedDisplay span.speed {font-size: 28px}
 }
 
 
