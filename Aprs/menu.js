@@ -75,7 +75,12 @@ function showContextMenu(ident, e, ax, ay)
 	          txt.push(['Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); gpsTracker.activate(); } ]);
 	     else
 	          txt.push(['De-aktiver GPS pos.', function() { gpsTracker.deactivate(); gpsTracker=null; } ]);
-	  }
+	     if (powerMgmt_locked)
+                  txt.push(['De-aktiver strømsparing', powerMgmt_unlock ]);
+             else
+                  txt.push(['Aktiver strømsparing', powerMgmt_lock ]);
+          }
+          
 	  txt.push(null);
           if (!traceIsHidden('ALL'))
             txt.push(['Skjul sporlogger', function() { myOverlay.hidePointTrace('ALL'); } ]);
