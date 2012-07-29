@@ -165,6 +165,9 @@ function myMapInitialized() {
     init_labelStyle(storage, uid);
     OpenLayers.Console.info("UID=", uid);
     
+    if (!isMobileApp)
+       powerMgmt_init();
+      
     permalink = (qstring.length >= 2 && qstring.match(/.*zoom\=.*/) && qstring.match(/.*lat\=.*/));
     if (!permalink) {
          var blayer = storage[uid+'.baselayer'];
