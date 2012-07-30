@@ -71,7 +71,6 @@ function myOnLoad_mobile() {
 
 function startUp() {
     initDHTMLAPI();
-    window.onresize=drawPage;
     
     myKaMap = new kaMap( 'viewport' );
     myKaRuler = new myKaRuler( myKaMap);       
@@ -133,7 +132,7 @@ function startUp() {
     drawPage();
     myKaMap.initialize( szMap, szExtents, szCPS );
     geopos = document.getElementById('geoPosition');
-
+    window.onresize=drawPage;
 
 }
 
@@ -164,7 +163,11 @@ function myMapInitialized() {
     if (uid==null)
       uid = "polaric"; 
     else uid = "polaric."+uid;
+    init_labelStyle(storage, uid);
     OpenLayers.Console.info("UID=", uid);
+    
+    if (!isMobileApp)
+       powerMgmt_init();
     
     permalink = (qstring.length >= 2 && qstring.match(/.*zoom\=.*/) && qstring.match(/.*lat\=.*/));
     if (!permalink) {
@@ -385,7 +388,7 @@ function filterView(fname)
 {
    selectedFView = fname; 
    if (initialized) {
-       storage['polaric.filter'] = fname;
+       storage[uid+'.filter'] = fname;
        myOverlay.removePoint();
        getXmlData(false);
    }
@@ -670,7 +673,7 @@ function getQueryParam(p) {
  * to be called
  */
 function mySetMap( name ) {
-   window.storage['polaric.view'] = name;
+   window.storage[uid+'.view'] = name;
    myKaMap.selectMap( name );
 }
 
