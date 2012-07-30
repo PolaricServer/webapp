@@ -13,6 +13,7 @@ function GpsTracker ()
 {
    this.my_point = null; 
    this.watchID = null; 
+   this.speedDisplay = false;
 }   
    
 
@@ -37,7 +38,15 @@ GpsTracker.prototype.activate = function ()
      var uref = ll.toUTMRef();
      var uref_map = uref.toLatLng().toUTMRef(utmnzone, utmzone);
      myZoomToGeo(uref_map.easting, uref_map.northing, 0.2);
-     setStatus('&nbsp; GPS posisjon ok <br>' + uref + '&nbsp;/&nbsp;'+ speedHeading(position.coords));
+     if (t.speedDisplay) {
+       setStatus('<div id="speedDisplay">'
+       +(position.coords.speed > 0.3 ? '<div id="gpsheadd"><img id="gpsheading" src="images/ptr1.png"></div>' : '')  
+       + speedHeading(position.coords) + '</div>');
+       var hd = new ImgRotate('gpsheading');
+       hd.rotate(position.coords.heading);
+     }
+     else
+        setStatus('&nbsp; GPS posisjon ok <br>' + uref + '&nbsp;/&nbsp;'+ speedHeading(position.coords));
      
      if (t.my_point == null) {
         t.my_point = myOverlay.addNewPoint('my_gps_position', uref_map.easting, uref_map.northing);  
@@ -47,7 +56,7 @@ GpsTracker.prototype.activate = function ()
         t.my_point.div.appendChild(icon.ldiv);  
      }
      else
-        this.my_point.setPosition(uref_map.easting, uref_map.northing);
+        t.my_point.setPosition(uref_map.easting, uref_map.northing);
      myKaMap.updateObjects();
    }
    
@@ -68,7 +77,7 @@ GpsTracker.prototype.activate = function ()
        else if (x.heading < 247) d = "SW";
        else if (x.heading < 292) d = "W"; 
        else d = "NW";
-       return Math.round(x.speed*3.6)+" km/h "+d;
+       return '<span class="speed">'+Math.round(x.speed*3.6)+'</span> km/h '+d;
    }
    
    
@@ -88,4 +97,16 @@ GpsTracker.prototype.deactivate = function ()
    navigator.geolocation.clearWatch(this.watchID);
    setStatus('&nbsp; GPS <u>av</u>slått');
    myKaMap.updateObjects();
+}
+
+
+GpsTracker.prototype.toggleSpeedDisplay = function ()
+{
+    this.speedDisplay = !this.speedDisplay;
+    if (this.speedDisplay) 
+       setStatus('&nbsp; Vise <u>fart</u>: vent litt...');
+    else if (this.my_point)
+       setStatus('&nbsp; GPS <u>på</u>slått');
+    else
+       setStatus('&nbsp; GPS <u>av</u>slått');
 }
