@@ -38,39 +38,6 @@ PROJECTION
 END
 
 
-
-#
-#
-# Start of legend
-#
-LEGEND
-  KEYSIZE 18 12
-  LABEL
-    TYPE BITMAP
-    SIZE MEDIUM
-    COLOR 0 0 89
-  END
-  STATUS ON
-END
-
-#
-# Start of scalebar
-#
-SCALEBAR
-  IMAGECOLOR 255 255 255
-  LABEL
-    COLOR 255 255 255
-    SIZE tiny
-  END
-  STYLE 1
-  SIZE 80 2
-  COLOR 255 255 255
-  UNITS KILOMETERS
-  INTERVALS 1
-  TRANSPARENT TRUE
-  STATUS TRUE
-END
-
 LAYER
    NAME "kartverket_europa"
    TYPE RASTER
@@ -82,6 +49,7 @@ LAYER
    MINSCALE 150000
 
    METADATA
+      "wms_connectiontimeout" "120"
       "wms_srs"             "EPSG:32633"
       "wms_name"            "Europa_WMS"
       "wms_title"           "Europa_WMS"
@@ -102,6 +70,7 @@ LAYER
    DEBUG ON
 
    METADATA
+      "wms_connectiontimeout" "120"
       "wms_srs"             "EPSG:32633"
       "wms_name"            "topo2_WMS"
       "wms_title"           "topo2_WMS"
