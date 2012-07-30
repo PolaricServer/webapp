@@ -201,6 +201,7 @@ function popup(onDiv, menudiv, x, y, img)
      onDiv.appendChild(activepopup);
      var xoff=0;
      var yoff=0;
+     var xoffs = yoffs = false;
      var firstTime = true;
   
      activepopup.style.position   = 'absolute';
@@ -227,7 +228,7 @@ function popup(onDiv, menudiv, x, y, img)
      
      adjustPosition();
      setTimeout(adjustPosition, 500); 
-     activepopup.style.zIndex  = 1000;
+     activepopup.style.zIndex  = 1301;
 
      
      /* Workaround to prevent OL from reacting on mousemove as long as popup is active */
@@ -245,6 +246,7 @@ function popup(onDiv, menudiv, x, y, img)
     {   
       xoff = x + 4 + menudiv.clientWidth - document.body.clientWidth;
       if (xoff > 0) {
+        xoffs = true;
         x -= xoff;
         if (x < 1) x=1;
         if (image!=null)
@@ -252,6 +254,7 @@ function popup(onDiv, menudiv, x, y, img)
       }
       yoff = y + 4 + menudiv.clientHeight - document.body.clientHeight;
       if (yoff > 0) {
+	yoffs = true;
         y -= yoff;
         if (y < 1) y=1;
         if (image!=null)
@@ -263,17 +266,20 @@ function popup(onDiv, menudiv, x, y, img)
          activepopup.style.top     = y-3+"px";
       }  
       firstTime = false;
+      if (xoffs && yoffs) 
+         image.style.display = "none";
      }
 
 }
 
 
 // FIXME: Add position of window
-function fullPopupWindow(name, url, width, height) {
-   var ctrl = "resizable=yes,scrollbars=yes,width="+width+",height="+height;
-   eval( "this."+name+"=window.open('"+url+"','"+name+"','"+ctrl+"');" );
-   eval( "if( this."+name+") this."+name+".moveTo(0,0); this."+name+".moveBy(50,100); this."+name+".focus();" );
-}
 
+function fullPopupWindow(name, url, width, height) {
+  var ctrl = "left=50,top=100,width="+width+",height="+height+"resizable=1,scrollbars=1";
+  eval( "this."+name+"=window.open('"+url+"','"+name+"','"+ctrl+"');" );
+  if (window.focus)
+    setTimeout(function() {eval("if(this."+name+") this."+name+".focus();" );}, 2000);
+}
 
 
