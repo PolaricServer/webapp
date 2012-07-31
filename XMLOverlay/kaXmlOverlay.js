@@ -1263,6 +1263,7 @@ kaXmlPoint.prototype.parse = function(point_element) {
            mdiv.setAttribute('id', ident+"_label");
            this.div.appendChild(mdiv);
            mdiv.style.position = 'absolute'; 
+           mdiv.className = "point"; 
            mdiv.style.zIndex = zzindex+10;
            if (isSign)
               mdiv.style.zIndex = zzindex - 10;  
@@ -1344,6 +1345,7 @@ kaXmlPoint.prototype.parse = function(point_element) {
                 this.addGraphic(t);
                 mdiv.appendChild(t.ldiv);  
                 t.ldiv.setAttribute('id', ident+"_label_txt");
+                t.ldiv.style.fontSize = labelStyle.getFontSize(); 
                 if (labelIsHidden(ident))
                     t.ldiv.style.visibility = 'hidden';
            }
