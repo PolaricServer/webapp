@@ -131,3 +131,29 @@ var defaultFilterView = 'track2';
 
 /* Set to true to enable SAR URL */
 var sarUrl = false; 
+
+
+/* Use WPS service from Statkart to get elevation data, 
+ * for now, you have to set up a proxy for this on the server
+ * with the same domain name as your service. It is VERY important 
+ * to remove all Authorization headers from proxied requests, to 
+ * avoid leaking authentication info. 
+ */
+
+var statkartWPS_enable = true;
+var statkartWPS_url = "/aprs/wps";
+
+
+
+
+/* Use service from met.no go get weather forecasts.
+ * For now, you have to set up a proxy for this on the server
+ * with the same domain name as your service. It is VERY important 
+ * to remove all Authorization headers from proxied requests, to 
+ * avoid leaking authentication info. 
+ * 
+ * To activate this, you should know what you are doing!
+ */
+
+var WXreport_enable = true;
+var WXreport_url = "/aprs/wxdata";
