@@ -1,8 +1,8 @@
-polaric-webapp (1.0.8+) UNRELEASED; urgency=low
+polaric-webapp (1.0.9) UNRELEASED; urgency=low
 
-  * Testing: WPS, change font size of labels, etc... 
+  * WPS, WX report,  change font size of labels, etc... 
 
- -- Øyvind hanssen <ohanssen@acm.org>  Wed, 20 Jun 2012 21:07:28 +0200
+ -- Øyvind hanssen <ohanssen@acm.org>  Sat, 04 Aug 2012 22:22:24 +0200
 
 polaric-webapp (1.0.8) stable; urgency=low
 
