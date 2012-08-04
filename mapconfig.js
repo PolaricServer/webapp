@@ -22,7 +22,7 @@ var backgroundColor = '#A1C1C9'
 
 
 /* 
- * Options for the map (common to all layers) 
+ * Options for the map (common to all layers). See OpenLayers Map class documentation.
  */
  var mapOptions = {
      projection: new OpenLayers.Projection('EPSG:32633'),
