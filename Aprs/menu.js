@@ -35,106 +35,145 @@ function receiveMessage(event)
 
 
 
+/************************************************************************
+ * Context menu
+ ************************************************************************/
 
-function showContextMenu(ident, e, ax, ay)
+
+var ctxtMenu = new ContextMenu(); 
+
+function ContextMenu()
+{
+   this.callbacks = new Array(); 
+   this.txt = new PopupMenu(null);
+}
+
+
+
+/* Context can be 'MAP', 'ITEM' or 'TOOLBAR' */
+
+ContextMenu.prototype.addCallback = function (context, func)
+{
+   this.callbacks[context] = func; 
+}
+
+
+
+
+ContextMenu.prototype.show = function (ident, e, ax, ay)
 {
      e = (e)?e:((event)?event:null); 
      var x = (ax) ? ax : ((e.pageX) ? e.pageX : e.clientX); 
      var y = (ay) ? ay : ((e.pageY) ? e.pageY : e.clientY);
+     var t = this; 
      
      var p = myOverlay.getPointObject(ident);
      var d = myKaMap.domObj;
-     var txt = new PopupMenu(null);
+     this.txt.clear();
+     this.txt.ident = ident; 
+     
      if (ident == null) {
-          txt.add('Vis kartreferanse',  function () { setTimeout('showPosInfoPix('+x+', '+y+');',100); });
+          this.txt.add('Vis kartreferanse',  function () { setTimeout('showPosInfoPix('+x+', '+y+');',100); });
           if (WXreport_enable)
-               txt.add('Værmelding', function() { setTimeout('showWxInfoPix('+x+', '+y+');',100); });
+               this.txt.add('Værmelding', function() { setTimeout('showWxInfoPix('+x+', '+y+');',100); });
   
           if (canUpdate()) 
-             txt.add('Legg på APRS objekt',function () { editObjectInfo(x, y);});
+             this.txt.add('Legg på APRS objekt',function () { editObjectInfo(x, y);});
 	  if (isAdmin())
-	     txt.add('Sett egen posisjon', function () { setOwnPosition(x, y);});
+	     this.txt.add('Sett egen posisjon', function () { setOwnPosition(x, y);});
 	  
-          txt.add(null);
-          txt.add('Sentrer punkt', function()  { myZoomTo(x,y); });
-          txt.add('Zoom inn', function() {myKaMap.zoomIn(); } );
-          txt.add('Zoom ut',  function() {myKaMap.zoomOut(); } );
+          this.txt.add(null);
+          this.txt.add('Sentrer punkt', function()  { myZoomTo(x,y); });
+          this.txt.add('Zoom inn', function() {myKaMap.zoomIn(); } );
+          this.txt.add('Zoom ut',  function() {myKaMap.zoomOut(); } );
+          _doCallback('MAP');
      }
                                      
      else if (ident == 'TOOLBAR') {
           d = toolbar;
-          txt.add('Finn APRS stasjon', function()  { setTimeout('searchStations();',100);});
-          txt.add('Finn kartreferanse', function() { setTimeout('showRefSearch();',100); });
+          this.txt.add('Finn APRS stasjon', function()  { setTimeout('searchStations();',100);});
+          this.txt.add('Finn kartreferanse', function() { setTimeout('showRefSearch();',100); });
           if (canUpdate()) {                 
-             txt.add('Legg inn objekt', function() { editObjectInfo(null, null); });
-             txt.add('Slett objekt', function() { deleteObject(null); });
+             this.txt.add('Legg inn objekt', function() { editObjectInfo(null, null); });
+             this.txt.add('Slett objekt', function() { deleteObject(null); });
           }
-          txt.add(null);
+          this.txt.add(null);
 	  
 	  if (isMobileApp) {          
 	     if (gpsTracker==null)
-	          txt.add('Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); gpsTracker.activate();});
+                 this.txt.add('Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); gpsTracker.activate();});
 	     else
-	          txt.add('De-aktiver GPS pos.', function() { gpsTracker.deactivate(); gpsTracker=null; });
+                 this.txt.add('De-aktiver GPS pos.', function() { gpsTracker.deactivate(); gpsTracker=null; });
              
              if (powerMgmt_locked)
-                  txt.add('De-aktiver strømsparing', powerMgmt_unlock);
+                 this.txt.add('De-aktiver strømsparing', powerMgmt_unlock);
              else
-                  txt.push('Aktiver strømsparing', powerMgmt_lock);
-             
+                 this.txt.push('Aktiver strømsparing', powerMgmt_lock);
 	  }
 	  
           if (!traceIsHidden('ALL'))
-            txt.add('Skjul sporlogger', function() { myOverlay.hidePointTrace('ALL'); });
+             this.txt.add('Skjul sporlogger', function() { myOverlay.hidePointTrace('ALL'); });
           else
-            txt.add('Vis sporlogger', function() { myOverlay.showPointTrace('ALL'); });
-          txt.add(null);
-          txt.add('Skriftstørrelse +',           function() { labelStyle.next(); } ]);
-          txt.add('Skriftstørrelse -',           function() { labelStyle.previous(); } ]);
+             this.txt.add('Vis sporlogger', function() { myOverlay.showPointTrace('ALL'); });
+          this.txt.add(null);
+          this.txt.add('Skriftstørrelse +',           function() { labelStyle.next(); });
+          this.txt.add('Skriftstørrelse -',           function() { labelStyle.previous(); });
 	  
           if (isAdmin() || canUpdate()) {
-             txt.add(null);
+             this.txt.add(null);
              if (sarUrl) 
-                  txt.add('SAR URL', sarUrl);
-             txt.add('SAR modus', sarModeWindow);
+                this.txt.add('SAR URL', sarUrl);
+             this.txt.add('SAR modus', sarModeWindow);
           }
           if (isAdmin()) {          
-             txt.add('Server info (admin)', adminWindow);
+             this.txt.add('Server info (admin)', adminWindow);
           }
+          _doCallback('TOOLBAR');
      }     
      else {
-          txt.add('Vis info', function() { showStationInfo(ident, false, x, y);});
+          this.txt.add('Vis info', function() { showStationInfo(ident, false, x, y);});
           if (p != null && p.hasTrace)
-               txt.add('Siste bevegelser', function() { showStationHistory(ident,x, y);});
+             this.txt.add('Siste bevegelser', function() { showStationHistory(ident,x, y);});
           
           if (canUpdate()) { 
-             txt.add('Globale innstillinger', function() { showStationInfo(ident, true);});
+             this.txt.add('Globale innstillinger', function() { showStationInfo(ident, true);});
              if (p != null) { 
                 if (p.own )
-                   txt.add('Slett objekt', function() { deleteObject(ident); });
+                   this.txt.add('Slett objekt', function() { deleteObject(ident); });
                 else
-                   txt.add('Nullstill info', function() { resetInfo(ident); });
+                   this.txt.add('Nullstill info', function() { resetInfo(ident); });
              }   
           }
           
-          txt.add(null);
-          txt.add('Auto-sporing '+(isTracked(ident) ? 'AV' : 'PÅ'), function() { toggleTracked(ident); });
+          this.txt.add(null);
+          this.txt.add('Auto-sporing '+(isTracked(ident) ? 'AV' : 'PÅ'), function() { toggleTracked(ident); });
           if (!labelIsHidden(ident))
-              txt.add('Skjul ident', function() { hidePointLabel(ident); } );
+              this.txt.add('Skjul ident', function() { hidePointLabel(ident); } );
           else
-              txt.add('Vis ident', function() { showPointLabel(ident); } );
+              this.txt.add('Vis ident', function() { showPointLabel(ident); } );
               
           if (hasTrace(ident)) {
              if (!traceIsHidden(ident))
-               txt.add('Skjul spor', function() { myOverlay.hidePointTrace(ident); });
+               this.txt.add('Skjul spor', function() { myOverlay.hidePointTrace(ident); });
              else
-               txt.add('Vis spor', function() { myOverlay.showPointTrace(ident); });
+               this.txt.add('Vis spor', function() { myOverlay.showPointTrace(ident); });
           } 
+          _doCallback('ITEM');
       }                       
 
      e.cancelBubble = true;       
      menuMouseSelect();                     
-     txt.activate(d,x, y);
+     this.txt.activate(d,x, y);
+     
+     
+     function _doCallback(ctxt)
+     {
+       var f = t.callbacks[ctxt]; 
+       if (f != null) 
+           f(t.txt); 
+     }
+     
+     
 } 
  
 
@@ -144,10 +183,13 @@ function mainMenu(icn, e)
      e = (e)?e:((event)?event:null);
      x = icn.offsetLeft + 10; 
      y = icn.offsetTop + icn.offsetHeight - 2;
-     showContextMenu('TOOLBAR', e, x, y);
+     ctxtMenu.show('TOOLBAR', e, x, y);
      e.cancelBubble = true;   
      return false; 
 }
+
+/************ End of Context menu stuff  *************/
+
 
 
 
@@ -563,15 +605,13 @@ function dateFormat(d1, d2) {
     txt = txt + " kl." + h1;
   if ( (d2.getDate() > d1.getDate()+1 || d2.getHours() > 0) ) {
     if (d2.getHours() == 0)
-      txt = txt + " til " + days[ prevDay(d2.getDay())]; 
+      txt = txt + " til " + d2.getDay()+"/"+days[ prevDay(d2.getDay())]; 
     else
       txt = txt + " til " + (d1.getDate() != d2.getDate() ? days[ d2.getDay()] : "") + " kl. "+h2;
   }
   return txt;
   
   function prevDay(x) {
-    if (x == 1) return 7;
-    else
-      return x -1; 
+    return x -1; 
   }
 }
