@@ -81,8 +81,8 @@ function xmlResult()
                 OpenLayers.Console.info("xmlResult: status", status);
                 if (status == 503)
                    setTimeout(function() { window.location.reload(); }, 25000);
-                else if (status == 0)
-                   setTimeout(function() { call(u, o, f); }, 1000);
+          //      else if (status == 0)
+          //         setTimeout(function() { call(u, o, f); }, 1000);  FIXME FIXME FIXME FIXME
            }
         }
     }
