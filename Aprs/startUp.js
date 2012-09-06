@@ -166,7 +166,7 @@ function myMapInitialized() {
     init_labelStyle(storage, uid);
     OpenLayers.Console.info("UID=", uid);
     
-    if (!isMobileApp)
+    if (isMobileApp)
        powerMgmt_init();
     
     permalink = (qstring.length >= 2 && qstring.match(/.*zoom\=.*/) && qstring.match(/.*lat\=.*/));
@@ -278,7 +278,7 @@ function myInitialized() {
     vp.oncontextmenu = function(e) 
          { e = (e)?e:((event)?event:null);
            if (document.kaCurrentTool != myKaRuler) 
-              showContextMenu(null, e); e.cancelBubble = true; }      
+              ctxtMenu.show(null, e); e.cancelBubble = true; }      
     document.getElementById('toolbar').oncontextmenu = function(e)     
          { e = (e)?e:((event)?event:null); 
            e.cancelBubble = true; }
@@ -329,12 +329,16 @@ function extentQuery()
 /* Get XML data from server */
 var xmlSeqno = 0;
 var retry = 0;
+var lastXmlCall = 0;
+
+
 function getXmlData(wait)
 {
    xmlSeqno++;
    var url = server_url + (getLogin() ? 'srv/mapdata_sec?' : 'srv/mapdata?');
    var i = myOverlay.loadXml(url+extentQuery() + "&scale="+currentScale+
                   (wait?"&wait=true":"") + (clientses!=null? "&clientses="+clientses : ""));
+   lastXmlCall = i; 
    
    var _xmlSeq = xmlSeqno;
    if (wait) setTimeout( function() 
@@ -378,7 +382,8 @@ function postLoadXml()
         ldiv.innerHTML = getLogin(); 
         ldiv.className = 'login';
      }
-     getXmlData(true);
+     if (myOverlay.seq >= 0) 
+        getXmlData(true);
 }
 
  
@@ -523,10 +528,10 @@ function myTrailClicked(ident, e) {
     menuMouseSelect();
     if (ie)
        remotepopupwindow(myKaMap.domObj, 
-       server_url + 'srv/trailpoint?id='+ident+"&index="+e.srcElement._index, x, y);
+       server_url + 'srv/trailpoint?ajax=true&id='+ident+"&time="+e.srcElement._time, x, y);
     else
        remotepopupwindow(myKaMap.domObj,
-       server_url + 'srv/trailpoint?id='+ident+"&index="+e.target._index, x, y);
+       server_url + 'srv/trailpoint?ajax=true&id='+ident+"&time="+e.target._time, x, y);
     e.cancelBubble = true; 
     if (e.stopPropagation) e.stopPropagation();
     return false;
