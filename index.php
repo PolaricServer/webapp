@@ -29,6 +29,7 @@ include_once( 'webappconfig.php' );
 <title><?php echo($siteTitle); ?></title>
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> 
+<link rel="stylesheet" href="jquery/smoothness/jquery-ui.css" type="text/css">
 <link rel="stylesheet" href="OpenLayers/theme/default/style.css" type="text/css">
 <link rel="stylesheet" href="KaMap/scalebar/scalebar-fat.css" type="text/css"  >
 <link rel="stylesheet" href="style/screen.css" type="text/css">
@@ -96,11 +97,10 @@ include_once( 'webappconfig.php' );
      echo('<script type="text/javascript" src="OpenLayers/lib/Firebug/firebug.js"></script>');
 ?>
 <script type="text/javascript" src="jquery/jquery-min.js"></script>
+<script type="text/javascript" src="jquery/jquery-ui-min.js"></script>
 <script type="text/javascript" src="OpenLayers/openlayers-polaric.js"></script>
 <script type="text/javascript" src="proj4js-compressed.js"></script>
-<script type="text/javascript" src="Aprs/gpx.js"></script>
 <script type="text/javascript" src="mapconfig.js"></script>
-
 
 <?php
   if  (!$isDebug) {
@@ -133,7 +133,13 @@ include_once( 'webappconfig.php' );
 ?>
 <script type="text/javascript" src="KaMap/tools/kaRubberZoom.js"></script>
 <script type="text/javascript" src="KaMap/tools/myKaRuler.js"></script> 
-       
+      
+
+<?php
+  // Add extra Javascript files
+  foreach ($jsIncludes as $inc) 
+     echo ('<script type="text/javascript" src="config/'.$inc.'" ></script>');
+?>
 
 </body>
 </html>
