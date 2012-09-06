@@ -129,6 +129,7 @@ function kaXmlOverlay( oKaMap, zIndex )
     this.name = 'kaXmlOverlay';
     this.postLoadXml = null;  
     this.meta = new Array(); 
+    this.seq = -1;
 
 
     for (var p in kaTool.prototype)
@@ -235,13 +236,18 @@ kaXmlOverlay.prototype.loadXmlDoc = function(xml_string)
         if (cancel && cancel == "true")
            return false;
         
+        /* Sequence numbers: Server increments this each time. 
+         * If we receive document out of order, return, 
+         * -1 is a special case. Just return it. 
+         */
         var ovrSeqNo = objDomTree.getAttribute("seq");
         if (ovrSeqNo) {
              var n = parseInt(ovrSeqNo);
              if ( n > 0 && n <= lastOvrSeq) 
                 return false;
-             
-             lastOvrSeq = n;
+           
+             this.seq = n; 
+             if (n >= 0) lastOvrSeq = n;
         } 
         var ovrView = objDomTree.getAttribute("view");
         if (ovrView && ovrView != selectedFView) {
@@ -623,6 +629,8 @@ kaXmlFeature.prototype.parseElement = function(point, domElement) {
 kaXmlFeature.prototype.readCoordinates = function(point, text) {
      var cx = new Array();
      var cy = new Array();
+     this.tn = new Array();
+     
      var pp = text.split(',');
      var i;
      for (i=0; i<pp.length; i++) {
@@ -631,8 +639,10 @@ kaXmlFeature.prototype.readCoordinates = function(point, text) {
           if (xy != null) {
                var x=parseFloat(xy[0]);
                var y=parseFloat(xy[1]);
+               
                cx.push(x);
                cy.push(y);
+               this.tn.push(xy[2]);
           }
      }
      this.setCoordinates(point,cx,cy);
@@ -775,8 +785,9 @@ kaXmlLinestring.prototype.draw_canvas = function(point)
            ctx.arc(this.xn[i]/scf, this.yn[i]/scf, 1, 0, Math.PI*2, false);
            
            var pt = document.createElement('div');
+           pt._time = this.tn[i];
            pt.style.position = 'absolute';
-           pt.title = point.pid;
+           pt.title = point.pid+" "+showTime(this.tn[i]);
            pt.className = 'trailPoint';
            this.ldiv.appendChild(pt);
            pt.style.left = (this.xn[i]/scf-4) +'px';
@@ -784,14 +795,17 @@ kaXmlLinestring.prototype.draw_canvas = function(point)
            pt.style.width = pt.style.height = '14px';
            pt.style.zIndex = '1190';
            pt._index = i;
+           pt._time = this.tn[i];
            pt.setAttribute('id', point.pid+"_"+i+"_trail");
            pt.onclick = function (e) 
              { return myTrailClicked(point.pid, e); }
         }
         ctx.stroke();
         ctx.restore();
-}
 
+        function showTime(t)
+           { return t.substring(8,10)+":"+t.substring(10,12); }    
+}
 
 
 
