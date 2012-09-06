@@ -21,8 +21,8 @@ function searchHistData(call)
       hist_totime = formatTime(new Date());   
    if (call != null)
       hist_call = call;
-         
-   var x = popupwindow(toolbar, 
+
+   var x = popupwindow(document.getElementById("anchor"),
         " <h1>Generere historisk spor</h1><hr><form> "+
         " Stasjon: <input type=\"text\"  size=\"10\" id=\"findcall\" value=\""
              + hist_call + "\"/><br> "+
@@ -36,8 +36,8 @@ function searchHistData(call)
                  + hist_totime + "\"/> <br> "+
         " <input id=\"searchbutton\" type=\"button\"" +
             " value=\"Søk\" />"+
-        "</form><br>", 50, 70, null, null, false);
-
+        "</form><br>", 50, 70, null);
+        
         $('#searchbutton').click( function() {
            hist_call     = $('#findcall').val();
            hist_fromdate = $('#tfrom').val();
@@ -49,18 +49,19 @@ function searchHistData(call)
             
         $('#tfrom').datepicker({ dateFormat: 'yy-mm-dd' });
         $('#tto').datepicker({ dateFormat: 'yy-mm-dd' });
-        $(x).resizable();
+        $(x).resizable(); 
 }
 
 
+
+
 function getHistXmlData(stn, tfrom, tto)
-{
+{ 
    abortCall(lastXmlCall);
    if (myOverlay != null) 
       myOverlay.removePoint(); 
-   reloadXml = false;
    myOverlay.loadXml('srv/htrail?'+extentQuery() + "&scale="+currentScale+
-                   '&station=' + stn + '&tfrom='+ tfrom + '&tto='+tto);
+     '&station=' + stn + '&tfrom='+ tfrom + '&tto='+tto+ (clientses!=null? "&clientses="+clientses : ""));
 }
 
 
