@@ -18,7 +18,9 @@ div#wxresult{max-width: 30em; min-width: 20em; margin-bottom: 0.5em}
   margin-bottom: 0.1em
 }
 
-a.sarurl {color: #900; font-size: 100%; font-family: monospace}
+.sarurl {color: #900; font-family: monospace}
+a.sarurl {font-size: 100%;}
+
 
 div.POPUP, div.POPUPMENU, #measureResult 
 {
