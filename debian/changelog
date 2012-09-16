@@ -1,8 +1,8 @@
-polaric-webapp (1.0.9+1) UNRELEASED; urgency=low
+polaric-webapp (1.0.10) stable; urgency=low
 
-  * Some small updates... 
+  * SAR mode icon red/green + SAR key for mobile app.
 
- -- Øyvind hanssen <ohanssen@acm.org>  Sat, 18 Aug 2012 13:49:23 +0200
+ -- Øyvind hanssen <ohanssen@acm.org>  Sun, 16 Sep 2012 16:52:23 +0200
 
 polaric-webapp (1.0.9) stable; urgency=low
 
