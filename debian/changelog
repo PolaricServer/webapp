@@ -1,3 +1,9 @@
+polaric-webapp (1.1-alpha3) unstable; urgency=low
+
+  * Database search is back...  
+
+ -- Øyvind hanssen <ohanssen@acm.org>  Wed, 05 Sep 2012 22:20:15 +0200
+
 polaric-webapp (1.1-alpha2) unstable; urgency=low
 
   * Hack 
