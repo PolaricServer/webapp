@@ -98,7 +98,8 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
              this.txt.add('Slett objekt', function() { deleteObject(null); });
           }
           this.txt.add(null);
-	  
+          this.txt.add('Sett SAR kode', function()  { setTimeout('setSarCode();',100);});
+          
 	  if (isMobileApp) {          
 	     if (gpsTracker==null)
                  this.txt.add('Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); gpsTracker.activate();});
@@ -298,6 +299,28 @@ function showStationHistory(ident, x, y)
 {
    remotepopupwindow(document.getElementById('toolbar'),  server_url + 'srv/history?ajax=true&simple=true&id='+ident, x, y);
   
+}
+
+
+function setSarCode()
+{  
+  var xpos = 50; 
+  var ypos = 70;
+  var pdiv = popupwindow(document.getElementById("anchor"), 
+      ' <div><h1>Sett SAR kode</h1><div id="sarcodeform"><form> '+
+      ' Kode: <input type="text"  width="10" id="sarcode" value="'+ (sarcode==null ? '' : sarcode) + '/> '+
+      ' <input id="sarcodebutton" type="button"' +
+      ' value="Bekreft" /></div></div>', xpos, ypos, null); 
+      
+      
+      document.getElementById("sarcodehbutton").onclick = function(e) {
+         var code = document.getElementById('sarcode').value;
+         if (code == "" || code == " ")
+           code = null;
+         sarcode = code; 
+         e.cancelBubble = true; 
+         if (e.stopPropagation) e.stopPropagation();  
+      };
 }
 
 
