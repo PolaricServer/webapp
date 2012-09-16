@@ -76,7 +76,9 @@ function xmlResult()
             aXmlHttp[i][1] = null;
             aXmlHttp[i]    = null;
             if (status==200)
-                f.apply(o, new Array(s));
+                f.apply(o, new Array(s)); // OK
+            else if (status==404)
+                f.apply(o, null);         // Not found or access denied 
             else {
                 OpenLayers.Console.info("xmlResult: status", status);
                 if (status == 503)
