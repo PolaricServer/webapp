@@ -98,8 +98,7 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
              this.txt.add('Slett objekt', function() { deleteObject(null); });
           }
           this.txt.add(null);
-          this.txt.add('Sett SAR kode', function()  { setTimeout('setSarCode();',100);});
-          
+	  this.txt.add('Sett SAR kode', setSarCode);
 	  if (isMobileApp) {          
 	     if (gpsTracker==null)
                  this.txt.add('Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); gpsTracker.activate();});
@@ -307,22 +306,21 @@ function setSarCode()
   var xpos = 50; 
   var ypos = 70;
   var pdiv = popupwindow(document.getElementById("anchor"), 
-      ' <div><h1>Sett SAR kode</h1><div id="sarcodeform"><form> '+
-      ' Kode: <input type="text"  width="10" id="sarcode" value="'+ (sarcode==null ? '' : sarcode) + '/> '+
-      ' <input id="sarcodebutton" type="button"' +
-      ' value="Bekreft" /></div></div>', xpos, ypos, null); 
-      
-      
-      document.getElementById("sarcodehbutton").onclick = function(e) {
-         var code = document.getElementById('sarcode').value;
-         if (code == "" || code == " ")
-           code = null;
-         sarcode = code; 
-         e.cancelBubble = true; 
-         if (e.stopPropagation) e.stopPropagation();  
-      };
+         ' <div><h1>Sett SAR kode</h1><div id="sarcodeform"><form> '+
+         ' Kode: <input type="text" style="width: 6em" width="6" id="sarcode" value="'+ (sar_key==null ? '' : sar_key) + '"/>&nbsp; '+
+         ' <input id="sarcodebutton" type="button"' +
+         ' value="Bekreft" /></div><br></div>', xpos, ypos, null); 
+  
+  
+  document.getElementById("sarcodebutton").onclick = function(e) {
+    var code = document.getElementById('sarcode').value;
+    if (code == "" || code == " ")
+      code = null;
+    sar_key = code; 
+    e.cancelBubble = true; 
+    if (e.stopPropagation) e.stopPropagation();  
+  };
 }
-
 
 
 function searchStations()
