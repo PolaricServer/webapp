@@ -346,7 +346,8 @@ if (!file_exists($szCacheFile) || $bForce)
         $sample3 = imagecolorat($oGDImg, 100, 1000);
         $sample4 = imagecolorat($oGDImg, 1000, 100);
         if (($sample1 == 0 && $sample2 == 0 && $sample3 == 0 && $sample4 == 0) ||
-            ($sample1 == 0xc0c0c0 && $sample2 == 0xc0c0c0 && $sample3 == 0xc0c0c0 && $sample4 == 0xc0c0c0)  ) {
+            ($sample1 == 0xc0c0c0 && $sample2 == 0xc0c0c0 && $sample3 == 0xc0c0c0 && $sample4 == 0xc0c0c0) ||
+            ($sample1 == 0xca0c1c8 && $sample2 == 0xca0c1c8 && $sample3 == 0xca0c1c8 && $sample4 == 0xca0c1c8)) {
 
            if ($tsRefresh) {
               $h = fopen($szMetaDir.'/refreshError', 'w+');
