@@ -36,7 +36,6 @@ function receiveMessage(e)
 
 
 function showContextMenu(ident, e, ax, ay)
-
 {
      e = (e)?e:((event)?event:null); 
      var x = (ax) ? ax : ((e.pageX) ? e.pageX : e.clientX); 
@@ -69,8 +68,9 @@ function showContextMenu(ident, e, ax, ay)
              txt.push(['Slett objekt', function() { deleteObject(null); } ]);
           }
           txt.push(null);
-	  
-	  if (isMobileApp) {          
+          
+	  if (isMobileApp) {   
+             txt.push(['Sett SAR nøkkel', function()  { setTimeout('setSarCode();',100);}]);
 	     if (gpsTracker==null)
 	          txt.push(['Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); gpsTracker.activate(); } ]);
 	     else
@@ -254,6 +254,28 @@ function showStationHistory(ident, x, y)
    remotepopupwindow(document.getElementById("anchor"),  server_url + 'srv/history?simple=true&id='+ident, x, y);
 }
 
+
+function setSarCode()
+{  
+  var xpos = 50; 
+  var ypos = 70;
+  var pdiv = popupwindow(document.getElementById("anchor"), 
+                         ' <div><h1>Sett SAR kode</h1><div id="sarcodeform"><form> '+
+                         ' Kode: <input type="text" style="width: 6em" width="6" id="sarcode" value="'+ (sar_key==null ? '' : sar_key) + '"/>&nbsp; '+
+                         ' <input id="sarcodebutton" type="button"' +
+                         ' value="Bekreft" /></div><br></div>', xpos, ypos, null); 
+  
+  
+  document.getElementById("sarcodebutton").onclick = function(e) {
+    var code = document.getElementById('sarcode').value;
+    if (code == "" || code == " ")
+      code = null;
+    sar_key = code; 
+    e.cancelBubble = true; 
+    if (e.stopPropagation) e.stopPropagation();  
+    removePopup();
+  };
+}
 
 
 function searchStations()
@@ -562,8 +584,6 @@ function dateFormat(d1, d2) {
   return txt;
   
   function prevDay(x) {
-    if (x == 1) return 7;
-    else
       return x -1; 
   }
 }
