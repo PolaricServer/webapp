@@ -22,6 +22,7 @@ var isMobileApp = false;
 var storage = null;
 var ses_storage = null;
 var uid = null;
+var sar_key = null;
 
 var myCoordinates = myOverlay = myInterval = null;
 
@@ -40,11 +41,19 @@ function isAdmin()
 /* get login name */
 function getLogin()
 { 
-    if (window.location.href.match(/.*\/sar_[0-9a-f]+/))
+    if (sar_key != null || window.location.href.match(/.*\/sar_[0-9a-f]+/)) 
        return "-SAR-";
     if (/null/.test(myOverlay.meta.login)) 
        return null;   
     return myOverlay.meta.login; 
+}
+
+
+function show_SAR_access(a)
+{
+    var sdiv = document.getElementById('sarmode');
+    if (sdiv != null)
+        sdiv.innerHTML = (a ? '<img src="images/sar-o.png">' : '<img src="images/sar.png">');
 }
 
 
@@ -332,14 +341,15 @@ function extentQuery()
 }
 
 
+
 /* Get XML data from server */
 var xmlSeqno = 0;
 var retry = 0;
 function getXmlData(wait)
 {
+   var sar_string = (sar_key == null ? '' : 'sar_'+sar_key+'/');
    xmlSeqno++;
-
-   var url = server_url + (getLogin() ? 'srv/sec-mapdata?' : 'srv/mapdata?');
+   var url = server_url + sar_string + (getLogin() ? 'srv/sec-mapdata?' : 'srv/mapdata?');
    var i = myOverlay.loadXml(url+extentQuery() + "&scale="+currentScale+
                   (wait?"&wait=true":"") + (clientses!=null? "&clientses="+clientses : ""));
    
@@ -362,10 +372,21 @@ function getXmlData(wait)
 }
 
 
+function postLoadXml_Fail()
+{
+  OpenLayers.Console.warn("XML Call: Not found");
+  if (sar_key != null) {
+     alert("Ikke tilgang til XML data. Ugyldig SAR nøkkel");
+     sar_key = null;
+     show_SAR_access(false);
+  }
+}
+
+
 
 /* Called after XML is received from the server */
 function postLoadXml() 
-{
+{    
      retry = 0;
      if (myOverlay.meta.utmzone != null)
         utmzone = myOverlay.meta.utmzone;
@@ -379,8 +400,10 @@ function postLoadXml()
         sdiv.style.visibility = 'visible';
      else
         sdiv.style.visibility = 'hidden';
-        
-     if (!isIframe && getLogin() != null) {
+
+     show_SAR_access(getLogin() != null); 
+     
+     if (!isIframe && !isMobile && !isMobileApp && getLogin() != null) {
         ldiv = document.getElementById('login')
         ldiv.innerHTML = getLogin(); 
         ldiv.className = 'login';
