@@ -1,8 +1,14 @@
-polaric-webapp (1.0.9) UNRELEASED; urgency=low
+polaric-webapp (1.0.9+1) UNRELEASED; urgency=low
+
+  * Some small updates... 
+
+ -- Øyvind hanssen <ohanssen@acm.org>  Sat, 18 Aug 2012 13:49:23 +0200
+
+polaric-webapp (1.0.9) stable; urgency=low
 
   * WPS, WX report,  change font size of labels, etc... 
 
- -- Øyvind hanssen <ohanssen@acm.org>  Sat, 04 Aug 2012 22:22:24 +0200
+ -- Øyvind hanssen <ohanssen@acm.org>  Sat, 18 Aug 2012 13:44:15 +0200
 
 polaric-webapp (1.0.8) stable; urgency=low
 
