@@ -212,11 +212,13 @@ if (typeof DOMParser == "undefined") {
 }
 
 
-kaXmlOverlay.prototype.loadXmlCallback = function(xml_string) {
-        if (this.loadXmlDoc(xml_string))
-           postLoadXml(); 
-}
 
+kaXmlOverlay.prototype.loadXmlCallback = function(xml_string) {
+  if (xml_string == null)
+    postLoadXml_Fail(); 
+  else if (this.loadXmlDoc(xml_string))
+    postLoadXml(); 
+}
 
 
 
@@ -1308,7 +1310,7 @@ kaXmlPoint.prototype.parse = function(point_element) {
            if (!isSign) {    
                        
              mdiv.oncontextmenu= function(e)
-             { showContextMenu(ident, e); return false; }
+             { ctxtMenu.show(ident, e); return false; }
              
              mdiv.ontouchstart = this.thandler.handle;         
              mdiv.ontouchend = this.thandler.handle;
