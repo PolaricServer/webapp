@@ -157,7 +157,6 @@ var permalink = false;
 var args = null;
 function myMapInitialized() { 
     var qstring = qstring = window.location.href;
-    alert(qstring);
     qstring = qstring.substring(qstring.indexOf('?')+1, qstring.length);
     /* Get arguments */
     args = new Object();
@@ -229,7 +228,8 @@ function myInitialized() {
     {
         var j = 0;
         for(var i in aMaps) {
-          oSelect[j++] = new Option(aMaps[i].title, aMaps[i].name, false,false);
+          if (aMaps[i].name.length > 1)
+            oSelect[j++] = new Option(aMaps[i].title, aMaps[i].name, false,false);
         }
 
         //make sure the map is selected ...
@@ -266,7 +266,9 @@ function myInitialized() {
                  selected = i;
                  filterView(sFilter);
              }
-             fSelect[j++] = new Option(filterViews[i].title, filterViews[i].name, false, false);
+
+             if (filterViews[i].name.length > 1)
+                fSelect[j++] = new Option(filterViews[i].title, filterViews[i].name, false, false);
           }
           fSelect.onchange = function() { filterView(fSelect[fSelect.selectedIndex].value); }
           fSelect[selected].selected = true;
@@ -277,7 +279,15 @@ function myInitialized() {
     
     switchMode('toolPan');
     myKaMap.domObj.onmousedown  = menuMouseSelect;
-           
+    
+    
+    if (isMobile)
+      document.getElementById('geoPosition').ontouchend = function(e)
+      { if (gpsTracker != null) 
+          gpsTracker.toggleSpeedDisplay(); 
+      };
+    
+    
     if (!isIframe && !isMobile) {
       buttonMenu = document.getElementById('buttonMenu');
       buttonMenu.onclick = function(e)       
@@ -377,7 +387,7 @@ function postLoadXml_Fail()
 {
   OpenLayers.Console.warn("XML Call: Not found");
   if (sar_key != null) {
-    alert("Ikke tilgang til XML data. Sar nøkkel utgått");
+    alert("Ikke tilgang til XML data. Ugyldig SAR nøkkel");
     sar_key = null;
   }
 }
