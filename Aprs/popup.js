@@ -66,10 +66,17 @@ function createItem(text, actn)
 function PopupMenu(title)
 {
     this.lastItem = null;
-    this.menudiv = document.createElement('div');
-    this.menudiv.style.display = 'none';
-    this.menudiv.className = 'POPUPMENU';
+    this.menudiv = null;
 }
+
+PopupMenu.prototype.clear = function()
+{  
+   this.lastItem = null;
+   this.menudiv = document.createElement('div');
+   this.menudiv.style.display = 'none';
+   this.menudiv.className = 'POPUPMENU';
+}
+
 
 
 PopupMenu.prototype.add = function(txt, func)
