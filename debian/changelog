@@ -1,23 +1,7 @@
-polaric-webapp (1.1-beta1) unstable; urgency=low
+polaric-webapp2 (1.1-beta1) unstable; urgency=low
 
   * Stabilize for release. 
 
  -- Øyvind hanssen <ohanssen@acm.org>  Wed, 19 Sep 2012 00:12:09 +0200
 
-polaric-webapp (1.1-alpha3) unstable; urgency=low
 
-  * Database search is back...  
-
- -- Øyvind hanssen <ohanssen@acm.org>  Wed, 05 Sep 2012 22:20:15 +0200
-
-polaric-webapp (1.1-alpha2) unstable; urgency=low
-
-  * Hack 
-
- -- Øyvind hanssen <ohanssen@acm.org>  Fri, 27 Jan 2012 20:58:58 +0100
-
-polaric-webapp (1.1-alpha1) unstable; urgency=low
-
-  * Initial Release.
-
- -- Øyvind hanssen <ohanssen@acm.org>  Tue, 12 Oct 2011 21:46:20 +0200
