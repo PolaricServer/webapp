@@ -1,4 +1,4 @@
-Source: polaric-webapp
+Source: polaric-webapp2
 Section: hamradio
 Priority: optional
 Maintainer: Øyvind hanssen <ohanssen@acm.org>
@@ -6,9 +6,10 @@ Build-Depends: debhelper (>= 8.0.0)
 Standards-Version: 3.9.2
 Homepage: http://hans.priv.no/la7eca
 
-Package: polaric-webapp
+Package: polaric-webapp2
 Architecture: all
-Depends: apache2, php5, php5-gd, php5-mapscript, polaric-aprsd, ${misc:Depends}
+Depends: apache2, php5, php5-gd, php5-mapscript, polaric-aprsd2, ${misc:Depends}
+Conflicts: polaric-webapp
 Recommends: 
 Description: Polaric Server: Web application. 
  The "Polaric Server" is mainly a web based service to present APRS 
