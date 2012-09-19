@@ -100,7 +100,9 @@ include_once( 'webappconfig.php' );
 <script type="text/javascript" src="jquery/jquery-ui-min.js"></script>
 <script type="text/javascript" src="OpenLayers/openlayers-polaric.js"></script>
 <script type="text/javascript" src="proj4js-compressed.js"></script>
+<script type="text/javascript" src="Aprs/gpx.js"></script>
 <script type="text/javascript" src="mapconfig.js"></script>
+
 
 <?php
   if  (!$isDebug) {
@@ -133,13 +135,11 @@ include_once( 'webappconfig.php' );
 ?>
 <script type="text/javascript" src="KaMap/tools/kaRubberZoom.js"></script>
 <script type="text/javascript" src="KaMap/tools/myKaRuler.js"></script> 
-      
-
+       
 <?php
   // Add extra Javascript files
   foreach ($jsIncludes as $inc) 
      echo ('<script type="text/javascript" src="config/'.$inc.'" ></script>');
 ?>
-
 </body>
 </html>
