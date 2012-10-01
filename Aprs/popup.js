@@ -257,7 +257,7 @@ function popup(onDiv, menudiv, x, y, img)
          activepopup.style.top     = y-3+"px";
       }  
       firstTime = false;
-      if (xoffs && yoffs) 
+      if (xoffs && yoffs && image != null) 
         image.style.display = "none";
      }
 
