@@ -235,7 +235,7 @@ function showStationInfo(ident, edit, x, y)
            server_url + 'srv/station?simple=true&id='+ident+ (edit ? '&edit=true':''), x, y, 'infopopup');
   else {
       var url = server_url + (getLogin() ? 'srv/sec-station?id=' : 'srv/station?id=');
-      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 715, 480);
+      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 715, 500);
   } 
 }
 
