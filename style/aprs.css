@@ -125,8 +125,8 @@ div.trailPoint:hover, div.trailPoint_hover {
 
 
 .welcome {
-   margin-top: 90px;
-   margin-left: 65px;
+   margin-top: 90px !important;
+   margin-left: 65px !important;
    margin-right: 50px;
    background: white;
    opacity: 0.85;
