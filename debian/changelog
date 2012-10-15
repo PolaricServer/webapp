@@ -1,7 +1,7 @@
-polaric-webapp2 (1.1-beta1) unstable; urgency=low
+polaric-webapp (1.0.99+1.1-beta1) unstable; urgency=low
 
   * Stabilize for release. 
 
- -- Øyvind hanssen <ohanssen@acm.org>  Wed, 19 Sep 2012 00:12:09 +0200
+ -- Øyvind hanssen <ohanssen@acm.org>  Mon, 15 Oct 2012 00:12:09 +0200
 
 
