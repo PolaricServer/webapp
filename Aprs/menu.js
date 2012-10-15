@@ -105,10 +105,10 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
 	     else
                  this.txt.add('De-aktiver GPS pos.', function() { gpsTracker.deactivate(); gpsTracker=null; });
              
-             if (powerMgmt_locked)
-                 this.txt.add('De-aktiver strømsparing', powerMgmt_unlock);
+             if (!powerMgmt_locked)
+                 this.txt.add('De-aktiver auto-slukking', powerMgmt_lock);
              else
-                 this.txt.push('Aktiver strømsparing', powerMgmt_lock);
+                 this.txt.push('Aktiver auto-slukking', powerMgmt_unlock);
 	  }
 	  
           if (!traceIsHidden('ALL'))
@@ -280,7 +280,7 @@ function showStationInfo(ident, edit, x, y)
       
   else {
       var url = server_url + (getLogin() ? 'srv/station_sec?id=' : 'srv/station?id=');
-      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 705, 450);
+      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 705, 500);
   } 
 }
 
@@ -317,6 +317,9 @@ function setSarCode()
     if (code == "" || code == " ")
       code = null;
     sar_key = code; 
+    storage.removeItem('polaric.sarkey');
+    storage['polaric.sarkey'] = code;
+    
     e.cancelBubble = true; 
     if (e.stopPropagation) e.stopPropagation();  
   };
