@@ -200,6 +200,7 @@ function myMapError(msg) {
  */
 var ststate = null;
 function myInitialized() { 
+    sar_key = storage['polaric.sarkey'];
     var view = null;
     if (view == null)
        view = args['view'];
@@ -387,8 +388,10 @@ function postLoadXml_Fail()
 {
   OpenLayers.Console.warn("XML Call: Not found");
   if (sar_key != null) {
-    alert("Ikke tilgang til XML data. Ugyldig SAR nøkkel");
-    sar_key = null;
+     alert("Ikke tilgang til SAR-modus info. Ugyldig nøkkel");
+     sar_key = null;
+     storage.removeItem('polaric.sarkey');
+     show_SAR_access(false);
   }
 }
 
