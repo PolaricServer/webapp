@@ -23,7 +23,8 @@ case "$1" in
         if [ -e "/var/www/aprs/theme" ]; then
            rm -R /var/www/aprs/theme
         fi
-        
+        ln -s /var/www/aprs/OpenLayers/theme /var/www/aprs/theme
+                
         a2enmod proxy_http > /dev/null 2>&1
         a2enmod expires > /dev/null 2>&1
         a2enmod deflate > /dev/null 2>&1
