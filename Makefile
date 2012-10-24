@@ -10,7 +10,8 @@
 INSTALL_CONFIG = $(DESTDIR)/etc/polaric-webapp
    INSTALL_WEB = $(DESTDIR)/var/www/aprs
  INSTALL_DATA  = $(DESTDIR)/var/lib/polaric
-
+   INSTALL_LOG = $(DESTDIR)/var/log/polaric/kamap
+   
 
 
 ##################################################
@@ -26,6 +27,7 @@ install: Aprs/compiled.js
 	install -d $(INSTALL_CONFIG)/www
 	install -d $(INSTALL_CONFIG)/mapserv
 	install -d $(INSTALL_BIN)
+	install -m 755 -d $(INSTALL_LOG)
 	install -d $(INSTALL_WEB)/Aprs $(INSTALL_WEB)/images $(INSTALL_WEB)/KaMap $(INSTALL_WEB)/OpenLayers \
 	           $(INSTALL_WEB)/style $(INSTALL_WEB)/www/dicons $(INSTALL_WEB)/XMLOverlay $(INSTALL_WEB)/jquery \
 	           $(INSTALL_WEB)/jquery/smoothness/images
