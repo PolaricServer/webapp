@@ -69,9 +69,9 @@ $szPHPGDModule = 'gd.'.PHP_SHLIB_SUFFIX;
  * maximum map size (by default 2000x2000) or be too resource-intensive on the
  * server, ultimately reducing performance.
  */
-$tileWidth = 256;
-$tileHeight =256;
-$metaWidth = 5;
+$tileWidth  = 256;
+$tileHeight = 256;
+$metaWidth  = 5;
 $metaHeight = 5;
 
 /* $metaBuffer = Buffer size in pixels to add around metatiles to avoid
@@ -83,14 +83,18 @@ $metaBuffer = 10;
  * failures (in seconds).  
  */
 $retryWait = 1800;
+$retryWaitRefresh = 604800; // 1 week when errors occur in refreshing (see below)
 
-/******************************************************************************
- * in-image debugging information - tile location, outlines etc.
- * to use this, you need to remove images from your cache first.  This also
- * affects the meta tiles - if debug is on, they are not deleted.
+/* How long to wait before trying to re-fresh cached tiles (in seconds). 0 means forever 
+ * We recommend 0 for mobile servers and at least a couple of weeks for online servers. 
+ * It is a good idea that this is longer than $clientCacheTime. 
+ * 31536000 is one year. 
  */
-$bDebug = false;
-
+$tsRefreshInterval = 0;
+ 
+/* How long client cache should be valid (seconds) */
+$clientCacheTime = 9676800;   // 16 weeks
+ 
 
 
 /* 
@@ -119,15 +123,6 @@ $bDebug = false;
  */
  
 		                               
-  $troya2Map =     array( 'title' => 'Tromsø by (NM RK)',
-                          'path'   => 'mapserv/tromsoya2.map',
-		          'scales' => array( 30000, 20000, 15000, 12500, 10000, 8000, 7000, 6000, 5000, 4000 ),
-		          'format' => 'JPEG' );
-
-  $msmMap =     array( 'title' => 'MSM kart',
-                       'path'  => 'mapserv/msm.map',
-		       'scales' => array( 40000, 30000, 20000, 12000, 6000 ),
-		       'format' => 'JPEG' );
            
   $topo2Map =     array( 'title' => 'Kartverket Topo 2',
                         'path'   => 'mapserv/kartverket.map',
@@ -139,7 +134,7 @@ $bDebug = false;
 		       'scales' => array( 2000000, 1000000, 600000, 400000, 200000, 100000, 60000, 40000, 25000, 15000),
 		       'format' => 'JPEG' );    
                           
-       
+
 /* Add more elements to this array to offer multiple mapfiles */
 
 
@@ -190,6 +185,11 @@ $szMapName = $aszMapFiles[$szMap]['title'];
 $szMapFile = $aszMapFiles[$szMap]['path'];
 $anScales = $aszMapFiles[$szMap]['scales'];
 setOutputFormat($aszMapFiles[$szMap]['format']);
+
+    
+$logFile = "/var/log/polaric/kamap/kamap.log";
+
+
 /******************************************************************************
  * output format of the map and resulting tiles
  *
