@@ -124,6 +124,15 @@ if (isset($oAuth) && $groups)
     }
 }
 
+if (!file_exists($logFile))
+{
+   $lf = fopen($logFile, 'w+');
+   fwrite($lf, "\n");
+   fclose($lf);
+   chmod($logFile, 0644);
+}
+
+
 
 /* bug 1253 - root permissions required to delete cached files */
 $orig_umask = umask(0);
