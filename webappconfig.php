@@ -3,12 +3,13 @@
 /*
  * Title of the site
  */
-$siteTitle = "Utvikling av Polaric Server 2.0";
+$siteTitle = "Polaric Server 2 - APRS kart";
+
 
 /*
  * Screen title. Shown on the left of menu bar.
  */
-$screenTitle = "Kartserver Hacking";
+$screenTitle = "Kartserver Test";
 
 /*
  * Logo of the owner (by default shown down at the left side)
@@ -23,7 +24,17 @@ $headInclude = "headinclude.html";
 
 /*
  * Extra styleshets (CSS files) to include [advanced]
- * This is a PHP array of filenames.
+ * This is a PHP array of filenames. NOTE: Place those files
+ * in the 'www' subdirectory. 
+ *
+ * Example: 
+ * $cssIncludes = array('file1.css', 'file2.css');
  */
-$cssIncludes = array('test2.css', 'test3.css'); 
+$cssIncludes = array(); 
 
+
+/*
+ *  Extra javascript files to include [advanced]
+ *  This is a PHP array of filenames.
+ */
+$jsIncludes = array();
