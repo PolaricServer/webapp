@@ -806,7 +806,7 @@ kaXmlLinestring.prototype.draw_canvas = function(point)
         ctx.restore();
 
         function showTime(t)
-           { return t.substring(8,10)+":"+t.substring(10,12); }    
+           { return (t ? t.substring(8,10)+":"+t.substring(10,12) : ""); }    
 }
 
 
