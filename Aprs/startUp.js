@@ -616,7 +616,7 @@ function histList_click(ident, index)
    var y = parsePosPix(point.style.top) + parsePosPix(parent.style.top) + 
            parsePosPix(parent.parentNode.style.top) + 10;
    remotepopupwindow(myKaMap.domObj, 
-      server_url + 'srv/trailpoint?id='+ident+"&index="+index, x, y); 
+      server_url + 'srv/trailpoint?ajax=true&id='+ident+"&index="+index, x, y); 
 }
 
 
