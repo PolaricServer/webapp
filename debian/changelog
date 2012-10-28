@@ -1,3 +1,9 @@
+polaric-webapp (1.0.99+1.1-beta2) UNRELEASED; urgency=low
+
+  * Ready for deploying on aprs.no 
+
+ -- Øyvind hanssen <ohanssen@acm.org>  Wed, 24 Oct 2012 21:42:49 +0200
+
 polaric-webapp (1.0.99+1.1-beta1) unstable; urgency=low
 
   * Stabilize for release. 
