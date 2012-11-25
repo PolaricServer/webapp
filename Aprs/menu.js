@@ -5,32 +5,42 @@ var gpsTracker = null;
 window.onmessage = receiveMessage; 
 
 
-
-function receiveMessage(event)  
+/* Receive and act on message from other window */
+function receiveMessage(e)  
 {   
   e = (e)?e:((event)?event:null);
-  var args = e.data.split(" ");
-  if (args[0] == "zoomIn")
+  var result = null;
+  
+  var args = e.data.split("##");
+  var op = args[0].split("#");
+  
+  if (op[0] == "zoomIn")
        myKaMap.zoomIn();
-  else if (args[0] == "zoomOut")
+  else if (op[0] == "zoomOut")
        myKaMap.zoomOut();
-  else if (args[0] == "zoomScale") {
+  else if (op[0] == "zoomScale") {
       var scale = parseInt(args[1], 10); 
       if (isNaN(scale))
          return; 
       myKaMap.zoomToScale(scale); 
   }
-  else if (args[0] == "gotoUtm") {
+  else if (op[0] == "gotoUtm") {
       var zz = args[1].substring(0,2);
       var nz = args[1].substring(2,3);
       doRefSearchUtm(args[2], args[3], nz, zz, true)
   }
-  else if (args[0] == "findItem")
+  else if (op[0] == "findItem")
       findStation(args[1]);
-  else if (args[0] == "selectMap")
+  else if (op[0] == "selectMap")
       myKaMap.selectMap(args[1]);
-  else if (args[0] == "selectBaseLayer")
+  else if (op[0] == "selectBaseLayer")
       myKaMap.selectBaseLayer(args[1]);
+  else if (op[0] == "echoTest")
+      result = "Echo - your text was: "+args[1];
+  
+  if (result != null)
+    e.source.postMessage(args[0]+"##"+result, e.origin);
+  
 } 
 
 
