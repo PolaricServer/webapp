@@ -182,7 +182,7 @@ function popup(onDiv, menudiv, x, y, img)
 	 image.style.position='absolute';
 	 image.style.left= -9+'px';
          image.style.top= -12+'px';
-         image.style.zIndex = 1001;
+         image.style.zIndex = 1301;
          activepopup = document.createElement('div');
          activepopup.appendChild(psubdiv);
          activepopup.onclick = function(e) 
