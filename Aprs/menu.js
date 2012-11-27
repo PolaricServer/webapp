@@ -75,10 +75,10 @@ function showContextMenu(ident, e, ax, ay)
 	          txt.push(['Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); gpsTracker.activate(); } ]);
 	     else
 	          txt.push(['De-aktiver GPS pos.', function() { gpsTracker.deactivate(); gpsTracker=null; } ]);
-	     if (powerMgmt_locked)
-                  txt.push(['De-aktiver strømsparing', powerMgmt_unlock ]);
+	     if (!powerMgmt_locked)
+                  txt.push(['De-aktiver auto-slukking', powerMgmt_lock ]);
              else
-                  txt.push(['Aktiver strømsparing', powerMgmt_lock ]);
+                  txt.push(['Aktiver auto-slukking', powerMgmt_unlock ]);
           }
           
 	  txt.push(null);
@@ -153,7 +153,7 @@ function mainMenu(icn, e)
 function findStation(ident, showInfo)
 {   
     /* AJA(X) call to find station */ 
-    call(server_url + "srv/findstation?id="+ident, null, findStationCallback, false); 
+    call(server_url + "srv/findstation?ajax=true&id="+ident, null, findStationCallback, false); 
     
     function findStationCallback(info)
     {
@@ -232,10 +232,10 @@ function showStationInfo(ident, edit, x, y)
 {
   if (!edit)
       remotepopupwindow(myKaMap.domObj, 
-           server_url + 'srv/station?simple=true&id='+ident+ (edit ? '&edit=true':''), x, y, 'infopopup');
+      server_url + 'srv/station?ajax=true&simple=true&id='+ident+ (edit ? '&edit=true':''), x, y, 'infopopup');
   else {
       var url = server_url + (getLogin() ? 'srv/sec-station?id=' : 'srv/station?id=');
-      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 715, 500);
+      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 715, 5040);
   } 
 }
 
@@ -244,14 +244,14 @@ function showStationInfo(ident, edit, x, y)
 function sarUrl(x, y)
 {
     var pl = document.getElementById("permolink").children[0].children[0].href;
-    remotepopupwindow(myKaMap.domObj, server_url + 'srv/sarurl?url='+escape(pl),  50, 80); 
+    remotepopupwindow(myKaMap.domObj, server_url + 'srv/sarurl?ajax=true&url='+escape(pl),  50, 80); 
 }
 
 
 
 function showStationHistory(ident, x, y)
 {
-   remotepopupwindow(document.getElementById("anchor"),  server_url + 'srv/history?simple=true&id='+ident, x, y);
+   remotepopupwindow(document.getElementById("anchor"),  server_url + 'srv/history?ajax=true&simple=true&id='+ident, x, y);
 }
 
 
@@ -271,6 +271,8 @@ function setSarCode()
     if (code == "" || code == " ")
       code = null;
     sar_key = code; 
+    storage.removeItem('polaric.sarkey');
+    storage['polaric.sarkey'] = code;
     e.cancelBubble = true; 
     if (e.stopPropagation) e.stopPropagation();  
     removePopup();
@@ -293,7 +295,7 @@ function searchStations()
          var srch = document.getElementById('findcall').value;
          e.cancelBubble = true; 
          if (e.stopPropagation) e.stopPropagation();
-         call(server_url + "srv/search?filter="+srch+(isMobile==true?"&mobile=true":""), null, searchStationCallback, false);  
+         call(server_url + "srv/search?ajax=true&filter="+srch+(isMobile==true?"&mobile=true":""), null, searchStationCallback, false);  
      };
 
 
