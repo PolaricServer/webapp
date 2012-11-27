@@ -198,6 +198,7 @@ function myMapError(a, msg) {
  */
 var ststate = null;
 function myInitialized() { 
+    sar_key = storage['polaric.sarkey'];
     var view = null;
     if (view == null)
        view = args['view'];
@@ -274,8 +275,7 @@ function myInitialized() {
     
     switchMode('toolPan');
     myKaMap.domObj.onmousedown  = menuMouseSelect;
-           
-    
+              
     
     if (isMobile)
         document.getElementById('geoPosition').ontouchend = function(e)
@@ -374,10 +374,10 @@ function getXmlData(wait)
 
 function postLoadXml_Fail()
 {
-  OpenLayers.Console.warn("XML Call: Not found");
   if (sar_key != null) {
-     alert("Ikke tilgang til XML data. Ugyldig SAR nøkkel");
+     alert("Ikke tilgang til SAR-modus info. Ugyldig nøkkel");
      sar_key = null;
+     storage.removeItem('polaric.sarkey');
      show_SAR_access(false);
   }
 }
@@ -557,10 +557,10 @@ function myTrailClicked(ident, e) {
     menuMouseSelect();
     if (ie)
        remotepopupwindow(myKaMap.domObj, 
-       server_url + 'srv/trailpoint?id='+ident+"&index="+e.srcElement._index, x, y);
+       server_url + 'srv/trailpoint?ajax=true&id='+ident+"&index="+e.srcElement._index, x, y);
     else
        remotepopupwindow(myKaMap.domObj,
-       server_url + 'srv/trailpoint?id='+ident+"&index="+e.target._index, x, y);
+       server_url + 'srv/trailpoint?ajax=true&id='+ident+"&index="+e.target._index, x, y);
     e.cancelBubble = true; 
     if (e.stopPropagation) e.stopPropagation();
     return false;
@@ -606,7 +606,7 @@ function histList_click(ident, index)
    var y = parsePosPix(point.style.top) + parsePosPix(parent.style.top) + 
            parsePosPix(parent.parentNode.style.top) + 10;
    remotepopupwindow(myKaMap.domObj, 
-      server_url + 'srv/trailpoint?id='+ident+"&index="+index, x, y); 
+       server_url + 'srv/trailpoint?ajax=true&id='+ident+"&index="+index, x, y); 
 }
 
 
