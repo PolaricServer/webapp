@@ -1,8 +1,0 @@
-/etc/polaric-webapp/mapserv/kartverket.map
-/etc/polaric-webapp/mapserv/kartverket_raster.map
-/etc/polaric-webapp/kamap-config.php
-/etc/polaric-webapp/mapconfig.js
-/etc/polaric-webapp/webappconfig.php
-/etc/apache2/sites-available/aprs
-/etc/cron.hourly/polaric-webapp
-/etc/init.d/polaric-webapp
