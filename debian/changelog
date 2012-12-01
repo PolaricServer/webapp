@@ -2,7 +2,7 @@ polaric-webapp (1.0.99+1.1-beta3) unstable; urgency=low
 
   * Fixes to API.
 
- -- Oyvind Hanssen <oivindh@localhost.localdomain>  Tue, 20 Nov 2012 10:53:35 +0100
+ -- Øyvind Hanssen <ohanssen@acm.org>  Tue, 20 Nov 2012 10:53:35 +0100
 
 polaric-webapp (1.0.99+1.1-beta2) unstable; urgency=low
 
