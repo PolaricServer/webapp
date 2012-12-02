@@ -266,6 +266,16 @@
        this.addGraphic(t);
      }
      
+     
+     // look for pointcloud element
+     elements = point_element.getElementsByTagName("pointcloud");
+     for (i=0; i<elements.length; i++) {
+       t = new kaXmlPointCloud(this);
+       t.parseElement(this, elements[i]);
+       this.addGraphic(t);
+     }
+     
+     
      // look for label element
      elements = point_element.getElementsByTagName("label");
      for (i=0; i<elements.length; i++) {
