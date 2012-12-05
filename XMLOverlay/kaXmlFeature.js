@@ -367,13 +367,13 @@
    kaXmlFeature.apply(this, [point]);
    
    if ( _BrowserIdent_hasCanvasSupport())
-     kaXmlLinestring.prototype['draw'] = kaXmlPointCloud.prototype['draw_canvas'];
+     kaXmlPointCloud.prototype['draw'] = kaXmlPointCloud.prototype['draw_canvas'];
    else
-     kaXmlLinestring.prototype['draw'] = function() {};   
+     kaXmlPointCloud.prototype['draw'] = function() {};   
    
    for (var p in kaXmlFeature.prototype) {
-     if (!kaXmlLinestring.prototype[p]) 
-       kaXmlLinestring.prototype[p]= kaXmlFeature.prototype[p];
+     if (!kaXmlPointCloud.prototype[p]) 
+       kaXmlPointCloud.prototype[p] = kaXmlFeature.prototype[p];
    }
  }
  
@@ -430,17 +430,16 @@
    ctx.translate(border,border);
    
    ctx.strokeStyle = '#' + this.color;
-   ctx.globalAlpha = this.opacity;
+   ctx.fillStyle = '#' + this.color2;
+   ctx.globalAlpha = this.opacity;  
 
    var i;
-   ctx.stroke();
-   ctx.beginPath();
    
    for (i=1; i<this.xn.length; i++) {
-     ctx.moveTo(this.xn[i]/scf, this.yn[i]/scf);
-     ctx.arc(this.xn[i]/scf, this.yn[i]/scf, 1, 0, Math.PI*2, false);
+     ctx.beginPath();
+     ctx.arc(this.xn[i]/scf, this.yn[i]/scf, 4, 0, Math.PI*4, true);  
+     ctx.fill();
    }
-   ctx.stroke();
    ctx.restore();
    
    function showTime(t)
