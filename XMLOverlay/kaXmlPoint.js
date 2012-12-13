@@ -32,6 +32,7 @@
    this.hasTrace = false;
    this.own = false;
    this.thandler = new touchHandler();
+   this.flags = "";
    
    this.graphics = new Array();
    
@@ -155,7 +156,8 @@
    var y = parseFloat(point_element.getAttribute("y"));
    var href = point_element.getAttribute("href");
    var title = point_element.getAttribute("title");    
-   var ident = point_element.getAttribute("id");    
+   var ident = point_element.getAttribute("id");
+   this.flags = point_element.getAttribute("flags");
    var isSign = (ident.substr(0,2) == "__");
    var redraw_a = point_element.getAttribute("redraw");
    var redraw = false;
