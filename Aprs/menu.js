@@ -80,7 +80,9 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
      var p = myOverlay.getPointObject(ident);
      var d = myKaMap.domObj;
      this.txt.clear();
-     this.txt.ident = ident; 
+     this.txt.ident = ident;
+     this.txt.x = x;
+     this.txt.y = y; 
      
      if (ident == null) {
           this.txt.add('Vis kartreferanse',  function () { setTimeout('showPosInfoPix('+x+', '+y+');',100); });
