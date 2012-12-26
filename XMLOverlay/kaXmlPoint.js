@@ -31,6 +31,7 @@
    this.shown = false;
    this.hasTrace = false;
    this.own = false;
+   this.isSign = false;
    this.thandler = new touchHandler();
    this.flags = "";
    
@@ -158,7 +159,7 @@
    var title = point_element.getAttribute("title");    
    var ident = point_element.getAttribute("id");
    this.flags = point_element.getAttribute("flags");
-   var isSign = (ident.substr(0,2) == "__");
+   this.isSign = (ident.substr(0,2) == "__");
    var redraw_a = point_element.getAttribute("redraw");
    var redraw = false;
    var tracked = false;
@@ -196,7 +197,7 @@
      mdiv.style.position = 'absolute'; 
      mdiv.className = "point"; 
      mdiv.style.zIndex = zzindex+10;
-     if (isSign)
+     if (this.isSign)
        mdiv.style.zIndex = zzindex - 10;  
      else
      {
@@ -222,7 +223,7 @@
      mdiv.onclick= function (e) 
      { return myObjectClicked(ident, e, href, title); }
      
-     if (!isSign) {    
+     if (!this.isSign) {    
        
        mdiv.oncontextmenu= function(e)
        { ctxtMenu.show(ident, e); return false; }
