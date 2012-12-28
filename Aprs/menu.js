@@ -60,7 +60,7 @@ function ContextMenu()
 
 
 
-/* Context can be 'MAP', 'ITEM' or 'TOOLBAR' */
+/* Context can be 'MAP', 'ITEM', SIGN or 'TOOLBAR' */
 
 ContextMenu.prototype.addCallback = function (context, func)
 {
@@ -142,6 +142,13 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
           }
           _doCallback('TOOLBAR');
      }     
+     
+     /*
+     else if (p != null && p.isSign) {
+         _doCallback('SIGN');
+     }
+     */
+     
      else {
           this.txt.add('Vis info', function() { showStationInfo(ident, false, x, y);});
           if (p != null && p.hasTrace)
@@ -610,7 +617,7 @@ function showWxInfo(uref) {
   var nPixPos = myKaMap.geoToPix(uref.easting, uref.northing);
   
   var w = popupwindow(myKaMap.domObj, 
-        '<img title="Kilde: Meteorologisk institutt (metno)" src="images/met.gif" align="right">'+
+        '<img title="Kilde: Meteorologisk institutt (met.no)" src="images/met.gif" align="right">'+
         '<h3>Værmelding fra met.no</h3>' +
         '<div id="wxresult"></div>', 
          nPixPos[0], nPixPos[1], false);
@@ -627,6 +634,7 @@ function showWxInfo(uref) {
                                   +" ("+x.name+")</h4>" + x.fcast; }
   });
 }
+
 
 
 function dateFormat(d1, d2) {

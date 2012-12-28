@@ -538,24 +538,29 @@ function myObjectClicked(ident, e, href, title)
     var y = (e.pageY) ? e.pageY : e.clientY; 
     
     menuMouseSelect();
-    if (href) {
-      setTimeout( function() { 
-	  if ( /^(p|P):.*/.test(href) )
-              popupwindow( myKaMap.domObj, 
-                      '<h1>'+title+'</h1>' +
-                      '<img class=\"popupimg\" src=\"'+href.substring(2)+'\">'
-                      , x, y, null, 'obj_click', true);    
-	  else
-	      if (!isMobileApp) 
-                   window.location = href; 
-      }, 100);
-      
-    }
+    if (href) 
+       setTimeout( function() { displayLink(href); }, 100);
     else
        showStationInfo(ident, false, x, y);
     e.cancelBubble = true;
     return false; 
 }
+
+
+
+function displayLink(href, title, x, y)
+{
+  if ( /^(p|P):.*/.test(href) )
+    popupwindow( myKaMap.domObj, 
+                 '<h1>'+title+'</h1>' +
+                 '<img class=\"popupimg\" src=\"'+href.substring(2)+'\">'
+                 , x, y, null, 'obj_click', true);    
+    else
+      if (!isMobileApp) 
+        window.location = href; 
+}
+
+
 
 
 /*  Trail */
