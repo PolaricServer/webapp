@@ -2,11 +2,14 @@
 Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
 
 
-function add_Gpx_Layer(name, url)
+function add_Gpx_Layer(name, url, color)
 {
     var gpx_format = new OpenLayers.Format.GPX();
+    if (!color)
+      color = "blue"; 
+
     var styleMap = new OpenLayers.StyleMap(OpenLayers.Util.applyDefaults({
-         	  strokeColor: "blue",
+         	  strokeColor: color,
          	  strokeWidth: 2,
          	  strokeOpacity: 0.8, 
          	  externalGraphic: "images/point.gif",
