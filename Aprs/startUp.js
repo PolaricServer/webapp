@@ -229,7 +229,7 @@ function myInitialized() {
     {
         var j = 0;
         for(var i in aMaps) {
-          if (aMaps[i].name.length > 1)
+          if (aMaps[i] && aMaps[i].name && aMaps[i].name.length > 1)
             oSelect[j++] = new Option(aMaps[i].title, aMaps[i].name, false,false);
         }
 
@@ -268,7 +268,7 @@ function myInitialized() {
                  filterView(sFilter);
              }
 
-             if (filterViews[i].name.length > 1)
+             if (filterViews[i].name && filterViews[i].name.length > 1)
                 fSelect[j++] = new Option(filterViews[i].title, filterViews[i].name, false, false);
           }
           fSelect.onchange = function() { filterView(fSelect[fSelect.selectedIndex].value); }

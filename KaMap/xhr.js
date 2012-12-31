@@ -61,13 +61,20 @@ function xmlResult()
 {
     for(var i=0;i<aXmlHttp.length;i++)
     {
-        if (aXmlHttp[i] && aXmlHttp[i][0] && aXmlHttp[i][0].readyState==4 )
+      if (aXmlHttp[i] && aXmlHttp[i][0] && aXmlHttp[i][0].readyState==4 )
 	{
             var u = aXmlHttp[i][3];
 	    var f = aXmlHttp[i][2];
             var o = aXmlHttp[i][1];
-            var s = aXmlHttp[i][0].responseText;
-	    var status = aXmlHttp[i][0].status;
+            var s = ""; 
+            var status = 404;
+            
+            try { 
+               s = aXmlHttp[i][0].responseText; 
+               status = aXmlHttp[i][0].status;
+            }
+            catch (e) 
+            { OpenLayers.Console.warning("Cannot access response from Ajax call (probably IE specific)");}
 	   
 	      
 	    //must null out record before calling function in case
