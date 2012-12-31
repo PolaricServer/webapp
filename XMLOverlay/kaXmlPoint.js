@@ -34,6 +34,8 @@
    this.isSign = false;
    this.thandler = new touchHandler();
    this.flags = "";
+   this.href = "";
+   this.title = "";
    
    this.graphics = new Array();
    
@@ -155,8 +157,8 @@
    var py = this.geoy;
    var x = parseFloat(point_element.getAttribute("x"));
    var y = parseFloat(point_element.getAttribute("y"));
-   var href = point_element.getAttribute("href");
-   var title = point_element.getAttribute("title");    
+   this.href = point_element.getAttribute("href");
+   this.title = point_element.getAttribute("title");    
    var ident = point_element.getAttribute("id");
    this.flags = point_element.getAttribute("flags");
    this.isSign = (ident.substr(0,2) == "__");
@@ -217,20 +219,18 @@
      }
      // LA7ECA: I added this for popup menu. Need this anymore? 
      
-     if (title != null)
-       mdiv.title = title; 
+     if (this.title != null)
+       mdiv.title = this.title; 
      
      mdiv.onclick= function (e) 
-     { return myObjectClicked(ident, e, href, title); }
-     
-     if (!this.isSign) {    
-       
-       mdiv.oncontextmenu= function(e)
+       { return myObjectClicked(ident, e, this.href, this.title); }
+   
+     mdiv.oncontextmenu= function(e)
        { ctxtMenu.show(ident, e); return false; }
-       
-       mdiv.ontouchstart = this.thandler.handle;         
-       mdiv.ontouchend = this.thandler.handle;
-     }
+
+     mdiv.ontouchstart = this.thandler.handle;         
+     mdiv.ontouchend = this.thandler.handle;
+     
      
      
      // look for ihtml element

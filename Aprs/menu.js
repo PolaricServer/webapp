@@ -128,8 +128,8 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
           else
              this.txt.add('Vis sporlogger', function() { myOverlay.showPointTrace('ALL'); });
           this.txt.add(null);
-          this.txt.add('Skriftstørrelse +',           function() { labelStyle.next(); });
-          this.txt.add('Skriftstørrelse -',           function() { labelStyle.previous(); });
+          this.txt.add('Skriftstørrelse +', function() { labelStyle.next(); });
+          this.txt.add('Skriftstørrelse -', function() { labelStyle.previous(); });
 	  
           if (isAdmin() || canUpdate()) {
              this.txt.add(null);
@@ -143,11 +143,12 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
           _doCallback('TOOLBAR');
      }     
      
-     /*
+     
      else if (p != null && p.isSign) {
+         this.txt.add('Vis info', function() { setTimeout( function() {showSignInfo(p, x, y); });}); 
          _doCallback('SIGN');
      }
-     */
+     
      
      else {
           this.txt.add('Vis info', function() { showStationInfo(ident, false, x, y);});
@@ -291,6 +292,22 @@ function sarModeWindow() {
 
 
 
+function showSignInfo(p, x, y)
+{ 
+  var uref = new UTMRef(p.geox, p.geoy,  this.utmnzone,  this.utmzone);
+  var llref = uref.toLatLng();
+  var sref = "" + llref.toUTMRef();
+  var ustring = showUTMstring(sref);
+  var w = popupwindow(myKaMap.domObj,
+       ' <span class="sleftlab">Beskrivelse:</span>' + p.title  +
+       ' <br/><span class="sleftlab">UTM:</span>' + showUTMstring(sref) +
+       ' <br/><nobr><span class="sleftlab">Latlong:</span>' + showDMstring(llref.lat)+"N, "+showDMstring(llref.lng)+"E"+
+       '<div></div>'
+       , x, y, null);
+}
+
+
+
 function showStationInfo(ident, edit, x, y)
 {
   if (!edit)
@@ -315,8 +332,8 @@ function sarUrl(x, y)
 
 function showStationHistory(ident, x, y)
 {
-   remotepopupwindow(document.getElementById('toolbar'),  server_url + 'srv/history?ajax=true&simple=true&id='+ident, x, y);
-  
+   remotepopupwindow(document.getElementById('toolbar'),  
+     server_url + 'srv/history?ajax=true&simple=true&id='+ident, x, y);
 }
 
 
@@ -350,11 +367,11 @@ function searchStations()
      var xpos = 50; 
      var ypos = 70;
      var pdiv = popupwindow(document.getElementById("anchor"), 
-        " <div><h1>Finn APRS stasjon/objekt</h1><div id=\"searchform\"><form> "+
-        " Tekst i ident/komment: <input type=\"text\"  width=\"10\" id=\"findcall\"/> "+
-        " <input id=\"searchbutton\" type=\"button\"" +
-            " value=\"Søk\" />"+
-          "</form><br><div id=\"searchresult\"></div></div></div>", xpos, ypos, null); 
+        ' <div><h1>Finn APRS stasjon/objekt</h1><div id="searchform"><form> '+
+        ' Tekst i ident/komment: <input type="text"  width="10" id="findcall"/> '+
+        ' <input id="searchbutton" type="button"' +
+            ' value="Søk" />' +
+        '</form><br><div id="searchresult"></div></div></div>', xpos, ypos, null); 
      
      $('#searchbutton').click( function(e) {
          e = (e)?e:((event)?event:null);
@@ -525,6 +542,15 @@ function _doRefSearchUtm(uref, hide) {
 }
 
 
+function showUTMstring(sref)
+{
+   return sref.substring(0,5)+'<span class="kartref">' + sref.substring(5,8) + '</span>'+
+          sref.substring(8,13)+'<span class="kartref">' + sref.substring(13,16) + '</span>'+
+          sref.substring(16);
+}
+
+
+
 function showDMstring(ll)
 {
     deg = Math.floor(ll);
@@ -558,10 +584,8 @@ function showPosInfoUtm(uref, iconOnly)
 {
     var llref = uref.toLatLng();
     var sref = "" + llref.toUTMRef();
-    var ustring = sref.substring(0,5)+"<span class=\"kartref\">"+sref.substring(5,8)+"</span>"+
-                  sref.substring(8,13)+"<span class=\"kartref\">"+sref.substring(13,16)+"</span>"+
-                  sref.substring(16);
-           
+    var ustring = showUTMstring(sref); 
+
     var nPixPos = myKaMap.geoToPix(uref.easting, uref.northing);
     
     if (iconOnly) {
