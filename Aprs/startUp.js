@@ -539,7 +539,7 @@ function myObjectClicked(ident, e, href, title)
     
     menuMouseSelect();
     if (href) 
-       setTimeout( function() { displayLink(href); }, 100);
+       setTimeout( function() { displayLink(href,title,x,y);}, 100);
     else
        showStationInfo(ident, false, x, y);
     e.cancelBubble = true;

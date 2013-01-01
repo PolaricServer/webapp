@@ -151,6 +151,7 @@
   */
  var tstate = null;
  kaXmlPoint.prototype.parse = function(point_element) {
+   var tt  = this;
    var zi; // Added by LA7ECA.
    var i;
    var px = this.geox;
@@ -167,9 +168,10 @@
    var tracked = false;
    if (redraw_a == "true") redraw = true;
        var own_a = point_element.getAttribute("own");
-   if (own_a == "true") this.own = true;
+   if (own_a == "true") 
+       this.own = true;
        
-       tracked = (_sstorage['polaric.tracked'] != null && ident == _sstorage['polaric.tracked']);                         
+   tracked = (_sstorage['polaric.tracked'] != null && ident == _sstorage['polaric.tracked']);                         
    
    if (!this.shown) {
      this.placeOnMap(x,y);
@@ -222,9 +224,11 @@
      if (this.title != null)
        mdiv.title = this.title; 
      
-     mdiv.onclick= function (e) 
-       { return myObjectClicked(ident, e, this.href, this.title); }
-   
+     if (!this.isSign || this.href) {
+       mdiv.onclick = function (e) 
+          { return myObjectClicked(ident, e, tt.href, tt.title); }
+     }
+     
      mdiv.oncontextmenu= function(e)
        { ctxtMenu.show(ident, e); return false; }
 
