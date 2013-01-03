@@ -51,7 +51,7 @@ GpsTracker.prototype.activate = function ()
      if (t.my_point == null) {
         t.my_point = myOverlay.addNewPoint('my_gps_position', uref_map.easting, uref_map.northing);  
         var icon = new kaXmlIcon();
-        icon.setImage(this.my_point, "images/position.png", 54, 54); 
+        icon.setImage(this.my_point, "images/position.png", 60, 60); 
         t.my_point.addGraphic(icon);
         t.my_point.div.appendChild(icon.ldiv);  
      }
