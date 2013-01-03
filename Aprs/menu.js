@@ -101,9 +101,9 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
           _doCallback('MAP');
      }
                                      
-     else if (ident == 'TOOLBAR') {
+     else if (ident == 'TOOLBAR') {   
           d = toolbar;
-          this.txt.add('Finn APRS stasjon', function()  { setTimeout('searchStations();',100);});
+          this.txt.add('Finn APRS stasjon', function()  { setTimeout('searchStations();',100);}); 
           this.txt.add('Finn kartreferanse', function() { setTimeout('showRefSearch();',100); });
           if (canUpdate()) {                 
              this.txt.add('Legg inn objekt', function() { editObjectInfo(null, null); });
@@ -116,13 +116,13 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
                  this.txt.add('Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); gpsTracker.activate();});
 	     else
                  this.txt.add('De-aktiver GPS pos.', function() { gpsTracker.deactivate(); gpsTracker=null; });
-             
+
              if (!powerMgmt_locked)
                  this.txt.add('De-aktiver auto-slukking', powerMgmt_lock);
              else
-                 this.txt.push('Aktiver auto-slukking', powerMgmt_unlock);
+                 this.txt.add('Aktiver auto-slukking', powerMgmt_unlock); 
 	  }
-	  
+
           if (!traceIsHidden('ALL'))
              this.txt.add('Skjul sporlogger', function() { myOverlay.hidePointTrace('ALL'); });
           else
@@ -137,10 +137,11 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
                 this.txt.add('SAR URL', sarUrl);
              this.txt.add('SAR modus', sarModeWindow);
           }
+ 
           if (isAdmin()) {          
              this.txt.add('Server info (admin)', adminWindow);
-          }
-          _doCallback('TOOLBAR');
+          } 
+          _doCallback('TOOLBAR');    
      }     
      
      
@@ -182,9 +183,9 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
       }                       
 
      e.cancelBubble = true;       
-     menuMouseSelect();                     
+     menuMouseSelect();                      
      this.txt.activate(d,x, y);
-     
+
      
      function _doCallback(ctxt)
      {
@@ -196,7 +197,6 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
      
 } 
  
-
 
 function mainMenu(icn, e)
 {

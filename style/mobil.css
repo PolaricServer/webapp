@@ -24,6 +24,7 @@ td {
 
 
 
+
 #tools * {
   cursor: pointer;
   margin-right:3px
@@ -66,8 +67,10 @@ screen and (min-device-height: 1200px) and (-webkit-device-pixel-ratio: 1.5)
   #tools { height: 39px; }
   #toolbarBackground {height: 45px;}
   #toolbarToggler { top: 50px; }
+  #refToggler {width: 20px; height: 16px}
   div.POPUP {font-size: 100% }
   div.layersDiv {font-size: 120% }
+  div.POPUPMENU { line-height: 1.6em; }
   
   #reference {
     width: 270px; height: 120px;

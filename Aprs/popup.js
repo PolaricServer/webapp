@@ -41,17 +41,19 @@ function onPopup(on, off)
 function createItem(text, actn)
 {
   function _executeItem(elem, actn)
-  {
+  { 
     removePopup();
     actn();
   }
   
   var elem = document.createElement('div');
   elem.origCls = '';
-  elem.onmouseup   = function(e) { _executeItem(elem, actn); }
-  elem.onmousedown = function(e) { _executeItem(elem, actn); }  
+  elem.onmouseup   = function(e) { elem.className += ' ITEM_selected'; 
+                                   setTimeout(function() {_executeItem(elem, actn);}, 300); e.cancelBubble=true;}
+  elem.onmousedown = function(e) { elem.className += ' ITEM_selected'; 
+                                   setTimeout(function() {_executeItem(elem, actn);}, 300); e.cancelBubble=true;}
   elem.onmouseover = function(e) { elem.origCls = elem.className; 
-  elem.className += ' ITEM_hover'; }
+                                   elem.className += ' ITEM_hover'; }                                
   elem.onmouseout  = function(e) { elem.className = elem.origCls;}
   
   elem.appendChild(document.createTextNode(text));

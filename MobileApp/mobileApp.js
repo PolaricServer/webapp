@@ -1,25 +1,28 @@
  
- 
+ var _powerman = null;
  var powerMgmt_locked = false; 
  
  /* This function must be called after the initialisation of the uid and 
   * the storage object 
   */
  function powerMgmt_init() {
+   _powerman = window.plugins.powerManagement;
    if ( storage['powermgmt_lock'] == 'true')
      powerMgmt_lock(); 
  }
  
  function powerMgmt_lock() {
-    cordova.require('cordova/plugin/powermanagement').acquire(
+    if (!powerMgmt_locked)
+     _powerman.acquire(
         function(x) { powerMgmt_locked = true; storage['powermgmt_lock'] = 'true'; }, 
         function(x) { alert("Error: cannot acquire wake lock"); } ); 
  }
      
  function powerMgmt_unlock() {
-    cordova.require('cordova/plugin/powermanagement').release(
-        function(x) { powerMgmt_locked = false; storage['powermgmt_lock'] = 'false';}, 
-        function(x) { alert("Error: cannot release wake lock"); } ); 
+    if (powerMgmt_locked) 
+      _powerman.release(
+         function(x) { powerMgmt_locked = false; storage['powermgmt_lock'] = 'false';}, 
+         function(x) { alert("Error: cannot release wake lock"); } ); 
  }
  
  function setStatus(txt) {

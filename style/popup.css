@@ -96,6 +96,12 @@ div.ITEM_hover, .link_id:hover
    color: white;
 }
 
+div.ITEM_selected
+{
+  background: yellow;
+  color: #400;
+}
+
 th, td {font-size: 90%;}
   
 th { 
