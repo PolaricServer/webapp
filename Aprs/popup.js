@@ -42,16 +42,21 @@ function createItem(text, actn)
 {
   function _executeItem(elem, actn)
   { 
-    removePopup();
-    actn();
+    if (elem.active)
+        return;
+    elem.className += ' ITEM_selected';
+    elem.active=true;
+    setTimeout(function() { 
+        removePopup(); 
+        actn(); 
+        elem.active=false; 
+    }, 500); 
   }
   
   var elem = document.createElement('div');
   elem.origCls = '';
-  elem.onmouseup   = function(e) { elem.className += ' ITEM_selected'; 
-                                   setTimeout(function() {_executeItem(elem, actn);}, 300); e.cancelBubble=true;}
-  elem.onmousedown = function(e) { elem.className += ' ITEM_selected'; 
-                                   setTimeout(function() {_executeItem(elem, actn);}, 300); e.cancelBubble=true;}
+  elem.onmouseup   = function(e) { _executeItem(elem, actn);  e.cancelBubble=true;}
+  elem.onmousedown = function(e) { _executeItem(elem, actn);  e.cancelBubble=true;}
   elem.onmouseover = function(e) { elem.origCls = elem.className; 
                                    elem.className += ' ITEM_hover'; }                                
   elem.onmouseout  = function(e) { elem.className = elem.origCls;}
