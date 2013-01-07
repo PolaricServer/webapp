@@ -112,10 +112,13 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
           this.txt.add(null);
 	  this.txt.add('Sett SAR kode', setSarCode);
 	  if (isMobileApp) {          
-	     if (gpsTracker==null)
-                 this.txt.add('Aktiver GPS pos.', function() { gpsTracker = new GpsTracker(); gpsTracker.activate();});
+	     if (gpsTracker==null || !gpsTracker.isActive())
+                 this.txt.add('Aktiver GPS pos.', function() {  
+                     if (gpsTracker==null) gpsTracker = new GpsTracker(); 
+                     gpsTracker.activate(); 
+                  } );
 	     else
-                 this.txt.add('De-aktiver GPS pos.', function() { gpsTracker.deactivate(); gpsTracker=null; });
+                 this.txt.add('De-aktiver GPS pos.', function() { gpsTracker.deactivate(); });
 
              if (!powerMgmt_locked)
                  this.txt.add('De-aktiver auto-slukking', powerMgmt_lock);

@@ -20,11 +20,13 @@ function GpsTracker ()
 GpsTracker.prototype.activate = function ()   
 {
    var t = this; 
+   var retry = 0;
    
    /*
-    * Called when we get a new position from GPS
+    * Called when we get a new or updated position from GPS
     */
    function gps_onSuccess(position) {
+     retry = 0;
      if (position.coords.accuracy > 60) {
         if (t.my_point != null) {
            t.my_point.removeFromMap();
@@ -38,16 +40,19 @@ GpsTracker.prototype.activate = function ()
      var uref = ll.toUTMRef();
      var uref_map = uref.toLatLng().toUTMRef(utmnzone, utmzone);
      myZoomToGeo(uref_map.easting, uref_map.northing, 0.2);
+     
+     /* Show speed and heading */
      if (t.speedDisplay) {
        setStatus('<div id="speedDisplay">'
-       +(position.coords.speed > 0.3 ? '<div id="gpsheadd"><img id="gpsheading" src="images/ptr1.png"></div>' : '')  
-       + speedHeading(position.coords) + '</div>');
+         +(position.coords.speed > 0.3 ? '<div id="gpsheadd"><img id="gpsheading" src="images/ptr1.png"></div>' : '')  
+         + speedHeading(position.coords) + '</div>');
        var hd = new ImgRotate('gpsheading');
        hd.rotate(position.coords.heading);
      }
      else
         setStatus('&nbsp; GPS posisjon ok <br>' + uref + '&nbsp;/&nbsp;'+ speedHeading(position.coords));
      
+     /* Show position on map */
      if (t.my_point == null) {
         t.my_point = myOverlay.addNewPoint('my_gps_position', uref_map.easting, uref_map.northing);  
         var icon = new kaXmlIcon();
@@ -61,10 +66,33 @@ GpsTracker.prototype.activate = function ()
    }
    
    
+   
    function gps_onError(error) {
-      setStatus('&nbsp; GPS feil<br>' + error.message);
-      navigator.notification.alert ("ERROR:"+error.message, null, 'PolaricDroid');
+     if (t.watchID == null)
+        return;
+     if (error.code==PositionError.TIMEOUT)
+        setStatus('&nbsp; venter på GPS...<br>');
+     else if (error.code=PositionError.POSITION_UNAVAILABLE) 
+     {
+        if (retry++ >= 3) {
+           navigator.geolocation.clearWatch(this.watchID);
+           setTimeout(startWatch, 20000);
+        }
+        else {
+           retry = 0;
+           setStatus('&nbsp; Får ikke posisjon<br>');
+           navigator.notification.alert ("FEIL: Posisjon er ikke tilgjengelig", null, 'PolaricDroid');
+           t.deactivate();
+        }
+     }
+     else {
+        setStatus('&nbsp; GPS utilgjengelig<br>' + error.message);
+        navigator.notification.alert ("FEIL: Ikke tilgang til GPS. Sjekk innstillinger.", null, 'PolaricDroid');
+        t.deactivate();
+     }
+     
    }
+   
    
    function speedHeading(x)
    {
@@ -81,12 +109,25 @@ GpsTracker.prototype.activate = function ()
    }
    
    
+   function startWatch()
+   { 
+       t.watchID = navigator.geolocation.watchPosition(gps_onSuccess, gps_onError, 
+          { timeout: 60000, enableHighAccuracy: true, maximumAge: 10000} ); 
+   }
+                
    
-   this.watchID = navigator.geolocation.watchPosition(gps_onSuccess, gps_onError, 
-       { timeout: 240000, enableHighAccuracy: true, maximumAge: 10000} );
+   if (t.watchID == null)
+      startWatch();
    setStatus('&nbsp; GPS <u>på</u>slått');
 }
 
+
+
+
+GpsTracker.prototype.isActive = function ()
+{
+  return (this.watchID != null);
+}
 
 
 
@@ -95,9 +136,11 @@ GpsTracker.prototype.deactivate = function ()
    myOverlay.removePoint('my_gps_position');
    this.my_point = null;
    navigator.geolocation.clearWatch(this.watchID);
+   this.watchID = null;
    setStatus('&nbsp; GPS <u>av</u>slått');
    myKaMap.updateObjects();
 }
+
 
 
 GpsTracker.prototype.toggleSpeedDisplay = function ()
