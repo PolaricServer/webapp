@@ -717,6 +717,7 @@ kaMap.prototype.updateObjects = function()
         var obj = this.aObjects[i];
         var xOffset = (obj.xOffset) ? obj.xOffset : 0;
         var yOffset = (obj.yOffset) ? obj.yOffset : 0;
+
         var aPix = this.geoToPix( obj.lon, obj.lat );
         var top = (aPix[1] + yOffset);
         var left = (aPix[0] + xOffset );
@@ -745,7 +746,7 @@ kaMap.prototype.updateObjects = function()
 kaMap.prototype.geoToPix = function( gX, gY ) {
     var gp = new OpenLayers.LonLat(gX, gY);
     gp = gp.transform(this.utmProjection, this.getMapProjection());
-    var p = this.olMap.getPixelFromLonLat(gp);
+    var p = this.olMap.getLayerPxFromLonLat(gp); // getPixelFromLonLat(gp);
     
     return [Math.floor(p.x), Math.floor(p.y)];
 };
