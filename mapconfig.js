@@ -18,7 +18,7 @@ var utm_projection = new OpenLayers.Projection("EPSG:32633");
 /*
  * Bacground color for maps
  */
-var backgroundColor = '#A1C1C9'
+var backgroundColor = '#A1C1C9';
 
 
 /* 
