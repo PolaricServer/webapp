@@ -6,7 +6,8 @@ div.olMap {
 }
 
 div.olMapViewport {
-    text-align: left;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
 }
 
 div.olLayerDiv {
@@ -341,7 +342,7 @@ div.olControlSaveFeaturesItemInactive {
 .olControlLayerSwitcher .minimizeDiv {
     width: 18px;
     height: 18px;
-    top: 5px;
+    top: 10px;
     right: 0;
     cursor: pointer;
 }
@@ -476,15 +477,14 @@ a.olControlZoomOut {
     border-radius: 0 0 4px 4px;
 }
 
-
-/**
- * Animations
+/* Enable 3d acceleration when operating on tiles, this is
+ *  known to yield better performance on IOS Safari.
+ *  http://osgeo-org.1803224.n2.nabble.com/Harware-accelerated-CSS3-animations-for-iOS-td6255560.html
+ * 
+ *  It also prevents tile blinking effects in iOS 5.
+ *  See https://github.com/openlayers/openlayers/issues/511
  */
-/*
-.olLayerGrid .olTileImage {
-    -webkit-transition: opacity 0.1s linear;
-    -moz-transition: opacity 0.1s linear;
-    -o-transition: opacity 0.1s linear;
-    transition: opacity 0.1s linear;
-}
-*/
+@media (-webkit-transform-3d) {
+  img.olTileImage {
+    -webkit-transform: translate3d(0, 0, 0);
+  }

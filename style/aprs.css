@@ -73,6 +73,29 @@ div.olControlPanZoomBar {
    top: 1px !important;
 }
 
+input.olButton {
+  margin: 4px 5px 2px 3px !important;
+  float: left;
+}
+
+label.olButton { line-height: 1.7em;}
+
+
+.baseLbl, .dataLbl {padding: 3px; background: #ccc}
+.baseLayersDiv, .dataLayersDiv {padding-bottom: 5px;}
+.layersDiv {
+   width: 21em; 
+   opacity: 0.85 !important;
+   background: #eee !important;
+   color: black; 
+   border: solid 1px #797;
+   box-shadow: 2px 2px 12px #797;
+}
+.olControlLayerSwitcher {width: 21em !important}
+
+
+
+
 #permolink {
   display: -moz-inline-stack;
   display: inline-block;
