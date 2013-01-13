@@ -109,7 +109,7 @@ function startUp() {
     myKaMap.registerForEvent( KAMAP_MOVE_START, null, function() 
     {    if (myOverlay != null) 
                 myOverlay.removePointExcept("my_.*"); 
-         } );
+     } );
         
     myScalebar = new ScaleBar(1);
     myScalebar.divisions = 3;
@@ -475,16 +475,11 @@ function myExtentChanged( eventID, extents )
        {    
            OpenLayers.Console.info("EXTENTS CHANGED: ", extents);
            if (initialized) {
-               storage.removeItem(uid+'.extents.0');
-               storage.removeItem(uid+'.extents.1');
-               storage.removeItem(uid+'.extents.2');
-               storage.removeItem(uid+'.extents.3');
-               storage.removeItem(uid+'.baselayer'); 
                storage[uid+'.extents.0'] = Math.round(extents[0]).toString();
                storage[uid+'.extents.1'] = Math.round(extents[1]).toString();
                storage[uid+'.extents.2'] = Math.round(extents[2]).toString();
                storage[uid+'.extents.3'] = Math.round(extents[3]).toString();
-               storage[uid+'.baselayer'] = myKaMap.getBaseLayer();
+               storage[uid+'.baselayer'] = myKaMap.getBaseLayer(); 
            }
            
            if (initialized) {
@@ -494,7 +489,7 @@ function myExtentChanged( eventID, extents )
            else
                setTimeout( function() { getXmlData(false);}, 2000);
            prev_extents = extents;
-       }
+       } 
        myKaRuler.reset();
 }
 
