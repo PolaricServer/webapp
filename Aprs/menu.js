@@ -676,7 +676,7 @@ function dateFormat(d1, d2) {
     txt = txt + " kl." + h1;
   if ( (d2.getDate() > d1.getDate()+1 || d2.getHours() > 0) ) {
     if (d2.getHours() == 0)
-      txt = txt + " til " + d2.getDay()+"/"+days[ prevDay(d2.getDay())]; 
+      txt = txt + " til " +days[ prevDay(d2.getDay())]; 
     else
       txt = txt + " til " + (d1.getDate() != d2.getDate() ? days[ d2.getDay()] : "") + " kl. "+h2;
   }
