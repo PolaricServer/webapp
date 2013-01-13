@@ -291,7 +291,7 @@ kaMap.prototype.initializeCallback = function( szInit )
        this.triggerEvent(KAMAP_EXTENTS_CHANGED, this.getGeoExtents());
     }
     function moveEnd() {
-       mousetrack_suspend = false;
+       mousetrack_suspend = false;   
        this.triggerEvent(KAMAP_EXTENTS_CHANGED, this.getGeoExtents());
        this.triggerEvent(KAMAP_MOVE_END); 
     }
@@ -306,6 +306,7 @@ kaMap.prototype.initializeCallback = function( szInit )
     
     
     /* Remove null layers */
+    if (baseLayers != null) 
     while (true) {
       for (idx=0; idx<baseLayers.length; idx++) 
          if (baseLayers[idx] == null)
@@ -338,6 +339,7 @@ kaMap.prototype.initializeCallback = function( szInit )
     this.plink.setMap(this.olMap);  
     
     /* Map views */
+    if (mapViews != null)
     for (var i = 0; i < mapViews.length; i++) {
         var x = new View (mapViews[i]);
         this.aMaps[x.name] = x;
@@ -345,19 +347,8 @@ kaMap.prototype.initializeCallback = function( szInit )
     
     this.triggerEvent( KAMAP_MAP_INITIALIZED );
     this.olMap.render(this.domObj);   
-
-    var cont = document.getElementsByTagName("div");
-    var elem; 
-    while (elem = cont[i++]) 
-       if (elem.className != null && elem.className.match(/olMapViewport/) != null) 
-          break;
     
-    if (elem.className != null && elem.className.match(/olMapViewport/) != null) {
-        var elem = elem.firstChild;
-        elem.appendChild(this.theInsideLayer);
-    }
-    else
-        alert("ERROR: Can't find OpenLayers Viewport element");
+    this.olMap.getViewport().appendChild(this.theInsideLayer);
     
     document.getElementById('permolink').appendChild(this.plink.draw());
     this.plink.element.innerHTML="link to this view";    
@@ -423,7 +414,7 @@ kaMap.prototype.createLayers = function() {
     
         /* Map touch events */
     this.theInsideLayer.ontouchstart = function (e) 
-            { t.thandler.handle(e); 
+            { t.thandler.handle(e);
               t.onmousedown(e);}
     this.theInsideLayer.ontouchmove = function (e) 
             { t.thandler.handle(e); 
@@ -559,19 +550,19 @@ kaMap.prototype.createDrawingCanvas = function( idx, bg ) {
     d.id = 'canvas';
     d.style.left = '0px';
     d.style.top = '0px';
-    d.style.width= '3000px';
-    d.style.height = '3000px';
     d.style.zIndex = idx;
     this.theInsideLayer.appendChild( d );
+    d.style.width= '1px';
+    d.style.height = '1px';
     
     if (bg) {
       var db = document.createElement( 'div' );
       db.id = 'canvasBG';
-      db.style.marginLeft = '-50%';
-      db.style.marginTop = '-50%';
-      db.style.width='150%';
-      db.style.height='150%';
-      d.appendChild(db);
+      d.appendChild(db);  
+      db.style.marginLeft = '-100px';
+      db.style.marginTop = '-100px';
+      db.style.width='3000px';
+      db.style.height='3000px';
     }
      
     this.aCanvases.push( d );
@@ -580,10 +571,6 @@ kaMap.prototype.createDrawingCanvas = function( idx, bg ) {
 };
 
 
-kaMap.prototype.updateDrawingCanvas = function( canvas ) {
-    this.theInsideLayer.removeChild(canvas);
-    this.theInsideLayer.appendChild(canvas);
-};
 
 
 kaMap.prototype.removeDrawingCanvas = function( canvas ) {
@@ -746,7 +733,7 @@ kaMap.prototype.updateObjects = function()
 kaMap.prototype.geoToPix = function( gX, gY ) {
     var gp = new OpenLayers.LonLat(gX, gY);
     gp = gp.transform(this.utmProjection, this.getMapProjection());
-    var p = this.olMap.getLayerPxFromLonLat(gp); // getPixelFromLonLat(gp);
+    var p = this.olMap.getViewPortPxFromLonLat(gp);
     
     return [Math.floor(p.x), Math.floor(p.y)];
 };
