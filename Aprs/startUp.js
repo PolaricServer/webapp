@@ -483,10 +483,10 @@ function myExtentChanged( eventID, extents )
            }
            
            if (initialized) {
-               getXmlData(false);
+               setTimeout( function() { getXmlData(false);}, 500);
                myKaMap.updateObjects();
            } 
-           else
+          else
                setTimeout( function() { getXmlData(false);}, 2000);
            prev_extents = extents;
        } 
