@@ -83,6 +83,7 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
      this.txt.ident = ident;
      this.txt.x = x;
      this.txt.y = y; 
+     this.txt.point = p;
      
      if (ident == null) {
           this.txt.add('Vis kartreferanse',  function () { setTimeout('showPosInfoPix('+x+', '+y+');',100); });
