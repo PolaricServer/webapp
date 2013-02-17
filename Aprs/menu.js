@@ -64,7 +64,9 @@ function ContextMenu()
 
 ContextMenu.prototype.addCallback = function (context, func)
 {
-   this.callbacks[context] = func; 
+   if (!this.callbacks[context])
+      this.callbacks[context] = new Array();
+   this.callbacks[context].push(func);
 }
 
 
@@ -83,7 +85,6 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
      this.txt.ident = ident;
      this.txt.x = x;
      this.txt.y = y; 
-     this.txt.point = p;
      
      if (ident == null) {
           this.txt.add('Vis kartreferanse',  function () { setTimeout('showPosInfoPix('+x+', '+y+');',100); });
@@ -193,9 +194,12 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
      
      function _doCallback(ctxt)
      {
-       var f = t.callbacks[ctxt]; 
-       if (f != null) 
-           f(t.txt); 
+       var lst = t.callbacks[ctxt]; 
+       for (i=0; i<lst.length; i++) {
+          f = lst[i]; 
+          if (f != null) 
+             f(t.txt); 
+       }    
      }
      
      

@@ -25,6 +25,7 @@ all: compile
 install: Aprs/compiled.js
 	install -d $(INSTALL_CONFIG)
 	install -d $(INSTALL_CONFIG)/www
+	install -d $(INSTALL_CONFIG)/www/auto
 	install -d $(INSTALL_CONFIG)/mapserv
 	install -d $(INSTALL_BIN)
 	install -m 755 -d $(INSTALL_LOG)

@@ -41,6 +41,15 @@ include_once( 'webappconfig.php' );
        echo('<link rel="stylesheet" href="style/mobil.css" type="text/css">');
    else if ($isIframe)
        echo('<link rel="stylesheet" href="style/iframe.css" type="text/css">');
+       
+       
+   /* Auto include of CSS files */
+   if ($handle = opendir('/etc/polaric-webapp/www/auto')) {
+       while (false !== ($file = readdir($handle)))
+          if ($file != "." && $file != ".." && strtolower(substr($file, strrpos($file, '.') + 1)) == 'css')
+              echo('<link rel="stylesheet" href="config/auto/'.$file.'" type="text/css">');
+       closedir($handle);
+    }
 
 
   // Add extra CSS stylesheets
@@ -143,6 +152,15 @@ include_once( 'webappconfig.php' );
 <script type="text/javascript" src="KaMap/tools/myKaRuler.js"></script> 
        
 <?php
+
+   /* Auto include of JS files */
+   if ($handle = opendir('/etc/polaric-webapp/www/auto')) {
+       while (false !== ($file = readdir($handle)))
+          if ($file != "." && $file != ".." && strtolower(substr($file, strrpos($file, '.') + 1)) == 'js')
+              echo('<script type="text/javascript" src="config/auto/'.$file.'" ></script>');
+       closedir($handle);
+    }
+
   // Add extra Javascript files
   foreach ($jsIncludes as $inc) 
      echo ('<script type="text/javascript" src="config/'.$inc.'" ></script>');
