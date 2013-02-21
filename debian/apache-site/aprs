@@ -23,7 +23,7 @@
     SetEnv  proxy-nokeepalive 1
     ProxyTimeout 180
     
-Alias /aprsd/ "/usr/share/polaric/"
+Alias /aprs/aprsd/ "/usr/share/polaric/"
 <Directory /usr/share/polaric>
    Options Indexes FollowSymLinks MultiViews
    AllowOverride None
