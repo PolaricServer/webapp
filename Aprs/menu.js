@@ -143,9 +143,6 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
              this.txt.add('SAR modus', sarModeWindow);
           }
  
-          if (isAdmin()) {          
-             this.txt.add('Server info (admin)', adminWindow);
-          } 
           _doCallback('TOOLBAR');    
      }     
      
@@ -291,7 +288,7 @@ function deleteAllObjects() {
 }
 
 function adminWindow() {
-    fullPopupWindow('Admin', server_url + 'srv/admin?cmd=info', 630, 460);
+    fullPopupWindow('Admin', server_url + 'srv/admin?cmd=info', 660, 500);
 }
 
 function sarModeWindow() {
