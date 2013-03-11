@@ -200,23 +200,24 @@
      this.div.appendChild(mdiv);
      mdiv.style.position = 'absolute'; 
      mdiv.className = "point"; 
-     mdiv.style.zIndex = zzindex+10;
+     
+     mdiv.style.zIndex = zzindex + 20;
      if (this.isSign)
-       mdiv.style.zIndex = zzindex - 10;  
+       mdiv.style.zIndex = zzindex - 20;  
      else
      {
        //  Special treatment for IE.  Arrrrgh! 
        if ( _BrowserIdent_isMSIE()) {
          mdiv.onmouseover = function ()
-         { this.parentNode.style.zIndex = zzindex + 100; }
+           { this.parentNode.style.zIndex += 100; }
          mdiv.onmouseout= function ()     
-         { this.parentNode.style.zIndex = zzindex; }
+           { this.parentNode.style.zIndex -= 100; }
        }
        else {
          mdiv.onmouseover = function ()
-         { this.style.zIndex = zzindex + 100; }
+           { this.style.zIndex += 100; }
          mdiv.onmouseout= function ()     
-         { this.style.zIndex = zzindex; }
+           { this.style.zIndex -= 100; }
        }
      }
      // LA7ECA: I added this for popup menu. Need this anymore? 
@@ -290,6 +291,7 @@
        t.parseElement(this, elements[i]);
        this.addGraphic(t);
        mdiv.appendChild(t.ldiv);  
+       mdiv.style.zIndex += 10;
        t.ldiv.setAttribute('id', ident+"_label_txt");
        t.ldiv.style.fontSize = labelStyle.getFontSize(); 
        if (labelIsHidden(ident))
