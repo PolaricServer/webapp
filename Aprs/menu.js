@@ -72,19 +72,19 @@ ContextMenu.prototype.addCallback = function (context, func)
 
 
 
-ContextMenu.prototype.show = function (ident, e, ax, ay)
+ContextMenu.prototype.show = function (i, e, ax, ay)
 {
+     var ident = i;
      e = (e)?e:((event)?event:null); 
      var x = (ax) ? ax : ((e.pageX) ? e.pageX : e.clientX); 
      var y = (ay) ? ay : ((e.pageY) ? e.pageY : e.clientY);
      var t = this; 
-     
      var p = myOverlay.getPointObject(ident);
      var d = myKaMap.domObj;
-     this.txt.clear();
-     this.txt.ident = ident;
-     this.txt.x = x;
-     this.txt.y = y; 
+     t.txt.clear();
+     t.txt.ident = ident;
+     t.txt.x = x;
+     t.txt.y = y; 
      
      if (ident == null) {
           this.txt.add('Vis kartreferanse',  function () { setTimeout('showPosInfoPix('+x+', '+y+');',100); });
@@ -142,7 +142,6 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
                 this.txt.add('SAR URL', sarUrl);
              this.txt.add('SAR modus', sarModeWindow);
           }
- 
           _doCallback('TOOLBAR');    
      }     
      
@@ -192,6 +191,7 @@ ContextMenu.prototype.show = function (ident, e, ax, ay)
      function _doCallback(ctxt)
      {
        var lst = t.callbacks[ctxt]; 
+       if (lst)
        for (i=0; i<lst.length; i++) {
           f = lst[i]; 
           if (f != null) 
