@@ -61,6 +61,7 @@ install: Aprs/compiled.js
 	install -m 644 KaMap/config/config.php $(INSTALL_CONFIG)/kamap-config.php
 	install -m 644 mapconfig.js  $(INSTALL_CONFIG)/mapconfig.js
 	install -m 644 webappconfig.php $(INSTALL_CONFIG)
+	install -m 644 users $(INSTALL_CONFIG)
 
 
 compile: 
