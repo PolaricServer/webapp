@@ -27,7 +27,7 @@ function receiveMessage(e)
   else if (op[0] == "gotoUtm") {
       var zz = args[1].substring(0,2);
       var nz = args[1].substring(2,3);
-      doRefSearchUtm(args[2], args[3], nz, zz, true)
+      gotoPos(args[2], args[3])
   }
   else if (op[0] == "findItem")
       findStation(args[1]);
@@ -107,6 +107,9 @@ ContextMenu.prototype.show = function (i, e, ax, ay)
           d = toolbar;
           this.txt.add('Finn APRS stasjon', function()  { setTimeout('searchStations();',100);}); 
           this.txt.add('Finn kartreferanse', function() { setTimeout('showRefSearch();',100); });
+          this.txt.add('Finn stedsnavn', function()  { setTimeout('searchNames();',100);}); 
+          
+          
           if (canUpdate()) {                 
              this.txt.add('Legg inn objekt', function() { editObjectInfo(null, null); });
              this.txt.add('Slett objekt', function() { deleteObject(null); });
@@ -580,6 +583,67 @@ function showPosInfo(coords)
 {
     showPosInfoUtm( new UTMRef(coords[0], coords[1], this.utmnzone, this.utmzone)); 
 }
+
+
+
+
+/* Zoom to pos and show marker there */
+function gotoPos(x, y)
+{
+  doRefSearchUtm(x, y, this.utmnzone, this.utmzone, true)
+}
+
+
+
+
+
+var skNames = new statkartName(statkartName_url);
+
+
+function searchNames()
+{  
+  var xpos = 50; 
+  var ypos = 70;
+  var pdiv = popupwindow(document.getElementById("anchor"), 
+          ' <div><h1>Finn Stedsnavn (Kartverket)</h1><div id="searchform"><form> '+
+          ' Navn: <input type="text"  width="10" id="findname"/> '+
+          ' <input id="searchbutton" type="button"' +
+          ' value="Søk" />' +
+          '</form><br><div id="searchresult"></div></div></div>', xpos, ypos, null); 
+  
+  $('#searchbutton').click( function(e) {
+     e = (e)?e:((event)?event:null);
+     e.cancelBubble = true; 
+     if (e.stopPropagation) e.stopPropagation();
+     skNames.doSearch($('#findname').val(), searchCallback);  
+    
+  });
+  
+  
+  function searchCallback(info)
+  {  
+    if (info == null) 
+      return; 
+    
+    var x = (isMobile ? document.getElementById('searchform') : 
+       document.getElementById('searchresult'));
+    if (x != null) {            
+       var h = '<table>';
+       for (var i=0; i<info.length; i++)
+          h += '<tr onclick="gotoPos('+info[i].east+','+info[i].north+')"><td>'
+              +info[i].navn+'</td><td>'+info[i].type+'</td><td>'+info[i].fylke+'</td></tr>';
+    
+       h+='</table>';
+       x.innerHTML = h;
+    } 
+    
+  }
+}
+
+
+
+
+
 
 
 

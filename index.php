@@ -139,6 +139,7 @@ include_once( 'webappconfig.php' );
      echo('<script type="text/javascript" src="XMLOverlay/kaXmlSymbol.js"></script>');
      echo('<script type="text/javascript" src="XMLOverlay/labelStyle.js"></script>');
      echo('<script type="text/javascript" src="Aprs/statkartWPS.js"></script>');
+     echo('<script type="text/javascript" src="Aprs/statkartName.js"></script>');
      echo('<script type="text/javascript" src="Aprs/WXreport.js"></script>');
      echo('<script type="text/javascript" src="Aprs/gpx.js"></script>');
      echo('<script type="text/javascript" src="Aprs/iscroll.js"></script>');

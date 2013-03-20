@@ -144,6 +144,9 @@ var statkartWPS_enable = true;
 var statkartWPS_url = "/aprs/wps";
 
 
+var statkartName_enable = true; 
+var statkartName_url = "/namesearch";
+
 
 
 /* Use service from met.no go get weather forecasts.
