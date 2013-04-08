@@ -626,7 +626,7 @@ function searchNames()
       return; 
     
     var x = (isMobile ? document.getElementById('searchform') : 
-       document.getElementById('searchresult'));
+                        document.getElementById('searchresult'));
     if (x != null) {            
        var h = '<table>';
        for (var i=0; i<info.length; i++)
@@ -635,6 +635,10 @@ function searchNames()
     
        h+='</table>';
        x.innerHTML = h;
+       
+       /* To allow scrollbar to be added */
+       removePopup();
+       setTimeout(function() { popup(document.getElementById("anchor"), pdiv, xpos, ypos, null);}, 1000); 
     } 
     
   }
