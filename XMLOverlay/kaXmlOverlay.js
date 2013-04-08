@@ -501,7 +501,8 @@ function _BrowserIdent() {
         if (!_BrowserIdent_version) 
            _BrowserIdent_version = _BrowserIdent_detect.charAt(_BrowserIdent_place + _BrowserIdent_thestring.length);
         
-        if (_BrowserIdent_isMSIE() && safeParseInt(_BrowserIdent_version) <= 7)
+        if (_BrowserIdent_isMSIE() && 
+             safeParseInt(_BrowserIdent_version) <= 7 && safeParseInt(_BrowserIdent_version) != 1)
            alert("OBS: Vi støtter ikke lenger Internet Explorer versjon 7 eller eldre. Anbefaler oppgradering av nettleser"); 
 }
 
