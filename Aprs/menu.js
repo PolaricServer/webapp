@@ -27,7 +27,7 @@ function receiveMessage(e)
   else if (op[0] == "gotoUtm") {
       var zz = args[1].substring(0,2);
       var nz = args[1].substring(2,3);
-      gotoPos(args[2], args[3])
+      doRefSearchUtm(args[2], args[3], nz, zz, true)
   }
   else if (op[0] == "findItem")
       findStation(args[1]);
