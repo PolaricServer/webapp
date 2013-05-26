@@ -58,6 +58,12 @@ polaricApi.prototype.zoomIn = function()
 polaricApi.prototype.zoomOut = function()
   { this.invoke("zoomOut"); }
   
+polaricApi.prototype.labelUp = function()
+  { this.invoke("labelUp"); }
+
+polaricApi.prototype.labelDown = function()
+  { this.invoke("labelDown"); } 
+
 polaricApi.prototype.zoomScale = function(scale)
   { this.invoke("zoomScale", scale);}
   
@@ -66,6 +72,12 @@ polaricApi.prototype.gotoUtm = function(zone, easting, northing)
 
 polaricApi.prototype.findItem = function(ident)
   { this.invoke("findItem", ident); }
+
+polaricApi.prototype.searchItems = function(filter, divid)
+{ this.invoke("searchItems", filter, function(x) {document.getElementById(divid).innerHTML=x;} ); }
+
+polaricApi.prototype.searchNames = function(filter, divid)
+{ this.invoke("searchNames", filter, function(x) {document.getElementById(divid).innerHTML=x;} ); }
 
 polaricApi.prototype.selectMap = function(ident)
   { this.invoke("selectMap", ident); }

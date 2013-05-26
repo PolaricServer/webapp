@@ -18,7 +18,7 @@ function loadXml(xml_url, cbfunc) {
       function callback(xml) { 
         var x = parseResult(xml); 
         if (cbfunc)
-            cbfunc(x);
+            cbfunc(toHtml(x));
       }
 }
 
@@ -49,6 +49,17 @@ function parseResult(xml_string) {
            j++;
         }
         return result;
+}
+
+function toHtml(info) // Consider doing this somewhere else
+{
+  var h = '<table>';
+  for (var i=0; i<info.length; i++)
+    h += '<tr onclick="gotoPos('+info[i].east+','+info[i].north+')"><td>'
+    +info[i].navn+'</td><td>'+info[i].type+'</td><td>'+info[i].fylke+'</td></tr>';
+  
+  h+='</table>';
+  return h;
 }
 
 

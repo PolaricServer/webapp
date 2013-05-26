@@ -9,7 +9,6 @@ window.onmessage = receiveMessage;
 function receiveMessage(e)  
 {   
   e = (e)?e:((event)?event:null);
-  var result = null;
   
   var args = e.data.split("##");
   var op = args[0].split("#");
@@ -31,16 +30,19 @@ function receiveMessage(e)
   }
   else if (op[0] == "findItem")
       findStation(args[1]);
+  else if (op[0] == "searchItems")
+      searchStationsCall(args[1], function(result) {
+         e.source.postMessage(args[0]+"##"+result, e.origin);
+      });
+  else if (op[0] == "searchNames")
+      skNames.doSearch(args[1], function(result) {
+         e.source.postMessage(args[0]+"##"+result, e.origin); 
+      });
+  
   else if (op[0] == "selectMap")
       myKaMap.selectMap(args[1]);
   else if (op[0] == "selectBaseLayer")
       myKaMap.selectBaseLayer(args[1]);
-  else if (op[0] == "echoTest")
-      result = "Echo - your text was: "+args[1];
-  
-  if (result != null)
-    e.source.postMessage(args[0]+"##"+result, e.origin);
-  
 } 
 
 
@@ -100,8 +102,7 @@ ContextMenu.prototype.show = function (i, e, ax, ay)
           this.txt.add('Sentrer punkt', function()  { myZoomTo(x,y); });
           this.txt.add('Zoom inn', function() {myKaMap.zoomIn(); } );
           this.txt.add('Zoom ut',  function() {myKaMap.zoomOut(); } );
-          _doCallback('MAP');
-     }
+          _doCallback('MAP');     }
                                      
      else if (ident == 'TOOLBAR') {   
           d = toolbar;
@@ -385,8 +386,7 @@ function searchStations()
          e = (e)?e:((event)?event:null);
          e.cancelBubble = true; 
          if (e.stopPropagation) e.stopPropagation();
-         call(server_url + "srv/search?ajax=true&filter="+
-	     $('#findcall').val()+(isMobile==true?"&mobile=true":""), null, searchStationCallback, false );
+         searchStationsCall( $('#findcall').val(), searchStationCallback)                  
      });
 
 
@@ -404,6 +404,16 @@ function searchStations()
         }    
     }
 }
+
+
+
+function searchStationsCall(filt, cb)
+{
+  call(server_url + "srv/search?ajax=true&filter="+
+    filt+(isMobile==true?"&mobile=true":""), null, cb, false );
+}
+
+
 
 
 /* Autojump stuff */
@@ -628,13 +638,7 @@ function searchNames()
     var x = (isMobile ? document.getElementById('searchform') : 
                         document.getElementById('searchresult'));
     if (x != null) {            
-       var h = '<table>';
-       for (var i=0; i<info.length; i++)
-          h += '<tr onclick="gotoPos('+info[i].east+','+info[i].north+')"><td>'
-              +info[i].navn+'</td><td>'+info[i].type+'</td><td>'+info[i].fylke+'</td></tr>';
-    
-       h+='</table>';
-       x.innerHTML = h;
+       x.innerHTML = info;
        
        /* To allow scrollbar to be added */
        removePopup();
