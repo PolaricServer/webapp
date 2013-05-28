@@ -21,15 +21,18 @@
        return; 
      myKaMap.zoomToScale(scale); 
    }
+   else if (op[0] == "gotoPos") {
+      gotoPos(args[1], args[2]);
+   }
    else if (op[0] == "gotoUtm") {
      var zz = args[1].substring(0,2);
      var nz = args[1].substring(2,3);
      doRefSearchUtm(args[2], args[3], nz, zz, true)
    }
    else if (op[0] == "findItem")
-     findStation(args[1]);
+     findItem(args[1], parseBool(args[2]));
    else if (op[0] == "searchItems")
-     searchStationsCall(args[1], function(result) {
+     searchItems(args[1], function(result) {
        e.source.postMessage(args[0]+"##"+result, e.origin);
      });
    else if (op[0] == "searchNames")
@@ -41,6 +44,10 @@
      myKaMap.selectMap(args[1]);
    else if (op[0] == "selectBaseLayer")
      myKaMap.selectBaseLayer(args[1]);
+   
+   
+   function parseBool(str)
+      { return  (str == "T") ? true : false; }
  } 
  
  
@@ -54,13 +61,15 @@
   *    showInfo - Pop up an info window on top of the map. 
   **************************************************************************************/
  
- function findStation(ident, showInfo)
+ function findItem(ident, showInfo)
  {   
    /* AJA(X) call to find station */ 
-   call(server_url + "srv/findstation?ajax=true&id="+ident, null, findStationCallback, false); 
+   call(server_url + "srv/finditem?ajax=true&id="+ident, null, findItemCallback, false); 
+   if (!showInfo)
+      showInfo = false;
    
    
-   function findStationCallback(info)
+   function findItemCallback(info)
    {
      if (info == null)
        return; 
@@ -85,6 +94,41 @@
  }
  
  
+ 
+ 
+ 
+ /*************************************************************************************
+  * Zoom to pos and show marker there 
+  *    x, y - coordinates in default UTM zone (string representation)
+  *************************************************************************************/
+ 
+ function gotoPos(x, y)
+ {
+   doRefSearchUtm(x, y, this.utmnzone, this.utmzone, true)
+ }
+ 
+ 
+ /**************************************************************************************
+  * doRefSearchLocal - Move map to a specific location
+  **************************************************************************************/
+ 
+ function doRefSearchLocal(ax, ay)
+ {   removePopup();
+    var x = parseInt(ax, 10);
+    var y = parseInt(ay, 10);
+    if (isNaN(x) || isNaN(y))
+      return;
+ 
+    var ext = myKaMap.getGeoExtents();
+    var cref = new UTMRef((ext[0] + ext[2]) / 2, (ext[1] + ext[3]) / 2,  this.utmnzone,  this.utmzone);
+    cref = cref.toLatLng().toUTMRef(); 
+    var bx = Math.floor(cref.easting  / 100000) * 100000;
+    var by = Math.floor(cref.northing / 100000) * 100000; 
+    var uref = new UTMRef(bx + x * 100,  by + y * 100, cref.latZone, cref.lngZone); 
+ 
+    /* TODO: We should actually try to show a 100x100m area */
+    _doRefSearchUtm(uref);
+ }
  
  
  
@@ -136,6 +180,7 @@
  
  
  
+ 
  /**************************************************************************************
   * searchStationsCall - Search items based on identifier or comment fields
   *    filt - Some text to match. Wildcards at beginning or end are allowed
@@ -144,7 +189,7 @@
   *  The result will be text representation of a HTML table
   **************************************************************************************/
  
- function searchStationsCall(filt, cb)
+ function searchItems(filt, cb)
  {
    call(server_url + "srv/search?ajax=true&filter="+
    filt+(isMobile==true?"&mobile=true":""), null, cb, false );

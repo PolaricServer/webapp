@@ -313,7 +313,7 @@ function searchStations()
          e = (e)?e:((event)?event:null);
          e.cancelBubble = true; 
          if (e.stopPropagation) e.stopPropagation();
-         searchStationsCall( $('#findcall').val(), searchStationCallback)                  
+         searchItems( $('#findcall').val(), searchStationCallback)                  
      });
 
 
@@ -427,24 +427,6 @@ function showRefSearch()
 }
 
 
-function doRefSearchLocal(ax, ay)
-{   removePopup();
-    var x = parseInt(ax, 10);
-    var y = parseInt(ay, 10);
-    if (isNaN(x) || isNaN(y))
-      return;
-    
-    var ext = myKaMap.getGeoExtents();
-    var cref = new UTMRef((ext[0] + ext[2]) / 2, (ext[1] + ext[3]) / 2,  this.utmnzone,  this.utmzone);
-    cref = cref.toLatLng().toUTMRef(); 
-    var bx = Math.floor(cref.easting  / 100000) * 100000;
-    var by = Math.floor(cref.northing / 100000) * 100000; 
-    var uref = new UTMRef(bx + x * 100,  by + y * 100, cref.latZone, cref.lngZone); 
-
-    /* TODO: We should actually try to show a 100x100m area */
-    _doRefSearchUtm(uref);
-}
-
 
 
 
@@ -481,16 +463,6 @@ function showPosInfo(coords)
 {
     showPosInfoUtm( new UTMRef(coords[0], coords[1], this.utmnzone, this.utmzone)); 
 }
-
-
-
-
-/* Zoom to pos and show marker there */
-function gotoPos(x, y)
-{
-  doRefSearchUtm(x, y, this.utmnzone, this.utmzone, true)
-}
-
 
 
 

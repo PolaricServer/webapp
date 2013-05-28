@@ -17,9 +17,14 @@ function _receiveMessage(e)
 }
 
 
+function findItem(x,y) { polaric.findItem(x,y); }
+function gotoPos(x,y) { polaric.gotoPos(x,y); }
+
 
 function init_polaric(iframeid, serverdomain)
-{ polaric = new polaricApi(iframeid, serverdomain); }
+{ 
+  polaric = new polaricApi(iframeid, serverdomain); 
+}
 
 
 function polaricApi(iframeid, serverdomain) {
@@ -67,17 +72,20 @@ polaricApi.prototype.labelDown = function()
 polaricApi.prototype.zoomScale = function(scale)
   { this.invoke("zoomScale", scale);}
   
+polaricApi.prototype.gotoPos = function(easting, northing)
+  { this.invoke("gotoPos", easting+"##"+northing);}
+  
 polaricApi.prototype.gotoUtm = function(zone, easting, northing)
   { this.invoke("gotoUtm", zone+"##"+easting+"##"+northing);}
 
-polaricApi.prototype.findItem = function(ident)
-  { this.invoke("findItem", ident); }
+polaricApi.prototype.findItem = function(ident, show)
+  { this.invoke("findItem", ident, (show ? "T" : "F")); }
 
 polaricApi.prototype.searchItems = function(filter, divid)
-{ this.invoke("searchItems", filter, function(x) {document.getElementById(divid).innerHTML=x;} ); }
+  { this.invoke("searchItems", filter, function(x) {document.getElementById(divid).innerHTML=x;} ); }
 
 polaricApi.prototype.searchNames = function(filter, divid)
-{ this.invoke("searchNames", filter, function(x) {document.getElementById(divid).innerHTML=x;} ); }
+  { this.invoke("searchNames", filter, function(x) {document.getElementById(divid).innerHTML=x;} ); }
 
 polaricApi.prototype.selectMap = function(ident)
   { this.invoke("selectMap", ident); }
