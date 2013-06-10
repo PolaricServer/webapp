@@ -137,7 +137,7 @@
  
  
  kaXmlPoint.prototype.moveToFront = function(point_element) {
-   this.div.style.zIndex = zzindex + 20;
+   this.div.style.zIndex = zzindex + 200000;
  }
  
  
