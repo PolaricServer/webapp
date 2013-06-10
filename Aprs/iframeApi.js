@@ -35,7 +35,7 @@ function polaricApi(iframeid, serverdomain) {
 
 
 /*
- * Invoke a remote function 
+ * Invoke a 'remote' function 
  * cback - optional callback function to receive return message
  */
 polaricApi.prototype.invoke = function(op, arg, cback)
@@ -92,6 +92,3 @@ polaricApi.prototype.selectMap = function(ident)
   
 polaricApi.prototype.selectBaseLayer = function(ident)
   { this.invoke("selectBaseLayer", ident); }  
-  
-polaricApi.prototype.echoTest = function(txt, cb)
-  { this.invoke("echoTest", txt, cb); }

@@ -71,25 +71,27 @@
    
    function findItemCallback(info)
    {
-     if (info == null)
-       return; 
+      if (info == null)
+         return; 
      
-     /* The returned info should be three tokens delimited by commas: 
-      * an id (string) and x and y coordinates (number)
-      */
-     var args = info.split(/\s*,\s*/g);
-     if (args == null || args.length < 3)
-       return;
-     var x = parseInt(args[1], 10);
-     var y = parseInt(args[2], 10);
-     if (isNaN(x) || isNaN(y))
-       return;
-     myKaMap.zoomTo(x, y);
-     removePopup();
-     if (showInfo) 
-       setTimeout(function() { showStationInfoGeo(args[0], false, x,  y );}, 1400);
-     setTimeout(function() { var x = myOverlay.getPointObject(args[0]); 
-     if (x!=null) x.moveToFront(); }, 3500);   
+      /* The returned info should be three tokens delimited by commas: 
+       * an id (string) and x and y coordinates (number)
+       */
+      var args = info.split(/\s*,\s*/g);
+      if (args == null || args.length < 3)
+         return;
+      var x = parseInt(args[1], 10);
+      var y = parseInt(args[2], 10);
+      if (isNaN(x) || isNaN(y))
+         return;
+      myKaMap.zoomTo(x, y);
+      removePopup();
+      if (showInfo) 
+         setTimeout(function() { showStationInfoGeo(args[0], false, x,  y );}, 1400);
+      setTimeout(function() { 
+         var x = myOverlay.getPointObject(args[0]);
+         if (x!=null) x.moveToFront();     
+      }, 3500);   
    }
  }
  
@@ -149,6 +151,7 @@
    var uref = ll.toUTMRef();
    _doRefSearchUtm(uref);
  }
+ 
  
  
  /**************************************************************************************
