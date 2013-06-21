@@ -25,20 +25,19 @@
  function kaXmlPoint(pid, xml_overlay) {
    this.xml_overlay = xml_overlay;
    this.pid = pid;
-   this.divId = this.xml_overlay.getDivId(pid);
+   this.flags = "";
+   this.href = "";
+   this.title = "";
    this.geox = 0;
    this.geoy = 0;
    this.shown = false;
    this.hasTrace = false;
    this.own = false;
    this.isSign = false;
+   
    this.thandler = new touchHandler();
-   this.flags = "";
-   this.href = "";
-   this.title = "";
-   
+   this.divId = this.xml_overlay.getDivId(pid);
    this.graphics = new Array();
-   
    this.div = document.createElement('div');
    this.div.setAttribute('id', this.divId);
  }
@@ -152,7 +151,7 @@
  var tstate = null;
  kaXmlPoint.prototype.parse = function(point_element) {
    var tt  = this;
-   var zi; // Added by LA7ECA.
+   var zi; 
    var i;
    var px = this.geox;
    var py = this.geoy;
@@ -160,9 +159,8 @@
    var y = parseFloat(point_element.getAttribute("y"));
    this.href = point_element.getAttribute("href");
    this.title = point_element.getAttribute("title");    
-   var ident = point_element.getAttribute("id");
    this.flags = point_element.getAttribute("flags");
-   this.isSign = (ident.substr(0,2) == "__");
+   this.isSign = (this.pid.substr(0,2) == "__");
    var redraw_a = point_element.getAttribute("redraw");
    var redraw = false;
    var tracked = false;
@@ -171,7 +169,7 @@
    if (own_a == "true") 
        this.own = true;
        
-   tracked = (_sstorage['polaric.tracked'] != null && ident == _sstorage['polaric.tracked']);                         
+   tracked = (_sstorage['polaric.tracked'] != null && this.pid == _sstorage['polaric.tracked']);                         
    
    if (!this.shown) {
      this.placeOnMap(x,y);
@@ -196,7 +194,7 @@
       * to allow those to react to mouse or touch events.
       */             
      var mdiv = document.createElement( 'div' );
-     mdiv.setAttribute('id', ident+"_label");
+     mdiv.setAttribute('id', this.pid+"_label");
      this.div.appendChild(mdiv);
      mdiv.style.position = 'absolute'; 
      mdiv.className = "point"; 
@@ -223,15 +221,15 @@
      // LA7ECA: I added this for popup menu. Need this anymore? 
      
      if (this.title != null)
-       mdiv.title = this.title; 
+       mdiv.title = (this.isSign ? ''  : '['+ this.pid +'] ') + this.title; 
      
      if (!this.isSign || this.href) {
        mdiv.onclick = function (e) 
-          { return myObjectClicked(ident, e, tt.href, tt.title); }
+          { return myObjectClicked(tt.pid, e, tt.href, tt.title); }
      }
-     
+
      mdiv.oncontextmenu= function(e)
-       { ctxtMenu.show(ident, e); return false; }
+       { ctxtMenu.show(tt.pid, e); return false; }
 
      mdiv.ontouchstart = this.thandler.handle;         
      mdiv.ontouchend = this.thandler.handle;
@@ -292,14 +290,14 @@
        this.addGraphic(t);
        mdiv.appendChild(t.ldiv);  
        mdiv.style.zIndex += 10;
-       t.ldiv.setAttribute('id', ident+"_label_txt");
+       t.ldiv.setAttribute('id', this.pid+"_label_txt");
        t.ldiv.style.fontSize = labelStyle.getFontSize(); 
-       if (labelIsHidden(ident))
+       if (labelIsHidden(this.pid))
          t.ldiv.style.visibility = 'hidden';
      }
    }
    if (tracked)  
-     setTracking(ident);  
+     setTracking(this.pid);  
  }
  
  

@@ -1,5 +1,5 @@
 var polaric = null;
-var api_calls = new  Array();
+var api_calls = new Array();
 var api_serial = 0;
 
 window.onmessage = _receiveMessage; 
@@ -13,7 +13,8 @@ function _receiveMessage(e)
   var f = api_calls[op]; 
   if (f)
     f(args[1]);
-  delete api_calls[op];
+  if (! /EVENT/.test(op))
+     delete api_calls[op];
 }
 
 
@@ -31,6 +32,16 @@ function polaricApi(iframeid, serverdomain) {
    this.domain = serverdomain;
    this.frame = document.getElementById(iframeid).contentWindow; 
 }
+
+
+polaricApi.prototype.subscribe = function(event, cback)
+{
+   this.invoke('_subscribe', event, function(x) 
+     { 
+       api_calls['EVENT#'+x] = cback;
+     });
+}
+
 
 
 
@@ -87,6 +98,9 @@ polaricApi.prototype.searchItems = function(filter, divid)
 polaricApi.prototype.searchNames = function(filter, divid)
   { this.invoke("searchNames", filter, function(x) {document.getElementById(divid).innerHTML=x;} ); }
 
+polaricApi.prototype.getXmlPoints = function(divid)
+  { this.invoke("xmlPoints", null, function(x) {document.getElementById(divid).innerHTML=x;} ); } 
+  
 polaricApi.prototype.selectMap = function(ident)
   { this.invoke("selectMap", ident); }
   

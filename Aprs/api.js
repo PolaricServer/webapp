@@ -3,6 +3,7 @@
  /****************************************************************** 
   * Set up a function to listen to messages from other frames 
   ******************************************************************/
+ var client = 0;
  
  window.onmessage = function(e)  
  {   
@@ -39,18 +40,60 @@
      skNames.doSearch(args[1], function(result) {
        e.source.postMessage(args[0]+"##"+result, e.origin); 
      });
-   
+   else if (op[0] == "xmlPoints")
+     getXmlPoints(function(result) {
+       e.source.postMessage(args[0]+"##"+result, e.origin);
+     });
    else if (op[0] == "selectMap")
      myKaMap.selectMap(args[1]);
    else if (op[0] == "selectBaseLayer")
      myKaMap.selectBaseLayer(args[1]);
    
+   else if (op[0] == "_subscribe") {
+      var event = args[1];
+      if (event=='XMLOVERLAY_LOAD') {
+         client = (client + 1) % 100000;
+         var cl = client;
+         var orig = e.origin;
+         var src = e.source;
+         myOverlay.registerForEvent(XMLOVERLAY_LOAD, null, function() 
+           { src.postMessage("EVENT#"+cl, orig); });      
+         e.source.postMessage(args[0]+"##"+cl, e.origin);
+      } 
+      if (event=='MAP_EXTENTS_CHANGED') {
+         client = (client + 1) % 100000;
+         var cl = client;
+         var orig = e.origin;
+         var src = e.source;
+         myKaMap.registerForEvent(KAMAP_EXTENTS_CHANGED, null, function() 
+           { src.postMessage("EVENT#"+cl, orig); });      
+         e.source.postMessage(args[0]+"##"+cl, e.origin);
+      }
+   } 
    
-   function parseBool(str)
-      { return  (str == "T") ? true : false; }
+   
+  function parseBool(x) {
+      return (x=='T' || x == 't' || x == 'true')
+  }   
+   
  } 
  
  
+ 
+ function getXmlPoints(cb)
+ {
+    var tb = '<table>';
+    for (var i=0; i < myOverlay.ovrObjects.length; i++) {
+      var x = myOverlay.ovrObjects[i];
+      
+      if (x != null)
+        tb += '<tr><td onclick="findItem(\''+ x.pid +'\',true);">'+ 
+           (x.pid.substring(0,6)!='__sign' ?  x.pid : '') + 
+           '</td><td>'+ x.title + '</td></tr>'
+    }
+    tb += '</table>';
+    cb(tb);
+ }
  
  
  

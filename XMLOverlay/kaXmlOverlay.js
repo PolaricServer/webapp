@@ -8,6 +8,14 @@
  *
  *****************************************************************************/
 
+/**
+ * kaMap! events
+ */
+var ovrLastEventId = 0;
+var XMLOVERLAY_LOAD = ovrLastEventId ++;
+var XMLOVERLAY_ERROR = ovrLastEventId ++;
+
+
 
 /* TODO: These global variables/functions should be inside the scope
  * of the kaXmlOverlay object 
@@ -116,6 +124,26 @@ function traceIsHidden(ident)
   { return _sstorage['polaric.hidetrace.'+ident] == 'T'; }
 
 
+  
+  
+kaXmlOverlay.prototype.registerForEvent = function( eventID, obj, func ) {
+    return this.eventManager.registerForEvent(eventID, obj, func);
+};
+
+
+kaXmlOverlay.prototype.deregisterForEvent = function( eventID, obj, func ) {
+    return this.eventManager.deregisterForEvent(eventID, obj, func);
+};
+
+
+kaXmlOverlay.prototype.triggerEvent = function( eventID /*pass additional arguments*/ ) {
+    return this.eventManager.triggerEvent.apply( this.eventManager, arguments );
+};
+
+
+
+
+
 /**
  * kaXmlOverlay( oKaMap, xml_url )
  *
@@ -149,6 +177,14 @@ function kaXmlOverlay( oKaMap, zIndex )
     
     // Register for events
     this.kaMap.registerForEvent( KAMAP_SCALE_CHANGED, this, this.scaleChanged );
+    
+    //event manager
+    this.eventManager = new _eventManager();   
+    /* register the known events */
+    for (var i=0; i<gnLastEventId; i++) {
+      this.eventManager.registerEventID( i );
+    }
+    
 }
 
 
@@ -181,7 +217,14 @@ kaXmlOverlay.prototype.remove = function() {
  * xml_url      URL of th XML with points to plot
  */
 kaXmlOverlay.prototype.loadXml = function(xml_url) {
-      return call(xml_url, this, this.loadXmlCallback, true); 
+      return call(xml_url, this, _loadXmlCallback, true); 
+      
+      function _loadXmlCallback(xml_string) {
+         if (xml_string == null)
+            this.triggerEvent(XMLOVERLAY_ERROR);
+         else if (this.loadXmlDoc(xml_string))
+            this.triggerEvent(XMLOVERLAY_LOAD); 
+      }
 }
 
 
@@ -210,14 +253,6 @@ if (typeof DOMParser == "undefined") {
    }
 }
 
-
-
-kaXmlOverlay.prototype.loadXmlCallback = function(xml_string) {
-  if (xml_string == null)
-    postLoadXml_Fail(); 
-  else if (this.loadXmlDoc(xml_string))
-    postLoadXml(); 
-}
 
 
 

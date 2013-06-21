@@ -110,6 +110,8 @@ function startUp() {
     {    if (myOverlay != null) 
                 myOverlay.removePointExcept("my_.*"); 
      } );
+    
+   
         
     myScalebar = new ScaleBar(1);
     myScalebar.divisions = 3;
@@ -244,12 +246,13 @@ function myInitialized() {
         }   
     }
 
-
-    
+ 
     /* Set up XML overlay */
     if (myOverlay == null)  
         myOverlay = new kaXmlOverlay( myKaMap, 1200 );
-
+    myOverlay.registerForEvent(XMLOVERLAY_ERROR, null, postLoadXml_Fail);
+    myOverlay.registerForEvent(XMLOVERLAY_LOAD, null, postLoadXml);
+    
     
     /* Filter select box */
     var sFilter = storage[uid+'.filter'];  
@@ -415,7 +418,7 @@ function postLoadXml()
         sdiv.style.visibility = 'hidden';
      
      show_SAR_access(getLogin() != null);
-     
+
      if (!isIframe && !isMobile && !isMobileApp && getLogin() != null) {
         ldiv = document.getElementById('login')
         ldiv.innerHTML = getLogin(); 
