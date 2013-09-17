@@ -1,1 +1,1 @@
- debian/apache-site/aprs  etc/apache2/sites-available
+ debian/apache-site/aprs.conf  etc/apache2/sites-available
