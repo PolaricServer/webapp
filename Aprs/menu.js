@@ -223,7 +223,7 @@ function adminWindow() {
 }
 
 function sarModeWindow() {
-    fullPopupWindow('SarMode', server_url + 'srv/sarmode', 460, 270);
+    fullPopupWindow('SarMode', server_url + 'srv/sarmode', 480, 310);
 }
 
 
@@ -252,7 +252,7 @@ function showStationInfo(ident, edit, x, y)
       
   else {
       var url = server_url + (getLogin() ? 'srv/station_sec?id=' : 'srv/station?id=');
-      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 705, 500);
+      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 705, 510);
   } 
 }
 
