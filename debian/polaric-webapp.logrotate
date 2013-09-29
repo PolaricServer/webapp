@@ -3,6 +3,5 @@
         weekly
         missingok
         rotate 52
-        endscript
         compress
 }
