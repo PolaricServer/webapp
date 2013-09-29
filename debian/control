@@ -8,7 +8,7 @@ Homepage: http://aprs.no/dokuwiki
 
 Package: polaric-webapp
 Architecture: all
-Depends: apache2, php5, php5-gd, php5-mapscript, polaric-aprsd, ${misc:Depends}
+Depends: apache2, libapache2-mod-php5, php5, php5-gd, php5-mapscript, polaric-aprsd, ${misc:Depends}
 Recommends: 
 Description: Polaric Server: Web application. 
  The "Polaric Server" is mainly a web based service to present APRS 
