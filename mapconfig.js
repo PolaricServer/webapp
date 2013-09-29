@@ -118,8 +118,7 @@ var mapViews = [
 /* Filter menyen */
 var filterViews = [
    { name: 'alle',   title: 'Alle / Alt' },
-   { name: 'track2', title: 'Sporing 1' },
-   { name: 'track',  title: 'Sporing 2' },
+   { name: 'track',  title: 'Sporing 1' },
    { name: 'le',     title: 'Kun LE kall' }, 
    { name: 'infra',  title: 'Infrastruktur'},
    { name: 'ainfra', title: 'Aktiv Infrastr'},
