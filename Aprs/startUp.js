@@ -299,7 +299,7 @@ function myInitialized() {
       buttonMenu.oncontextmenu = function(e) 
          { return mainMenu(buttonMenu, e);}  
     }      
-    var vp = document.getElementById('viewport');
+    var vp = myKaMap.olMap.getViewport(); 
     vp.oncontextmenu = function(e) 
          { e = (e)?e:((event)?event:null);
            if (document.kaCurrentTool != myKaRuler) 
