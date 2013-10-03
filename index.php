@@ -70,7 +70,7 @@ include_once( 'webappconfig.php' );
 <body onload="<?php if ($isMobile) echo("myOnLoad_mobile();");
                     else if ($isIframe) echo ("myOnLoad_iframe();");
                     else echo("myOnLoad();"); ?>">
-<div id="viewport">
+<div id="PolaricVP">
 <?php
   if ($isMobile || $isIframe)
     include_once('form_small.php');

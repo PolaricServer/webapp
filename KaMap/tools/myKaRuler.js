@@ -120,7 +120,7 @@ myKaRuler.prototype.activate = function() {
     if(this.canvas == null)
        this.canvas = _BrowserIdent_newCanvas(this.kaMap.theInsideLayer);
     
-    var vp = document.getElementById('viewport');   
+    var vp = this.kaMap.domObj;   
     this.height = vp.clientHeight;
     this.width = vp.clientWidth;   
     _BrowserIdent_setCanvasHW(this.canvas, this.height, this.width); 

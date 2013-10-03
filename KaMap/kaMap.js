@@ -765,18 +765,26 @@ kaMap.prototype.pixToGeo = function( pX, pY ) {
 
 
 
+
+
 /**
- * kaMap.resize()
- *
- * called when the viewport layer changes size.  It is the responsibility
- * of the user of this API to track changes in viewport size and call this
- * function to update the map
+ * drawPage - should be called by the user when the application starts or the container
+ * layer changes size. If the size of the container layer isn't set, it will be set to
+ * the size of the containing window. 
  */
-kaMap.prototype.resize = function( ) {
-    if(this.olMap) {
-       this.olMap.updateSize();
-       this.triggerEvent( KAMAP_EXTENTS_CHANGED, this.getGeoExtents() );
-    }
+kaMap.prototype.drawPage = function( ) {
+  
+  var viewport = this.domObj; 
+  if (viewport.style.width == '' || viewport.style.height == '') {
+     var browserHeight = getInsideWindowHeight(); 
+     var browserWidth = getInsideWindowWidth();
+     viewport.style.width = browserWidth + "px";
+     viewport.style.height = browserHeight + "px";
+  }
+  if(this.olMap) {
+    this.olMap.updateSize();
+    this.triggerEvent( KAMAP_EXTENTS_CHANGED, this.getGeoExtents() );
+  }
 };
 
 

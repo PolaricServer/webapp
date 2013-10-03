@@ -80,14 +80,14 @@ function myOnLoad_mobile() {
 
 
 function startUp() {
-    initDHTMLAPI();
-    
-    myKaMap = new kaMap( 'viewport' );
-    myKaRuler = new myKaRuler( myKaMap);       
     var szMap = getQueryParam('map');   
     var szExtents = getQueryParam('extents');
     var szCPS = getQueryParam('cps');
-
+    
+    /* Initialize kaMap and related tools */
+    initDHTMLAPI()
+    myKaMap = new kaMap( 'PolaricVP' );
+    myKaRuler = new myKaRuler(myKaMap);       
     myKaQuery = new kaQuery( myKaMap, KAMAP_POINT_QUERY ); 
     myKaRubberZoom = new kaRubberZoom( myKaMap );
     myKaTracker = new kaMouseTracker(myKaMap);
@@ -95,6 +95,15 @@ function startUp() {
     myKaNavigator = new kaNavigator(myKaMap);
     myKaNavigator.activate();
     
+    myScalebar = new ScaleBar(1);
+    myScalebar.divisions = 3;
+    myScalebar.subdivisions = 2;
+    myScalebar.minWidth = 150;
+    myScalebar.maxWidth = 250;
+    myScalebar.place('scalebar');
+    
+    
+    /* Register handlers for KaMap events */
     myKaMap.registerForEvent( KAMAP_MAP_INITIALIZED, null, myMapInitialized ); 
     myKaMap.registerForEvent( KAMAP_ERROR, null, myMapError );
     myKaMap.registerForEvent( KAMAP_INITIALIZED, null, myInitialized );  
@@ -110,15 +119,7 @@ function startUp() {
     {    if (myOverlay != null) 
                 myOverlay.removePointExcept("my_.*"); 
      } );
-    
-   
-        
-    myScalebar = new ScaleBar(1);
-    myScalebar.divisions = 3;
-    myScalebar.subdivisions = 2;
-    myScalebar.minWidth = 150;
-    myScalebar.maxWidth = 250;
-    myScalebar.place('scalebar');
+
     
   /* Dummy storage object for old browsers that do not 
      support it */
@@ -141,11 +142,10 @@ function startUp() {
     }
     setSesStorage(ses_storage);  
     
-    drawPage();
     myKaMap.initialize( szMap, szExtents, szCPS );
     geopos = document.getElementById('geoPosition');
-    window.onresize=drawPage;
-
+    window.onresize=myKaMap.drawPage;
+    myKaMap.drawPage(); 
 }
 
 
@@ -281,9 +281,7 @@ function myInitialized() {
     if (args['findcall'] != null)
       findStation( args['findcall'], false); 
     
-    switchMode('toolPan');
-    myKaMap.domObj.onmousedown  = menuMouseSelect;
-    
+    switchMode('toolPan');    
     
     if (isMobile)
       document.getElementById('geoPosition').ontouchend = function(e)
@@ -299,7 +297,8 @@ function myInitialized() {
       buttonMenu.oncontextmenu = function(e) 
          { return mainMenu(buttonMenu, e);}  
     }      
-    var vp = myKaMap.olMap.getViewport(); 
+    var vp = myKaMap.olMap.getViewport();
+    vp.onmousedown = menuMouseSelect;
     vp.oncontextmenu = function(e) 
          { e = (e)?e:((event)?event:null);
            if (document.kaCurrentTool != myKaRuler) 
@@ -789,18 +788,6 @@ function dialogToggle( href, szObj) {
 }
 
 
-
-/**
- * drawPage - calculate sizes of the various divs to make the app full screen.
- */
-function drawPage() {
-    var browserWidth = getInsideWindowWidth();
-    var browserHeight = getInsideWindowHeight();
-    var viewport = getRawObject('viewport');
-    viewport.style.width = browserWidth + "px";
-    viewport.style.height = browserHeight + "px";
-    myKaMap.resize();
-}
 
 
 
