@@ -241,3 +241,24 @@
    filt+(isMobile==true?"&mobile=true":""), null, cb, false );
  }
  
+ 
+ 
+ /**************************************************************************************
+  * setSarKey - Store SAR key
+  *    k key value (string)
+  * 
+  * Note that if this is unsuccessfully used to authenticate to server, it is
+  * removed from local storage. 
+  *  
+  **************************************************************************************/
+ 
+ function setSarKey(k)
+ { 
+   sar_key = code;
+   storage.removeItem('polaric.sarkey');
+   storage['polaric.sarkey'] = k;
+ }
+ 
+ 
+ 
+ 

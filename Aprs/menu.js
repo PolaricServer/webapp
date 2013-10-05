@@ -19,7 +19,11 @@ function ContextMenu()
 
 
 
-/* Context can be 'MAP', 'ITEM', SIGN or 'TOOLBAR' */
+/* 
+ * Register a callback function that adds menu-items to some context. 
+ * Called by plugin code.
+ * Context can be 'MAP', 'ITEM', SIGN or 'TOOLBAR' 
+ */
 
 ContextMenu.prototype.addCallback = function (context, func)
 {
@@ -30,7 +34,12 @@ ContextMenu.prototype.addCallback = function (context, func)
 
 
 
-
+/*
+ * Show the menu for a context
+ * i identifier
+ * e event object
+ * ax and ay position on screen
+ */ 
 ContextMenu.prototype.show = function (i, e, ax, ay)
 {
      var ident = i;
@@ -46,14 +55,14 @@ ContextMenu.prototype.show = function (i, e, ax, ay)
      t.txt.y = y; 
      
      if (ident == null) {
-          this.txt.add('Vis kartreferanse',  function () { setTimeout('showPosInfoPix('+x+', '+y+');',100); });
+          this.txt.add('Vis kartreferanse',  function () { setTimeout('popup_posInfoPix('+x+', '+y+');',100); });
           if (WXreport_enable)
-               this.txt.add('Værmelding', function() { setTimeout('showWxInfoPix('+x+', '+y+');',100); });
+               this.txt.add('Værmelding', function() { setTimeout('popup_wxInfoPix('+x+', '+y+');',100); });
   
           if (canUpdate()) 
-             this.txt.add('Legg på APRS objekt',function () { editObjectInfo(x, y);});
+             this.txt.add('Legg på APRS objekt',function () { popup_editObject(x, y);});
 	  if (isAdmin())
-	     this.txt.add('Sett egen posisjon', function () { setOwnPosition(x, y);});
+	     this.txt.add('Sett egen posisjon', function () { popup_setOwnPos(x, y);});
 	  
           this.txt.add(null);
           this.txt.add('Sentrer punkt', function()  { myZoomTo(x,y); });
@@ -63,17 +72,17 @@ ContextMenu.prototype.show = function (i, e, ax, ay)
                                      
      else if (ident == 'TOOLBAR') {   
           d = toolbar;
-          this.txt.add('Finn APRS stasjon', function()  { setTimeout('searchStations();',100);}); 
-          this.txt.add('Finn kartreferanse', function() { setTimeout('showRefSearch();',100); });
-          this.txt.add('Finn stedsnavn', function()  { setTimeout('searchNames();',100);}); 
+          this.txt.add('Finn APRS stasjon', function()  { setTimeout('popup_searchItems();',100);}); 
+          this.txt.add('Finn kartreferanse', function() { setTimeout('popup_refSearch();',100); });
+          this.txt.add('Finn stedsnavn', function()  { setTimeout('popup_searchNames();',100);}); 
           
           
           if (canUpdate()) {                 
-             this.txt.add('Legg inn objekt', function() { editObjectInfo(null, null); });
-             this.txt.add('Slett objekt', function() { deleteObject(null); });
+             this.txt.add('Legg inn objekt', function() { popup_editObject(null, null); });
+             this.txt.add('Slett objekt', function() { popup_deleteObject(null); });
           }
           this.txt.add(null);
-	  this.txt.add('Sett SAR kode', setSarCode);
+	  this.txt.add('Sett SAR kode', popup_setSarKey);
 	  if (isMobileApp) {          
 	     if (gpsTracker==null || !gpsTracker.isActive())
                  this.txt.add('Aktiver GPS pos.', function() {  
@@ -100,31 +109,31 @@ ContextMenu.prototype.show = function (i, e, ax, ay)
           if (isAdmin() || canUpdate()) {
              this.txt.add(null);
              if (sarUrl) 
-                this.txt.add('SAR URL', sarUrl);
-             this.txt.add('SAR modus', sarModeWindow);
+                this.txt.add('SAR URL', popup_sarUrl);
+             this.txt.add('SAR modus', popup_sarMode);
           }
           _doCallback('TOOLBAR');    
      }     
      
      
      else if (p != null && p.isSign) {
-         this.txt.add('Vis info', function() { setTimeout( function() {showSignInfo(p, x, y); });}); 
+         this.txt.add('Vis info', function() { setTimeout( function() {popup_signInfo(p, x, y); });}); 
          _doCallback('SIGN');
      }
      
      
      else {
-          this.txt.add('Vis info', function() { showStationInfo(ident, false, x, y);});
+          this.txt.add('Vis info', function() { popup_stationInfo(ident, false, x, y);});
           if (p != null && p.hasTrace)
-             this.txt.add('Siste bevegelser', function() { showStationHistory(ident,x, y);});
+             this.txt.add('Siste bevegelser', function() { popup_stationHistory(ident,x, y);});
           
           if (canUpdate()) { 
-             this.txt.add('Globale innstillinger', function() { showStationInfo(ident, true);});
+             this.txt.add('Globale innstillinger', function() { popup_stationInfo(ident, true);});
              if (p != null) { 
                 if (p.own )
-                   this.txt.add('Slett objekt', function() { deleteObject(ident); });
+                   this.txt.add('Slett objekt', function() { popup_deleteObject(ident); });
                 else
-                   this.txt.add('Nullstill info', function() { resetInfo(ident); });
+                   this.txt.add('Nullstill info', function() { popup_resetInfo(ident); });
              }   
           }
           
@@ -148,7 +157,10 @@ ContextMenu.prototype.show = function (i, e, ax, ay)
      menuMouseSelect();                      
      this.txt.activate(d,x, y);
 
-     
+   
+     /*
+      * Internal function that executes plugin callbacks
+      */
      function _doCallback(ctxt)
      {
        var lst = t.callbacks[ctxt]; 
@@ -181,15 +193,12 @@ function mainMenu(icn, e)
 
 
 
-function showStationInfoGeo(ident, edit, x, y)
-{
-    var pixPos = myKaMap.geoToPix(x, y);
-    showStationInfo(ident, false, pixPos[0]+12, pixPos[1]+10);
-}
+/*************************************************************
+ * Popup window to edit/add object info (logged in users only)
+ * call to server: 'addobject'
+ *************************************************************/
 
-
-
-function editObjectInfo(x, y)
+function popup_editObject(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
     fullPopupWindow('Objekt', server_url + 'srv/addobject' +
@@ -197,8 +206,11 @@ function editObjectInfo(x, y)
 }
 
 
-
-function setOwnPosition(x, y)
+/***********************************************************
+ * Popup window to set own position (admin users only)
+ * call to server: 'setownpos'
+ ***********************************************************/
+function popup_setOwnPos(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
     fullPopupWindow('Posisjon', server_url + 'srv/setownpos' +
@@ -206,29 +218,44 @@ function setOwnPosition(x, y)
 }
 
 
-function deleteObject(ident) {
+/***********************************************************
+ * Popup window to delete object (logged in users only)
+ * call to server: 'deleteobject'
+ ***********************************************************/
+
+function popup_deleteObject(ident) {
     fullPopupWindow('Objekt', server_url + 'srv/deleteobject'+ (ident==null ? "" : '?objid='+ident), 350, 200);
 }
 
-function resetInfo(ident) {
+
+/***************************************************************
+ * Popup window to reset info about item (logged in users only)
+ * call to server: 'resetinfo'
+ ***************************************************************/
+
+function popup_resetInfo(ident) {
     fullPopupWindow('Stasjon', server_url + 'srv/resetinfo'+ (ident==null ? "" : '?objid='+ident), 350, 200);
 }
 
-function deleteAllObjects() {
-    fullPopupWindow('Objekt', server_url + 'srv/deleteallobj', 350, 230);
-}
 
-function adminWindow() {
-    fullPopupWindow('Admin', server_url + 'srv/admin?cmd=info', 660, 500);
-}
 
-function sarModeWindow() {
+/***********************************************************
+ * Popup window to set SAR mode (logged in users only)
+ * call to server: 'sarmode'
+ ***********************************************************/ 
+
+function popup_sarMode() {
     fullPopupWindow('SarMode', server_url + 'srv/sarmode', 480, 310);
 }
 
 
+/***********************************************************
+ * Popup window to show info about sign (simple object) 
+ *   p - point object from XmlOverlay
+ *   x,y - geographical position (screen map projection)
+ ***********************************************************/
 
-function showSignInfo(p, x, y)
+function popup_signInfo(p, x, y)
 { 
   var uref = new UTMRef(p.geox, p.geoy,  this.utmnzone,  this.utmzone);
   var llref = uref.toLatLng();
@@ -244,7 +271,15 @@ function showSignInfo(p, x, y)
 
 
 
-function showStationInfo(ident, edit, x, y)
+/***************************************************************
+ * Popup window to show or edit Station/object info
+ *   ident - identifier of station or object
+ *   edit  - true if we want to edit it. Only for logged in users
+ * 
+ * call to server: 'station' or 'station_sec' 
+ ***************************************************************/
+
+function popup_stationInfo(ident, edit, x, y)
 {
   if (!edit)
       remotepopupwindow(myKaMap.domObj, 
@@ -252,13 +287,25 @@ function showStationInfo(ident, edit, x, y)
       
   else {
       var url = server_url + (getLogin() ? 'srv/station_sec?id=' : 'srv/station?id=');
-      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 705, 510);
+      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 730, 520);
   } 
 }
 
 
+function popup_stationInfoGeo(ident, edit, x, y)
+{
+  var pixPos = myKaMap.geoToPix(x, y);
+  popup_stationInfo(ident, false, pixPos[0]+12, pixPos[1]+10);
+}
 
-function sarUrl(x, y)
+
+
+/***********************************************************
+ * Popup window to get SAR URL (with SAR key) from server 
+ *   call to server: 'sarurl'
+ ***********************************************************/
+
+function popup_sarUrl(x, y)
 {
     var pl = document.getElementById("permolink").children[0].children[0].href;
     remotepopupwindow(myKaMap.domObj, server_url + 'srv/sarurl?url='+escape(pl),  50, 80); 
@@ -266,14 +313,25 @@ function sarUrl(x, y)
 
 
 
-function showStationHistory(ident, x, y)
+/***********************************************************
+ * Popup window to search in station history 
+ *   call to server: 'history'
+ ***********************************************************/
+
+function popup_stationHistory(ident, x, y)
 {
   remotepopupwindow( myKaMap.domObj,  
      server_url + 'srv/history?ajax=true&simple=true&id='+ident, x, y);
 }
 
 
-function setSarCode()
+
+/***********************************************************
+ * Popup window to get SAR key from user 
+ *  uses api function setSarKey()
+ ***********************************************************/
+
+function popup_setSarKey()
 {  
   var xpos = 50; 
   var ypos = 70;
@@ -284,21 +342,25 @@ function setSarCode()
          ' value="Bekreft" /></div><br></div>', xpos, ypos, null); 
   
   
-  document.getElementById("sarcodebutton").onclick = function(e) {
-    var code = document.getElementById('sarcode').value;
+  $('#sarcodebutton').click( function(e) {
+    var code = $('#sarcode').val();
     if (code == "" || code == " ")
       code = null;
-    sar_key = code; 
-    storage.removeItem('polaric.sarkey');
-    storage['polaric.sarkey'] = code;
+    setSarKey(code);
     
+    removePopup();
     e.cancelBubble = true; 
     if (e.stopPropagation) e.stopPropagation();  
-  };
+  });
 }
 
 
-function searchStations()
+/***********************************************************
+ * Popup window to search items (stations/objects)
+ *  uses api function searchItems()
+ ***********************************************************/
+
+function popup_searchItems()
 {  
      var xpos = 50; 
      var ypos = 70;
@@ -373,7 +435,12 @@ function autojump_keyUp()
 
 
 
-function showRefSearch()
+/************************************************************************************
+ * Popup window to search for map positions
+ *  uses api functions doRefSearchLocal(), doRefSearchUtm and doRefSearchLatLong()
+ ************************************************************************************/
+
+function popup_refSearch()
 {
    /* TODO: Mulighet for å skrive inn kartreferanse i maidenhead */
     var ext = myKaMap.getGeoExtents();
@@ -382,38 +449,38 @@ function showRefSearch()
 
 
    popupwindow(myKaMap.domObj, 
-     "<h1>Vis kartreferanse på kartet</h1>" +
-     "<form class=\"mapref\">"+
+     '<h1>Vis kartreferanse på kartet</h1>' +
+     '<form class="mapref">'+
           
-     "<hr><span class=\"sleftlab\">Kartref: </span>" +
-     "<div><input id=\"locx\" type=\"text\" size=\"3\" maxlength=\"3\">"+
-     "<input id=\"locy\" type=\"text\" size=\"3\" maxlength=\"3\">"+
+     '<hr><span class="sleftlab">Kartref: </span>' +
+     '<div><input id="locx" type="text" size="3" maxlength="3">'+
+     '<input id="locy" type="text" size="3" maxlength="3">'+
      
-     "&nbsp;<input type=\"button\" "+
-     "   onclick=\"doRefSearchLocal(document.getElementById('locx').value, document.getElementById('locy').value)\""+ 
-     "   value=\"Finn\">&nbsp;</div>"+
+     '&nbsp;<input type="button" '+
+     '   onclick="doRefSearchLocal(document.getElementById(\'locx\').value, document.getElementById(\'locy\').value)"'+ 
+     '   value="Finn">&nbsp;</div>'+
      
-     "<hr><span class=\"sleftlab\">UTM: </span>"+
-     "<nobr><div><input id=\"utmz\" type=\"text\" size=\"2\" maxlength=\"2\" value=\"" +cref.lngZone+ "\">" +
-     "<input id=\"utmnz\" type=\"text\" size=\"1\" maxlength=\"1\" value=\"" +cref.latZone+ "\">" +
-     "&nbsp;&nbsp<input id=\"utmx\" type=\"text\" size=\"6\" maxlength=\"6\">"+
-     "<input id=\"utmy\" type=\"text\" size=\"7\" maxlength=\"7\">"+
+     '<hr><span class="sleftlab">UTM: </span>'+
+     '<nobr><div><input id="utmz" type="text" size="2" maxlength="2" value="' +cref.lngZone+ '">' +
+     '<input id="utmnz" type="text" size="1" maxlength="1" value="' +cref.latZone+ '">' +
+     '&nbsp;&nbsp<input id="utmx" type="text" size="6" maxlength="6">'+
+     '<input id="utmy" type="text" size="7" maxlength="7">'+
      
-     "&nbsp;<input type=\"button\" "+
-     "   onclick=\"doRefSearchUtm(document.getElementById('utmx').value, document.getElementById('utmy').value, "+ 
-     "     document.getElementById('utmnz').value, document.getElementById('utmz').value)\""+
-     "   value=\"Finn\" style=\"margin-right:3.5em\">&nbsp;</div></nobr>" +
+     '&nbsp;<input type="button" '+
+     '   onclick="doRefSearchUtm(document.getElementById(\'utmx\').value, document.getElementById(\'utmy\').value, '+ 
+     '     document.getElementById(\'utmnz\').value, document.getElementById(\'utmz\').value)"'+
+     '   value="Finn" style="margin-right:3.5em">&nbsp;</div></nobr>' +
      
-     "<hr><span class=\"sleftlab\">LatLong: </span>" +
-     "<nobr><div><input id=\"ll_Nd\" type=\"text\" size=\"2\" maxlength=\"2\">°&nbsp;"+
-     "<input id=\"ll_Nm\" type=\"text\" size=\"6\" maxlength=\"6\">'N&nbsp;&nbsp;"+
-     "<input id=\"ll_Ed\" type=\"text\" size=\"2\" maxlength=\"2\">°&nbsp;"+
-     "<input id=\"ll_Em\" type=\"text\" size=\"6\" maxlength=\"6\">'E"+
-     "&nbsp;<input type=\"button\" "+
-     "   onclick=\"doRefSearchLatlong(document.getElementById('ll_Nd').value, document.getElementById('ll_Nm').value, "+
-     "        document.getElementById('ll_Ed').value, document.getElementById('ll_Em').value)\""+ 
-     "   value=\"Finn\">&nbsp;</div></nobr><hr>"+
-     "</form>" 
+     '<hr><span class="sleftlab">LatLong: </span>' +
+     '<nobr><div><input id="ll_Nd" type="text" size="2" maxlength="2">°&nbsp;'+
+     '<input id="ll_Nm" type="text" size="6" maxlength="6">\'N&nbsp;&nbsp;'+
+     '<input id="ll_Ed" type="text" size="2" maxlength="2">°&nbsp;'+
+     '<input id="ll_Em" type="text" size="6" maxlength="6">\'E'+
+     '&nbsp;<input type="button" '+
+     '   onclick="doRefSearchLatlong(document.getElementById(\'ll_Nd\').value, document.getElementById(\'ll_Nm\').value, '+
+     '        document.getElementById(\'ll_Ed\').value, document.getElementById(\'ll_Em\').value)"'+ 
+     '   value="Finn">&nbsp;</div></nobr><hr>'+
+     '</form>' 
      
    , (isMobile? 20:50), (isMobile?53:70), false);
    
@@ -450,19 +517,7 @@ function showDMstring(ll)
     return ""+deg+"° "+mins+"'";
 }
 
- 
 
-function showPosInfoPix(x, y)
-{
-    var coord = myKaMap.pixToGeo(x, y);
-    showPosInfo(coord);
-}
-
-
-function showPosInfo(coords)
-{
-    showPosInfoUtm( new UTMRef(coords[0], coords[1], this.utmnzone, this.utmzone)); 
-}
 
 
 
@@ -470,7 +525,11 @@ function showPosInfo(coords)
 var skNames = new statkartName(statkartName_url);
 
 
-function searchNames()
+/********************************************************
+ * popup window to search for place names in SK database
+ ********************************************************/
+
+function popup_searchNames()
 {  
   var xpos = 50; 
   var ypos = 70;
@@ -512,12 +571,36 @@ function searchNames()
 
 
 
+/*******************************************************************************
+ * popup info on a position on the map
+ * based on pixel position on display
+ *******************************************************************************/
+function popup_posInfoPix(x, y)
+{
+  var coord = myKaMap.pixToGeo(x, y);
+  popup_posInfo(coord);
+}
+
+
+
+/*******************************************************************************
+ * popup info on a position on the map
+ *******************************************************************************/
+function popup_posInfo(coords)
+{
+   popup_posInfoUtm( new UTMRef(coords[0], coords[1], this.utmnzone, this.utmzone)); 
+}
 
 
 
 var wps = new statkartWPS(statkartWPS_url);
 
-function showPosInfoUtm(uref, iconOnly)
+/*******************************************************************************
+ * popup info on a position on the map
+ * based on UTM reference. 
+ *******************************************************************************/
+
+function popup_posInfoUtm(uref, iconOnly)
 {
     var llref = uref.toLatLng();
     var sref = "" + llref.toUTMRef();
@@ -561,19 +644,21 @@ function showPosInfoUtm(uref, iconOnly)
 
 
 
-/* Weather report from met.no */
+/**************************************************************
+ * popup weather report from met.no 
+ **************************************************************/
 
 var wx = new WXreport(WXreport_url);
 
-function showWxInfoPix(x, y) {
+function popup_wxInfoPix(x, y) {
   var coord = myKaMap.pixToGeo(x, y);
   var u = new UTMRef(coord[0], coord[1], this.utmnzone, this.utmzone);
-  showWxInfo(u);
+  popup_wxInfo(u);
 }
 
 
 
-function showWxInfo(uref) {
+function popup_wxInfo(uref) {
   var llref = uref.toLatLng();
   var nPixPos = myKaMap.geoToPix(uref.easting, uref.northing);
   

@@ -149,7 +149,8 @@ function startUp() {
 }
 
 
-/*
+/* 
+ * Event handler  (KaMap callback)
  * at this point, ka-Map! knows what map files are available and we have
  * access to them. But it has not rendered the map yet. We need to select the
  * baselayer before rendering, since otherwise maps will be loaded 
@@ -160,6 +161,7 @@ var args = null;
 function myMapInitialized() { 
     var qstring = qstring = window.location.href;
     qstring = qstring.substring(qstring.indexOf('?')+1, qstring.length);
+    
     /* Get arguments */
     args = new Object();
     var pairs = qstring.split("&");
@@ -190,13 +192,15 @@ function myMapInitialized() {
 };
 
 
-
+/* Event handler  (KaMap callback) */
 function myMapError(msg) {
     alert(msg);
 }
 
 
-/* At this point ka-Map! has rendered the map. Since OL does not 
+/* 
+ * Event handler (KaMap callback)
+ * At this point ka-Map! has rendered the map. Since OL does not 
  * handle zoom level before rendering (I think this is a bug in OL), 
  * we have to separate this out. 
  */
@@ -444,6 +448,7 @@ function filterView(fname)
 
 
 /**
+ * Event handler (KaMap callback)
  * called when kaMap tells us the scale has changed
  */
 var currentScale = -1;
@@ -463,6 +468,7 @@ function myScaleChanged( eventID, scale )
 
 
 /**
+ * Event handler (KaMap callback)
  * handle the extents changing by updating a link in the interface that links
  * to the current view
  */
@@ -496,30 +502,38 @@ function myExtentChanged( eventID, extents )
 }
 
 
-/* Called when base layer is changed */
+/* Event handler  (KaMap callback)
+ * Called when base layer is changed 
+ */
 function myLayersChanged(eventID, map) {   
     if (initialized) 
        getXmlData(false);
 }
 
 
-
+/*
+ * Event handler  (KaMap callback)
+ */
 function myQuery( eventID, queryType, coords ) 
 {
     if (menuMouseSelect()) {
-       showPosInfo(coords); 
+       popup_posInfo(coords); 
     }
     return false;  
 }
 
 
-
+/*
+ * Event handler  (KaMap callback)
+ */
 function myMapClicked( eventID, coords ) {
      return true; 
 }
 
 
-
+/*
+ * Event handler (KaMap callback)
+ */
 function myMouseMoved( eventID, position) {
     var uref = new UTMRef(position.x, position.y, this.utmnzone, this.utmzone);
     var llref = uref.toLatLng();     
@@ -538,7 +552,7 @@ function myObjectClicked(ident, e, href, title)
     if (href) 
        setTimeout( function() { displayLink(href,title,x,y);}, 100);
     else
-       showStationInfo(ident, false, x, y);
+       popup_stationInfo(ident, false, x, y);
     e.cancelBubble = true;
     return false; 
 }
@@ -789,17 +803,6 @@ function dialogToggle( href, szObj) {
 
 
 
-
-
-/**
- * getFullExtent
- * ...
- */
-function getFullExtent() {
-    var exStr = myKaMap.getCurrentMap().defaultExtents.toString();
-    var ex = myKaMap.getCurrentMap().defaultExtents;
-    myKaMap.zoomToExtents(ex[0],ex[1],ex[2],ex[3]);
-}
 
 
 
