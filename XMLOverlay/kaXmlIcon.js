@@ -63,6 +63,9 @@
    }
  }
  
+ kaXmlIcon.prototype.setClass = function(classname) {
+   this.ldiv.className = classname; 
+ }
  
  
  kaXmlIcon.prototype.draw_plain = function(point) {
@@ -73,6 +76,7 @@
    this.ldiv.style.position = 'absolute';
    this.ldiv.style.top = dy+'px';
    this.ldiv.style.left = dx+'px';
+   this.ldiv.className = 'icon'; 
    
    this.img = document.createElement( 'img' );
    this.img.src = this.icon_src;
