@@ -5,8 +5,13 @@ function ImgRotate (img)
      this.rdeg = 0;
      this.image = document.getElementById(img);
      this.canvas = _BrowserIdent_newCanvas(this.image.parentNode);
+     if (window.matchMedia( "(min-width: 1000px)" )) {
+       this.image.width = "39px";
+       this.image.height = "39px"; 
+     }
      this.canvas.setAttribute('width', this.image.width);
      this.canvas.setAttribute('height', this.image.height);
+     
      this.canvasCtxt = _BrowserIdent_getCanvasContext(this.canvas);
      if (this.canvasCtxt != null) {
         this.image.style.visibility = 'hidden';

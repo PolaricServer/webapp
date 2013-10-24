@@ -40,13 +40,11 @@ input[type=radio] {
   
   border: 1px solid #555;
   padding: 0.5em;
-  line-height: 1.2em;
   width: 80%;
   background: #fff;
   background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ccc));
   display: inline-block;
   font-size: 15px;
-  line-height: 1em;
   margin: 0 0.25em 0 0;
   width: 1.25em;
   height: 1.25em;
@@ -89,31 +87,36 @@ input[type=radio]:checked {
 #speedDisplay {font-size: 22px; font-weight: bold; vertical-align: middle;}
 #speedDisplay span.speed {font-size: 26px}
 #gpsheadd {float: left; margin-left: 20px; margin-right: 10px; }
+canvas.direction img, canvas.direction {height: 30px; width: 30px }
 
-@media screen and (min-device-width: 1100px) and (min-resolution: 120dpi),
-screen and (min-device-width: 1100px) and (-webkit-max-device-pixel-ratio: 1.0), 
-screen and (min-device-width: 1100px) and (-webkit-max-device-pixel-ratio: 1.5),
-screen and (min-device-height: 1100px) and (min-resolution: 120dpi),
-screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 1.0), 
-screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 1.5) 
+
+@media screen and (min-device-width: 1100px) and (min-resolution: 110dpi),
+screen and (min-device-width: 1100px) and (-webkit-max-device-pixel-ratio: 2.0), 
+screen and (min-device-height: 1100px) and (min-resolution: 110dpi),
+screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 2.0) 
 {
   #toolPan       { width: 34px; height: 34px; }
   #toolZoomIn    { width: 34px; height: 34px; }
   #toolZoomOut   { width: 34px; height: 34px; }
   #toolZoomRubber{ width: 34px; height: 34px; }
-  #toolZoomFull  { width: 34px; height: 34px; }  
-  #toolRuler     { width: 35px; height: 30px; } 
   #filters       { font-size: 90%; vertical-align: middle }
   
   #toolbar { height: 45px; min-width: 352px;}
   #tools { height: 39px; }
-  #toolbarBackground {height: 45px;}
+  #toolbarBackground {height: 45px; }
   #toolbarToggler { top: 50px; }
   #refToggler {width: 20px; height: 16px}
   div.POPUP {font-size: 100% }
   div.layersDiv {font-size: 120% }
-  div.POPUPMENU { line-height: 1.6em; }
+  div.POPUPMENU { line-height: 1.7em; }
   
+  input[type=checkbox],
+  input[type=radio] {
+    font-size: 16px;
+    width: 1.4em;
+    height: 1.4em;
+  }
+  .olControlLayerSwitcher img { top: 4px}
   #reference {
     width: 270px; height: 120px;
   }
@@ -132,6 +135,79 @@ screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 1.5)
 }
 
 
+@media screen and (min-device-width: 1100px) and (min-width: 1000px),
+screen and (min-device-height: 1100px) and (min-height: 1000px)
+{
+  #toolPan       { width: 44px; height: 44px; }
+  #toolZoomIn    { width: 44px; height: 44px; }
+  #toolZoomOut   { width: 44px; height: 44px; }
+  #toolZoomRubber{ width: 44px; height: 44px; }
+  #filters       { font-size: 117% }
+  
+  #toolbar { height: 58px; min-width: 456px; }
+  #tools { height: 51px; }
+  #toolbarBackground {height: 57px;}
+  #toolbarToggler { top: 65px; }
+  #refToggler {width: 26px; height: 21px}
+  div.POPUP {font-size: 130%; }
+  div.layersDiv {font-size: 156% }
+  div.olControlLayerSwitcher, .layersDiv {width: 25em !important}
+  div.POPUPMENU { line-height: 1.75em; font-size: 180%;}
+  
+  div.icon img {height: 28px; width: 28px}
+  div.gpsposition img {height: 78px; width: 78px }
+  canvas.direction img, canvas.direction {height: 39px; width: 39px }
+ 
+  div.lstill, div.lobject, div.lmoving {left: 30px}
+  
+ input[type=checkbox],
+ input[type=radio] {
+   font-size: 19px;
+   line-height: 1em;
+   width: 1.62em;
+   height: 1.62em;
+ }
+ .olControlLayerSwitcher img {width: 140%; right: 8px; top: 2px}
+ 
+ input[type=checkbox]:checked {
+   -webkit-background-size: 25px 25px; /* shrink high resolution background */
+ }
+ input[type=radio]:checked {
+   -webkit-background-size: 36px 36px; /* shrink high resolution background */
+ }
+ 
+ #reference {
+  width: 351px; height: 156px;
+ }
+ 
+ #geoPosition {
+  width: 348px;
+  height: 57px; 
+  font-size: 19px;
+ }
+ #scale { 
+   height: 19px; 
+   font-size: 17px; 
+   width: 351px;
+   margin-top: 59px;
+ }
+ .sbNumbersBox {top: -22px; font-size: 0.98em }
+ .sbLabelBox {font-size: 1.2em }
+
+ #scaleReference {
+   height: 91px;
+ }
+ #speedDisplay {font-size: 31px}
+ #speedDisplay span.speed {font-size: 36px}
+ #gpsheadd { margin-left: 26px; margin-right: 13px; }
+
+
+ #refToggler, #toolbarToggler {
+   width: 26px; 
+   height: 21px; 
+   background-size: 20px 20px; 
+ }
+}
 
 
 
