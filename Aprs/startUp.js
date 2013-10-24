@@ -102,7 +102,6 @@ function startUp() {
     myScalebar.maxWidth = 250;
     myScalebar.place('scalebar');
     
-    
     /* Register handlers for KaMap events */
     myKaMap.registerForEvent( KAMAP_MAP_INITIALIZED, null, myMapInitialized ); 
     myKaMap.registerForEvent( KAMAP_ERROR, null, myMapError );
@@ -120,7 +119,6 @@ function startUp() {
                 myOverlay.removePointExcept("my_.*"); 
      } );
 
-    
   /* Dummy storage object for old browsers that do not 
      support it */
     storage = window.localStorage;
@@ -142,6 +140,7 @@ function startUp() {
     }
     setSesStorage(ses_storage);  
     
+    getViewportRes();
     myKaMap.initialize( szMap, szExtents, szCPS );
     geopos = document.getElementById('geoPosition');
     window.onresize=myKaMap.drawPage;
@@ -172,16 +171,12 @@ function myMapInitialized() {
         var value = pairs[i].substring(pos+1);
         args[argname] = unescape(value); 
     }
-    
     uid = args['uid']; 
     if (uid==null)
       uid = "polaric"; 
     else uid = "polaric."+uid;
     init_labelStyle(storage, uid);
     OpenLayers.Console.info("UID=", uid);
-    
-    if (isMobileApp)
-       powerMgmt_init();
     
     permalink = (qstring.length >= 2 && qstring.match(/.*zoom\=.*/) && qstring.match(/.*lat\=.*/));
     if (!permalink) {
@@ -218,15 +213,13 @@ function myInitialized() {
          var ext1 = storage[uid+'.extents.1'];
          var ext2 = storage[uid+'.extents.2'];
          var ext3 = storage[uid+'.extents.3'];
-          
          if (ext0 != null) {
             myKaMap.zoomToExtents(parseInt(ext0, 10), parseInt(ext1, 10), parseInt(ext2, 10), parseInt(ext3, 10));
-            myKaMap.selectMap(view, true); 
+            myKaMap.selectMap(view, true);
          }
          else
             myKaMap.selectMap(view, false);
     }
-    
     //get list of mapviews and populate the select box
     var aMaps = myKaMap.getMaps();
     // Update map selection list if one is available
@@ -249,7 +242,6 @@ function myInitialized() {
            }
         }   
     }
-
  
     /* Set up XML overlay */
     if (myOverlay == null)  
@@ -293,7 +285,6 @@ function myInitialized() {
           gpsTracker.toggleSpeedDisplay(); 
       };
     
-    
     if (!isIframe && !isMobile) {
       buttonMenu = document.getElementById('buttonMenu');
       buttonMenu.onclick = function(e)       
@@ -332,6 +323,7 @@ function myInitialized() {
         setTimeout( function() { welcome(); }, 2000);
      }
      
+ //    alert(getInsideWindowWidth()+", "+getInsideWindowHeight());
 }
 
 
@@ -480,7 +472,7 @@ function myExtentChanged( eventID, extents )
            Math.round(extents[1]) != Math.round(prev_extents[1]) ||
            Math.round(extents[2]) != Math.round(prev_extents[2]) ||
            Math.round(extents[3]) != Math.round(prev_extents[3])) 
-       {    
+       {                   
            OpenLayers.Console.info("EXTENTS CHANGED: ", extents);
            if (initialized) {
                storage[uid+'.extents.0'] = Math.round(extents[0]).toString();
@@ -498,7 +490,7 @@ function myExtentChanged( eventID, extents )
                setTimeout( function() { getXmlData(false);}, 2000);
            prev_extents = extents;
        } 
-       myKaRuler.reset();
+//       myKaRuler.reset();
 }
 
 

@@ -1,40 +1,35 @@
- 
- var _powerman = null;
- var powerMgmt_locked = false; 
- 
- /* This function must be called after the initialisation of the uid and 
-  * the storage object 
-  */
- function powerMgmt_init() {
-   _powerman = window.plugins.powerManagement;
-   if ( storage['powermgmt_lock'] == 'true')
-     powerMgmt_lock(); 
- }
- 
- function powerMgmt_lock() {
-    if (!powerMgmt_locked)
-     _powerman.acquire(
-        function(x) { powerMgmt_locked = true; storage['powermgmt_lock'] = 'true'; }, 
-        function(x) { alert("Error: cannot acquire wake lock"); } ); 
- }
-     
- function powerMgmt_unlock() {
-    if (powerMgmt_locked) 
-      _powerman.release(
-         function(x) { powerMgmt_locked = false; storage['powermgmt_lock'] = 'false';}, 
-         function(x) { alert("Error: cannot release wake lock"); } ); 
- }
+
  
  function setStatus(txt) {
      geopos.innerHTML = txt;
  }
+
  
+
+ var viewportTab = [ 
+     '<meta name="viewport" content="target-densitydpi=device-dpi*1.5 width=device-width, height=device-height">',
+     '<meta name="viewport" content="target-densitydpi=device-dpi width=device-width, height=device-height">'
+ ];
+ var viewportDescr = ['1.5 X (standard)', '1.0 X (høy oppløsning)'];
  
+ function switchViewportRes() {
+      var i = parseInt(storage['polaric.viewportIndex'], 10);
+      i = (i + 1) % 2;
+      alert("Forstørrelse: "+viewportDescr[i]);
+      storage['polaric.viewportIndex'] = i.toString();
+      location.reload();
+ }
+
+function getViewportRes() {
+      var i = parseInt(storage['polaric.viewportIndex'], 10);
+      $('head').append(viewportTab[i]); 
+}
+
+
  /* For use inside an Android app. (using PhoneGap). */ 
  function myOnLoad_droid() {
-   isMobile = isMobileApp = true;   
+   isMobile = isMobileApp = true;
    document.addEventListener("deviceready", function() {
-     
      document.addEventListener("menubutton", function(e) { 
        if (popupActive())
          return menuMouseSelect(); 
@@ -52,7 +47,7 @@
      
      
      function backButt(e)
-     { menuMouseSelect(); e.cancelBubble = true; }
+       { menuMouseSelect(); e.cancelBubble = true;  }
      
      onPopup(
        function() { 

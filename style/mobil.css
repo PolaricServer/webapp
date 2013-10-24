@@ -90,12 +90,12 @@ input[type=radio]:checked {
 #speedDisplay span.speed {font-size: 26px}
 #gpsheadd {float: left; margin-left: 20px; margin-right: 10px; }
 
-@media screen and (min-device-width: 1200px) and (min-resolution: 120dpi),
-screen and (min-device-width: 1200px) and (-webkit-device-pixel-ratio: 1.0), 
-screen and (min-device-width: 1200px) and (-webkit-device-pixel-ratio: 1.5),
-screen and (min-device-height: 1200px) and (min-resolution: 120dpi),
-screen and (min-device-height: 1200px) and (-webkit-device-pixel-ratio: 1.0), 
-screen and (min-device-height: 1200px) and (-webkit-device-pixel-ratio: 1.5) 
+@media screen and (min-device-width: 1100px) and (min-resolution: 120dpi),
+screen and (min-device-width: 1100px) and (-webkit-max-device-pixel-ratio: 1.0), 
+screen and (min-device-width: 1100px) and (-webkit-max-device-pixel-ratio: 1.5),
+screen and (min-device-height: 1100px) and (min-resolution: 120dpi),
+screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 1.0), 
+screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 1.5) 
 {
   #toolPan       { width: 34px; height: 34px; }
   #toolZoomIn    { width: 34px; height: 34px; }

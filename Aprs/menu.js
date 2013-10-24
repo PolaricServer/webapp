@@ -91,11 +91,7 @@ ContextMenu.prototype.show = function (i, e, ax, ay)
                   } );
 	     else
                  this.txt.add('De-aktiver GPS pos.', function() { gpsTracker.deactivate(); });
-
-             if (!powerMgmt_locked)
-                 this.txt.add('De-aktiver auto-slukking', powerMgmt_lock);
-             else
-                 this.txt.add('Aktiver auto-slukking', powerMgmt_unlock); 
+             this.txt.add('Endre skjermoppløsning', switchViewportRes); 
 	  }
 
           if (!traceIsHidden('ALL'))
