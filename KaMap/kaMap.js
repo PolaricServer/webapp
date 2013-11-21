@@ -85,7 +85,7 @@ function kaMap( szID ) {
         this.isNN4 = (document.layers) ? true : false;
         this.isIE6CSS = (document.compatMode && document.compatMode.indexOf("CSS1") >= 0) ? true : false;
     }
-
+    this.szID = szID;
     this.domObj = this.getRawObject( szID );
     this.domObj.style.overflow = 'hidden';
 
@@ -232,18 +232,19 @@ kaMap.prototype.seekLayer = function(doc, name) {
  * returns true
  */
 kaMap.prototype.initialize = function() {
-    if (this.initializationState == 2) {
-        this.triggerEvent( KAMAP_ERROR, 'ERROR: ka-Map! is already initialized!' );
+    var t = this;
+    if (t.initializationState == 2) {
+        t.triggerEvent( KAMAP_ERROR, 'ERROR: ka-Map! is already initialized!' );
         return false;
-    } else if (this.intializationState == 1) {
-        this.triggerEvent( KAMAP_WARNING, 'WARNING: ka-Map! is currently initializing ... wait for the KAMAP_INITIALIZED event to be triggered.' );
+    } else if (t.intializationState == 1) {
+        t.triggerEvent( KAMAP_WARNING, 'WARNING: ka-Map! is currently initializing ... wait for the KAMAP_INITIALIZED event to be triggered.' );
         return false;
     }
-    this.initializationState = 1;
+    t.initializationState = 1;
     /* call initialization script on the server */
-    var szURL = this.server+this.init;
+    var szURL = t.server+t.init;
 
-    var sep = (this.init.indexOf("?") == -1) ? "?" : "&";
+    var sep = (t.init.indexOf("?") == -1) ? "?" : "&";
 
     if (arguments.length > 0 && arguments[0] != '') {
         szURL = szURL + sep + "map="+ arguments[0];
@@ -258,11 +259,13 @@ kaMap.prototype.initialize = function() {
         sep = "&";
     } 
     if (use_kaMap_maps) 
-         call(szURL, this, this.initializeCallback);
+         call(szURL, t, t.initializeCallback);
     else
-         this.initializeCallback(null);
+         setTimeout( function() {t.initializeCallback(null); }, 200);
     return true;
 };
+
+
 
 
 /**
@@ -270,6 +273,7 @@ kaMap.prototype.initialize = function() {
  */
 kaMap.prototype.initializeCallback = function( szInit ) 
 {
+    var t = this; 
     // szInit contains /*init*/ if it worked, or some php error otherwise
     if (use_kaMap_maps && /\/\*init\*\$/.test(szInit.substr(0, 10))) { 
         this.triggerEvent( KAMAP_ERROR, 'ERROR: ka-Map! initialization '+
@@ -278,32 +282,9 @@ kaMap.prototype.initializeCallback = function( szInit )
         return false;
     }
     
-    /*
-     * OpenLayers integration.
-     * The options and the layers are defined in mapconfig.js
-     */
-    this.olMap = new OpenLayers.Map(mapOptions);
+
     this.utmProjection = utm_projection;
 
-    /* map OpenLayers events to kaMap events */
-    function zoomEnd() {
-       this.triggerEvent(KAMAP_SCALE_CHANGED, this.getCurrentScale());
-       this.triggerEvent(KAMAP_EXTENTS_CHANGED, this.getGeoExtents());
-    }
-    function moveEnd() {
-       mousetrack_suspend = false;   
-       this.triggerEvent(KAMAP_EXTENTS_CHANGED, this.getGeoExtents());
-       this.triggerEvent(KAMAP_MOVE_END); 
-    }
-    function moveStart() {
-       mousetrack_suspend = true;
-       this.triggerEvent(KAMAP_MOVE_START);
-    }
-
-    function layerChange() {
-       this.triggerEvent(KAMAP_LAYERS_CHANGED);
-    }
-    
     
     /* Remove null layers */
     if (baseLayers != null) 
@@ -316,49 +297,88 @@ kaMap.prototype.initializeCallback = function( szInit )
       else break;
     }
     
-    
-    /* Get baselayers from kaMap backend */
-    if (use_kaMap_maps && kaMapFirst)
-        eval(szInit);
-    if (baseLayers != null && baseLayers.length > 0)
-        this.olMap.addLayers(baseLayers);
-    if (use_kaMap_maps && !kaMapFirst)
-        eval(szInit);
-    
-    
-    /* OL controls, Permalink setup, etc.. */  
-    this.olMap.events.register("changebaselayer", this, layerChange);
-    this.olMap.events.register("zoomend", this, zoomEnd);
-    this.olMap.events.register("moveend", this, moveEnd);
-    this.olMap.events.register("movestart", this, moveStart);
-    if (!isMobile) 
-         this.olMap.addControl( new OpenLayers.Control.PanZoomBar() );
-    
-    this.olMap.addControl( new OpenLayers.Control.LayerSwitcher() );
-    this.plink = new OpenLayers.Control.Permalink();
-    this.plink.setMap(this.olMap);  
-    
-    /* Map views */
-    if (mapViews != null)
+    this.initializeOL(szInit);
+    this.initializationState = 2;      
+};
+
+
+
+
+
+kaMap.prototype.initializeOL = function( szInit ) {
+  /* map OpenLayers events to kaMap events */
+  function zoomEnd() {
+    this.triggerEvent(KAMAP_SCALE_CHANGED, this.getCurrentScale());
+    this.triggerEvent(KAMAP_EXTENTS_CHANGED, this.getGeoExtents());
+  }
+  function moveEnd() {
+    mousetrack_suspend = false;   
+    this.triggerEvent(KAMAP_EXTENTS_CHANGED, this.getGeoExtents());
+    this.triggerEvent(KAMAP_MOVE_END); 
+  }
+  function moveStart() {
+    mousetrack_suspend = true;
+    this.triggerEvent(KAMAP_MOVE_START);
+  }
+  
+  function layerChange() {
+    this.triggerEvent(KAMAP_LAYERS_CHANGED);
+  }
+  
+  
+  /*
+   * OpenLayers integration.
+   * The options and the layers are defined in mapconfig.js
+   */
+  this.olMap = new OpenLayers.Map(mapOptions);
+  
+  this.domObj = this.getRawObject( this.szID );
+  this.domObj.style.overflow = 'hidden';
+  this.viewportWidth = this.getObjectWidth(this.domObj);
+  this.viewportHeight = this.getObjectHeight(this.domObj);
+  
+  
+  /* Get baselayers from kaMap backend */
+  if (use_kaMap_maps && kaMapFirst)
+    eval(szInit);
+  if (baseLayers != null && baseLayers.length > 0)
+    this.olMap.addLayers(baseLayers);
+  if (use_kaMap_maps && !kaMapFirst)
+    eval(szInit);
+  
+  
+  /* OL controls, Permalink setup, etc.. */  
+  this.olMap.events.register("changebaselayer", this, layerChange);
+  this.olMap.events.register("zoomend", this, zoomEnd);
+  this.olMap.events.register("moveend", this, moveEnd);
+  this.olMap.events.register("movestart", this, moveStart);
+  if (!isMobile) 
+    this.olMap.addControl( new OpenLayers.Control.PanZoomBar() );
+  
+  this.olMap.addControl( new OpenLayers.Control.LayerSwitcher() );
+  this.plink = new OpenLayers.Control.Permalink();
+  this.plink.setMap(this.olMap);  
+  
+  /* Map views */
+  if (mapViews != null)
     for (var i = 0; i < mapViews.length; i++) {
-        var x = new View (mapViews[i]);
-        this.aMaps[x.name] = x;
+      var x = new View (mapViews[i]);
+      this.aMaps[x.name] = x;
     }
     
-    this.triggerEvent( KAMAP_MAP_INITIALIZED );
-    this.olMap.render(this.domObj);   
-    
-    this.olMap.getViewport().appendChild(this.theInsideLayer);
-    
-    document.getElementById('permolink').appendChild(this.plink.draw());
-    this.plink.element.innerHTML="link to this view";    
-    this.setBackgroundColor( backgroundColor ); 
-    
-    this.triggerEvent( KAMAP_INITIALIZED );
-    this.triggerEvent( KAMAP_SCALE_CHANGED, this.getCurrentScale());
-    this.initializationState = 2;      
+  this.triggerEvent( KAMAP_MAP_INITIALIZED );
+  this.olMap.render(this.domObj);   
+  
+  this.olMap.getViewport().appendChild(this.theInsideLayer);
+  
+  document.getElementById('permolink').appendChild(this.plink.draw());
+  this.plink.element.innerHTML="link to this view";    
+  this.setBackgroundColor( backgroundColor ); 
+  
+  this.triggerEvent( KAMAP_INITIALIZED );
+  this.triggerEvent( KAMAP_SCALE_CHANGED, this.getCurrentScale());
+}
 
-};
 
 
 
@@ -422,7 +442,7 @@ kaMap.prototype.createLayers = function() {
     this.theInsideLayer.ontouchend = function (e) 
             { t.thandler.handle(e); t.onmouseup(e);}       
     this.theInsideLayer.ontouchcancel = function (e) 
-            { t.thandler.handle(e); }
+            { t.thandler.handle(e); } 
     
     if (window.addEventListener)
         this.domObj.addEventListener( "DOMMouseScroll", 
@@ -584,6 +604,7 @@ kaMap.prototype.removeDrawingCanvas = function( canvas ) {
     canvas.kaMap = null;
     return true;
 };
+
 
 
 /**
