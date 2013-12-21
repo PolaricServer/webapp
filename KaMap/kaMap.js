@@ -306,79 +306,94 @@ kaMap.prototype.initializeCallback = function( szInit )
 
 
 kaMap.prototype.initializeOL = function( szInit ) {
+  var t = this; 
   /* map OpenLayers events to kaMap events */
   function zoomEnd() {
-    this.triggerEvent(KAMAP_SCALE_CHANGED, this.getCurrentScale());
-    this.triggerEvent(KAMAP_EXTENTS_CHANGED, this.getGeoExtents());
-  }
-  function moveEnd() {
-    mousetrack_suspend = false;   
-    this.triggerEvent(KAMAP_EXTENTS_CHANGED, this.getGeoExtents());
-    this.triggerEvent(KAMAP_MOVE_END); 
-  }
-  function moveStart() {
-    mousetrack_suspend = true;
-    this.triggerEvent(KAMAP_MOVE_START);
+    t.triggerEvent(KAMAP_SCALE_CHANGED, this.getCurrentScale());
+    t.triggerEvent(KAMAP_EXTENTS_CHANGED, this.getGeoExtents());
   }
   
-  function layerChange() {
-    this.triggerEvent(KAMAP_LAYERS_CHANGED);
+  function moveEnd() {
+    mousetrack_suspend = false;   
+    t.triggerEvent(KAMAP_EXTENTS_CHANGED, t.getGeoExtents());
+    t.triggerEvent(KAMAP_MOVE_END); 
   }
+  
+  
+  function moveStart() {
+    mousetrack_suspend = true;
+    t.triggerEvent(KAMAP_MOVE_START);
+  }
+  
+  /* Triggered each time user changes base layer */
+  function layerChange() {
+    setGray();
+    t.triggerEvent(KAMAP_LAYERS_CHANGED);
+  }
+  
+  function setGray() {
+    if (t.getBaseLayer().gray)
+       $('#canvasBG').css('opacity', t.getBaseLayer().gray); 
+    else
+       $('#canvasBG').css('opacity', '0.33');
+  }
+  
   
   
   /*
    * OpenLayers integration.
    * The options and the layers are defined in mapconfig.js
    */
-  this.olMap = new OpenLayers.Map(mapOptions);
+  t.olMap = new OpenLayers.Map(mapOptions);
   
-  this.domObj = this.getRawObject( this.szID );
-  this.domObj.style.overflow = 'hidden';
-  this.viewportWidth = this.getObjectWidth(this.domObj);
-  this.viewportHeight = this.getObjectHeight(this.domObj);
+  t.domObj = t.getRawObject( t.szID );
+  t.domObj.style.overflow = 'hidden';
+  t.viewportWidth = t.getObjectWidth(t.domObj);
+  t.viewportHeight = t.getObjectHeight(t.domObj);
   
   
   /* Get baselayers from kaMap backend */
   if (use_kaMap_maps && kaMapFirst)
     eval(szInit);
   if (baseLayers != null && baseLayers.length > 0)
-    this.olMap.addLayers(baseLayers);
+    t.olMap.addLayers(baseLayers);
   if (use_kaMap_maps && !kaMapFirst)
     eval(szInit);
   
   
   /* OL controls, Permalink setup, etc.. */  
-  this.olMap.events.register("changebaselayer", this, layerChange);
-  this.olMap.events.register("zoomend", this, zoomEnd);
-  this.olMap.events.register("moveend", this, moveEnd);
-  this.olMap.events.register("movestart", this, moveStart);
+  t.olMap.events.register("changebaselayer", t, layerChange);
+  t.olMap.events.register("zoomend", t, zoomEnd);
+  t.olMap.events.register("moveend", t, moveEnd);
+  t.olMap.events.register("movestart", t, moveStart);
   if (!isMobile) 
-    this.olMap.addControl( new OpenLayers.Control.PanZoomBar() );
+    t.olMap.addControl( new OpenLayers.Control.PanZoomBar() );
   
-  this.olMap.addControl( new OpenLayers.Control.LayerSwitcher() );
-  this.plink = new OpenLayers.Control.Permalink();
-  this.plink.setMap(this.olMap);  
+  t.olMap.addControl( new OpenLayers.Control.LayerSwitcher() );
+  t.plink = new OpenLayers.Control.Permalink();
+  t.plink.setMap(t.olMap);  
   
   /* Map views */
   if (mapViews != null)
     for (var i = 0; i < mapViews.length; i++) {
       var x = new View (mapViews[i]);
-      this.aMaps[x.name] = x;
+      t.aMaps[x.name] = x;
     }
     
-  this.triggerEvent( KAMAP_MAP_INITIALIZED );
-  this.olMap.render(this.domObj);   
+  t.triggerEvent( KAMAP_MAP_INITIALIZED );
+  t.olMap.render(t.domObj);   
   
-  this.olMap.getViewport().appendChild(this.theInsideLayer);
+  t.olMap.getViewport().appendChild(t.theInsideLayer);
   
   document.getElementById('permolink').appendChild(this.plink.draw());
-  this.plink.element.innerHTML="link to this view";    
-  this.setBackgroundColor( backgroundColor ); 
+  t.plink.element.innerHTML="link to this view";    
+  t.setBackgroundColor( backgroundColor ); 
   
-  this.triggerEvent( KAMAP_INITIALIZED );
-  this.triggerEvent( KAMAP_SCALE_CHANGED, this.getCurrentScale());
+  t.triggerEvent( KAMAP_INITIALIZED );
+  t.triggerEvent( KAMAP_SCALE_CHANGED, t.getCurrentScale());
+  setGray(); 
 }
-
+/* End of initializeOL */
 
 
 
@@ -399,6 +414,7 @@ kaMap.prototype.setBackgroundColor = function( color ) {
     this.domObj.style.backgroundColor = color;
     return true;
 };
+
 
 
 
@@ -1117,7 +1133,7 @@ kaMap.prototype.selectMap = function( name, dontZoom )
 
 
 kaMap.prototype.getBaseLayer = function() {
-    return this.olMap.baseLayer.id;
+    return this.olMap.baseLayer;
 };
 
 kaMap.prototype.setBaseLayer = function(lname) {
