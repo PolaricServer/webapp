@@ -165,7 +165,8 @@ include_once( 'webappconfig.php' );
 
   // Add extra Javascript files
   foreach ($jsIncludes as $inc) 
-     echo ('<script type="text/javascript" src="config/'.$inc.'" ></script>');
+    if ($inc != "." && $inc != ".." && strtolower(substr($inc, strrpos($inc, '.') + 1)) == 'js')
+       echo ('<script type="text/javascript" src="config/'.$inc.'" ></script>');
 ?>
 </body>
 </html>
