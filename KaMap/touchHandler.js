@@ -41,8 +41,8 @@
          break;        
        
        case "touchend":
-         if (t.tstate != null && !t.cMenu )  
-           sendEvent("click",first);
+    //     if (t.tstate != null && !t.cMenu )  
+    //       sendEvent("click",first);
 	 if (!t.cMenu) 
            sendEvent("mouseup",first); 
          t.cMenu = false;
