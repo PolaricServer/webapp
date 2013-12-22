@@ -102,6 +102,7 @@ function startUp() {
     myScalebar.maxWidth = 250;
     myScalebar.place('scalebar');
     
+    
     /* Register handlers for KaMap events */
     myKaMap.registerForEvent( KAMAP_MAP_INITIALIZED, null, myMapInitialized ); 
     myKaMap.registerForEvent( KAMAP_ERROR, null, myMapError );
@@ -139,8 +140,9 @@ function startUp() {
       };
     }
     setSesStorage(ses_storage);  
+    if (!isMobileApp)
+       getViewportRes(); 
     
-    getViewportRes();
     myKaMap.initialize( szMap, szExtents, szCPS );
     geopos = document.getElementById('geoPosition');
     window.onresize=myKaMap.drawPage;
@@ -171,6 +173,7 @@ function myMapInitialized() {
         var value = pairs[i].substring(pos+1);
         args[argname] = unescape(value); 
     }
+    
     uid = args['uid']; 
     if (uid==null)
       uid = "polaric"; 
@@ -178,11 +181,14 @@ function myMapInitialized() {
     init_labelStyle(storage, uid);
     OpenLayers.Console.info("UID=", uid);
     
+    if (isMobileApp)
+       powerMgmt_init();
+    
     permalink = (qstring.length >= 2 && qstring.match(/.*zoom\=.*/) && qstring.match(/.*lat\=.*/));
     if (!permalink) {
          var blayer = storage[uid+'.baselayer'];
          if (blayer != null)
-            myKaMap.setBaseLayer(blayer);
+            myKaMap.setBaseLayerId(blayer);
     }
 };
 
@@ -215,11 +221,12 @@ function myInitialized() {
          var ext3 = storage[uid+'.extents.3'];
          if (ext0 != null) {
             myKaMap.zoomToExtents(parseInt(ext0, 10), parseInt(ext1, 10), parseInt(ext2, 10), parseInt(ext3, 10));
-            myKaMap.selectMap(view, true);
+            myKaMap.selectMap(view, true); 
          }
          else
             myKaMap.selectMap(view, false);
     }
+    
     //get list of mapviews and populate the select box
     var aMaps = myKaMap.getMaps();
     // Update map selection list if one is available
@@ -242,6 +249,7 @@ function myInitialized() {
            }
         }   
     }
+
  
     /* Set up XML overlay */
     if (myOverlay == null)  
@@ -285,6 +293,7 @@ function myInitialized() {
           gpsTracker.toggleSpeedDisplay(); 
       };
     
+    
     if (!isIframe && !isMobile) {
       buttonMenu = document.getElementById('buttonMenu');
       buttonMenu.onclick = function(e)       
@@ -322,8 +331,6 @@ function myInitialized() {
         ses_storage['polaric.welcomed'] = true;
         setTimeout( function() { welcome(); }, 2000);
      }
-     
- //    alert(getInsideWindowWidth()+", "+getInsideWindowHeight());
 }
 
 
@@ -479,7 +486,7 @@ function myExtentChanged( eventID, extents )
                storage[uid+'.extents.1'] = Math.round(extents[1]).toString();
                storage[uid+'.extents.2'] = Math.round(extents[2]).toString();
                storage[uid+'.extents.3'] = Math.round(extents[3]).toString();
-               storage[uid+'.baselayer'] = myKaMap.getBaseLayer(); 
+               storage[uid+'.baselayer'] = myKaMap.getBaseLayer().id; 
            }
            
            if (initialized) {
@@ -490,7 +497,7 @@ function myExtentChanged( eventID, extents )
                setTimeout( function() { getXmlData(false);}, 2000);
            prev_extents = extents;
        } 
-//       myKaRuler.reset();
+       myKaRuler.reset();
 }
 
 
