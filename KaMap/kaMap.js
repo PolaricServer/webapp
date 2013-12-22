@@ -1136,7 +1136,7 @@ kaMap.prototype.getBaseLayer = function() {
     return this.olMap.baseLayer;
 };
 
-kaMap.prototype.setBaseLayer = function(lname) {
+kaMap.prototype.setBaseLayerId = function(lname) {
     var x = this.olMap.getLayer(lname);
     if (x != null) 
        this.olMap.setBaseLayer(x);
