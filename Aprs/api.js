@@ -221,7 +221,7 @@
    /* This is a hack, but the coordinates need to be in the same zone as the map */
    var uref_map = uref.toLatLng().toUTMRef(this.utmnzone, this.utmzone);
    myKaMap.zoomTo(uref_map.easting, uref_map.northing);
-   setTimeout( function() { showPosInfoUtm(uref_map, hide);}, 1500 );
+   setTimeout( function() { popup_posInfoUtm(uref_map, hide);}, 1500 );
  }
  
  
