@@ -28,6 +28,7 @@ var backgroundColor = '#A1C1C9';
      projection: new OpenLayers.Projection('EPSG:32633'),
      displayProjection: new OpenLayers.Projection('EPSG:32633'),
      numZoomLevels: 12,
+     zoomMethod: null,
      maxExtent: new OpenLayers.Bounds(-2500000.0,3500000.0,3045984.0,9045984.0),
      maxResolution: 1354.0, 
      minResolution: 0.6611328, 
@@ -59,17 +60,18 @@ var backgroundColor = '#A1C1C9';
              {  attribution: _kv_attr }
         ),
     new OpenLayers.Layer.WMS(
+          "Kartverket Grunnkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
+             {  layers: 'norges_grunnkart',
+                format: 'image/png'},
+            {   attribution: _kv_attr,
+                gray: '0' }
+        ),       
+    new OpenLayers.Layer.WMS(
              "Kartverket Raster", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
              {  layers: 'toporaster2',
                 format: 'image/png'},
              {  attribution: _kv_attr }
         ),   
-    new OpenLayers.Layer.WMS(
-            "Norge i bilder (flyfoto)", "http://cache.norgeibilder.no/geowebcache/service/wms?",
-            {  layers: 'NiB',
-               format: 'image/jpeg'},
-            {  attribution: "Skog og landskap, Statens vegvesen og Statens kartverk" }
-        ),
     new OpenLayers.Layer.WMS(
              "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
              {  layers: 'sjo_hovedkart2',
