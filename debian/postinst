@@ -1,6 +1,5 @@
 #!/bin/sh
 set -e
-INIFILE=/etc/polaric-aprsd/server.ini
 
 # Source debconf library.
 . /usr/share/debconf/confmodule
@@ -15,20 +14,21 @@ case "$1" in
            rm -R /var/www/aprs/KaMap/mapserv
         fi
         ln -s /etc/polaric-webapp/mapserv /var/www/aprs/KaMap/mapserv
-        
+
         if [ -e "/var/www/aprs/img" ]; then
            rm -R /var/www/aprs/img
         fi
         ln -s /var/www/aprs/OpenLayers/img /var/www/aprs/img
+        
         if [ -e "/var/www/aprs/theme" ]; then
            rm -R /var/www/aprs/theme
         fi
         ln -s /var/www/aprs/OpenLayers/theme /var/www/aprs/theme
-                
+        
         a2enmod proxy_http > /dev/null 2>&1
         a2enmod expires > /dev/null 2>&1
         a2enmod deflate > /dev/null 2>&1
-        a2ensite aprs > /dev/null 2>&1        
+        a2ensite aprs.conf > /dev/null 2>&1 
         chown www-data:www-data /var/www/aprs/kacache2 /var/log/polaric/kamap
         chmod 755 /var/log/polaric/kamap
         db_stop
