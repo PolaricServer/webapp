@@ -140,7 +140,7 @@ function startUp() {
       };
     }
     setSesStorage(ses_storage);  
-    if (!isMobileApp)
+    if (isMobileApp)
        getViewportRes(); 
     
     myKaMap.initialize( szMap, szExtents, szCPS );
