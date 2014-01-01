@@ -58,20 +58,20 @@ var backgroundColor = '#A1C1C9';
              {  layers: 'topo2',
                 format: 'image/png'},
              {  attribution: _kv_attr }
-        ),
-    new OpenLayers.Layer.WMS(
-          "Kartverket Grunnkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
-             {  layers: 'norges_grunnkart',
-                format: 'image/png'},
-            {   attribution: _kv_attr,
-                gray: '0' }
-        ),       
+        ),    
     new OpenLayers.Layer.WMS(
              "Kartverket Raster", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
              {  layers: 'toporaster2',
                 format: 'image/png'},
              {  attribution: _kv_attr }
         ),   
+    new OpenLayers.Layer.WMS(
+          "Kartverket Grunnkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
+          {  layers: 'norges_grunnkart',
+             format: 'image/png'},
+          {  attribution: _kv_attr,
+             gray: '0' }
+        ),    
     new OpenLayers.Layer.WMS(
              "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
              {  layers: 'sjo_hovedkart2',
@@ -141,11 +141,11 @@ var sarUrl = false;
  * avoid leaking authentication info. 
  */
 
-var statkartWPS_enable = true;
+var statkartWPS_enable = false;
 var statkartWPS_url = "/aprs/wps";
 
 
-var statkartName_enable = true; 
+var statkartName_enable = false; 
 var statkartName_url = "/namesearch";
 
 
@@ -159,5 +159,5 @@ var statkartName_url = "/namesearch";
  * To activate this, you should know what you are doing!
  */
 
-var WXreport_enable = true;
+var WXreport_enable = false;
 var WXreport_url = "/aprs/wxdata";
