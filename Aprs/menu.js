@@ -634,7 +634,7 @@ function popup_posInfoUtm(uref, iconOnly)
        hr.style.marginBottom = "0";
        hr.style.marginTop = "0.2em";
        var m = w.appendChild(createItem("Opprett APRS objekt her", 
-                              function () { editObjectInfo(nPixPos[0], nPixPos[1]);menuMouseSelect();}));
+            function () { popup_editObject(nPixPos[0], nPixPos[1]); menuMouseSelect();}));
        m.style.width = "12em";
     }
 }
