@@ -99,9 +99,11 @@ kaXmlOverlay.prototype._setPointTrace = function (ident, hide)
         elem.style.visibility = (hide ? 'hidden' : 'visible');
    }
 
-   if (ident == 'ALL')
+   if (ident == 'ALL') {
       for (var i=0; i < this.ovrObjects.length; i++) 
-        _setElemTrace(this.ovrObjects[i].pid, hide);     
+        if (this.ovrObjects[i] != null)
+          _setElemTrace(this.ovrObjects[i].pid, hide);     
+   }
    else {
        if (_sstorage['polaric.hidetrace.ALL'] == 'T')
           return;
