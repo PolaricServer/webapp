@@ -74,7 +74,8 @@ ContextMenu.prototype.show = function (i, e, ax, ay)
           d = toolbar;
           this.txt.add('Finn APRS stasjon', function()  { setTimeout('popup_searchItems();',100);}); 
           this.txt.add('Finn kartreferanse', function() { setTimeout('popup_refSearch();',100); });
-          this.txt.add('Finn stedsnavn', function()  { setTimeout('popup_searchNames();',100);}); 
+          if (statkartName_enable)
+              this.txt.add('Finn stedsnavn', function()  { setTimeout('popup_searchNames();',100);}); 
           
           
           if (canUpdate()) {                 
@@ -198,7 +199,7 @@ function popup_editObject(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
     fullPopupWindow('Objekt', server_url + 'srv/addobject' +
-          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]), 495, 280);
+          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]), 550, 280);
 }
 
 
@@ -210,7 +211,7 @@ function popup_setOwnPos(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
     fullPopupWindow('Posisjon', server_url + 'srv/setownpos' +
-          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]), 495, 200);
+          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]), 500, 200);
 }
 
 
