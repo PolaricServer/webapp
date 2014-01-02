@@ -1,25 +1,14 @@
 
 Files: *
 Copyright: 2011 Øyvind hanssen <ohanssen@acm.org>
-License: GPL-2.0+
+License: GPL version 2
+(see /usr/share/common-licenses/GPL-2)
 
 Files: debian/*
 Copyright: 2011 Øyvind hanssen <ohanssen@acm.org>
-License: GPL-2.0+
+License: GPL version 2
+(see /usr/share/common-licenses/GPL-2)
 
-License: GPL-2.0+
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 2 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
@@ -37,18 +26,30 @@ Copyright: Piergiorgio Navone
 Modified and parts removed by Øyvind Hanssen <ohanssen@acm.org>
 Licence: BSD (distributed with original KaMap code)
 
+Files: jquery/*
+Copyright: 2013 jQuery Foundation and other contributors
+License: MIT license
+(see https://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt)
+
 Files: OpenLayers/*
 Copyright: 2005-2008 MetaCarta, Inc.
 Licence: BSD
 
+Files: OpenLayers/lib/Firebug/*
+Copyright: 2007, Parakey Inc.
+Licence: BSD
+
 Files: Aprs/jscoord.js
 Copyright: 2005 Jonathan Stott
-License: GPL?
+License: GPL version 2
+(see /usr/share/common-licenses/GPL-2)
 
 Files: Aprs/iscroll.js
 Copyright: 2011 Matteo Spinelli
-License: MIT license, http://cubiq.org/license
+License: MIT license
+(see http://cubiq.org/license)
 
 Files: proj4js-compressed.js
 Copyright: Mike Adair et. al.
-License: LGPL, see also /usr/share/common-licenses 
+License: LGPL
+(see http://www.gnu.org/copyleft/lesser.html)
