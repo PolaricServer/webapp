@@ -1,0 +1,3 @@
+
+# Files are installed in /var/www/aprs. I will move those eventually. 
+polaric-webapp: dir-or-file-in-var-www var/www/aprs/*

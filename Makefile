@@ -42,7 +42,6 @@ install: Aprs/compiled.js
 	install -m 644 iconx.png login.php nrrl.gif proj4js-compressed.js robots.txt $(INSTALL_WEB)
 	install -m 644 images/* $(INSTALL_WEB)/images
 	install -m 644 style/*.css $(INSTALL_WEB)/style
-#	install -m 644 www/dicons/*.png $(INSTALL_WEB)/www/dicons
 	install -m 644 jquery/jquery-min.js jquery/jquery-ui-min.js $(INSTALL_WEB)/jquery
 	install -m 644 jquery/smoothness/*.css $(INSTALL_WEB)/jquery/smoothness
 	install -m 644 jquery/smoothness/images/*.png $(INSTALL_WEB)/jquery/smoothness/images
@@ -62,6 +61,10 @@ install: Aprs/compiled.js
 	install -m 644 mapconfig.js  $(INSTALL_CONFIG)/mapconfig.js
 	install -m 644 webappconfig.php $(INSTALL_CONFIG)
 	install -m 644 users $(INSTALL_CONFIG)
+	
+	# To keep Lintian happy (redundant license file)
+	rm $(INSTALL_WEB)/OpenLayers/lib/Firebug/license.txt
+
 
 
 compile: 
