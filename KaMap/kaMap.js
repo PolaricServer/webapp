@@ -183,7 +183,6 @@ function kaMap( szID ) {
 };
  
  
- 
 
 kaMap.prototype.getMapProjection = function()
 {
@@ -470,6 +469,8 @@ kaMap.prototype.createLayers = function() {
 kaMap.prototype.showLayers = function() {}
 kaMap.prototype.hideLayers = function() {}
 kaMap.prototype.getPlink = function() {return this.plink; }
+
+
 
 
 // Convert object name string or object reference
@@ -810,14 +811,13 @@ kaMap.prototype.pixToGeo = function( pX, pY ) {
  * the size of the containing window. 
  */
 kaMap.prototype.drawPage = function( ) {
-  
   var viewport = this.domObj; 
-  if (viewport.style.width == '' || viewport.style.height == '') {
-     var browserHeight = getInsideWindowHeight(); 
-     var browserWidth = getInsideWindowWidth();
-     viewport.style.width = browserWidth + "px";
-     viewport.style.height = browserHeight + "px";
-  }
+
+  var browserHeight = getInsideWindowHeight(); 
+  var browserWidth = getInsideWindowWidth();
+  viewport.style.width = browserWidth + "px";
+  viewport.style.height = browserHeight + "px";
+
   if(this.olMap) {
     this.olMap.updateSize();
     this.triggerEvent( KAMAP_EXTENTS_CHANGED, this.getGeoExtents() );

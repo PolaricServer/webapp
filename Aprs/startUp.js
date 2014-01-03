@@ -145,8 +145,11 @@ function startUp() {
     
     myKaMap.initialize( szMap, szExtents, szCPS );
     geopos = document.getElementById('geoPosition');
-    window.onresize=myKaMap.drawPage;
+    window.onresize=redrawPage;
     myKaMap.drawPage(); 
+    
+    function redrawPage()
+       {  var x = myKaMap; x.drawPage(); }
 }
 
 
