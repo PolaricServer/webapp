@@ -288,7 +288,7 @@ kaXmlOverlay.prototype.loadXmlDoc = function(xml_string)
              if (n >= 0) lastOvrSeq = n;
         } 
         var ovrView = objDomTree.getAttribute("view");
-        if (ovrView && ovrView != selectedFView) {
+        if (ovrView && ovrView != filterProfiles.selectedProf()) {
             OpenLayers.Console.info("LOAD XML: View name mismatch -> IGNORE");
             return false;
         }

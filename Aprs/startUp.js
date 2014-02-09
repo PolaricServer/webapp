@@ -24,9 +24,8 @@ var ses_storage = null;
 var uid = null;
 var sar_key = null;
 
-
 var myCoordinates = myOverlay = myInterval = null;
-
+var filterProfiles = null; 
 
 /* Permissions */
 /* Return true if logged in user is allowed to update information */
@@ -259,31 +258,11 @@ function myInitialized() {
         myOverlay = new kaXmlOverlay( myKaMap, 1200 );
     myOverlay.registerForEvent(XMLOVERLAY_ERROR, null, postLoadXml_Fail);
     myOverlay.registerForEvent(XMLOVERLAY_LOAD, null, postLoadXml);
+   
+    /* Set up filter profiles */
+    filterProfiles = new FilterProfile(); 
+//    setTimeout(filterProfiles.init, 2000); 
     
-    
-    /* Filter select box */
-    var sFilter = storage[uid+'.filter'];  
-    if (sFilter==null)
-       sFilter = args['filter'];
-    if (sFilter==null)
-       sFilter = defaultFilterView;
-       
-    var fSelect = document.forms[0].filters;
-    if (fSelect) {
-          j = 0;
-          var selected = 0;
-          for(var i in filterViews) {
-             if (sFilter != null & sFilter == filterViews[i].name)  {
-                 selected = i;
-                 filterView(sFilter);
-             }
-
-             if (filterViews[i].name && filterViews[i].name.length > 1)
-                fSelect[j++] = new Option(filterViews[i].title, filterViews[i].name, false, false);
-          }
-          fSelect.onchange = function() { filterView(fSelect[fSelect.selectedIndex].value); }
-          fSelect[selected].selected = true;
-    }
     
     if (args['findcall'] != null)
       findStation( args['findcall'], false); 
@@ -349,8 +328,8 @@ function extentQuery()
 {
     var ext = myKaMap.getGeoExtents();
     var flt = "";
-    if (selectedFView != null)
-        flt = "&filter="+selectedFView;
+    if (filterProfiles.selectedProf() != null)
+        flt = "&filter="+filterProfiles.selectedProf();
     return "x1="  + Math.round(ext[0]) + "&x2="+ Math.round(ext[1]) +
            "&x3=" + Math.round(ext[2]) + "&x4="+ Math.round(ext[3]) + flt ;
 }
@@ -422,6 +401,7 @@ function postLoadXml()
      else
         sdiv.style.visibility = 'hidden';
      
+     filterProfiles.init(); 
      show_SAR_access(getLogin() != null);
 
      if (!isIframe && !isMobile && !isMobileApp && getLogin() != null) {
@@ -434,19 +414,6 @@ function postLoadXml()
 }
 
  
-
-var selectedFView = defaultFilterView;
-function filterView(fname)
-{
-   selectedFView = fname; 
-   if (initialized) {
-       storage[uid+'.filter'] = fname;
-       myOverlay.removePoint();
-       getXmlData(false);
-   }
-}
-
-
 
 
 /**
@@ -866,3 +833,4 @@ function switchMode(id) {
         objectClickable = true; 
     }
 }
+
