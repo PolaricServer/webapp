@@ -181,10 +181,8 @@
      
      this.setPosition(x,y);
      /* Tracking of object: Move object to center of display */
-     if (tracked) {
-       myZoomToGeo(x, y, 0.1);  
-       return;
-     }        
+     if (tracked) 
+       myZoomToGeo(x, y, 0.2);          
    }          
    // Need redraw?
    if (redraw) {           
