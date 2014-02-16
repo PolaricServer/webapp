@@ -28,14 +28,20 @@ var myCoordinates = myOverlay = myInterval = null;
 var filterProfiles = null; 
 
 /* Permissions */
+
+/* Return true if logged in user is a super user */  
+function isLoggedIn()
+  { return (myOverlay.meta.loginuser != null && myOverlay.meta.loginuser == 'true'); }
+
+
 /* Return true if logged in user is allowed to update information */
 function canUpdate()
-  { return (myOverlay.meta.updateuser != null && myOverlay.meta.updateuser == 'true'); }
+  { return (isLoggedIn() && myOverlay.meta.updateuser != null && myOverlay.meta.updateuser == 'true'); }
 
 
 /* Return true if logged in user is a super user */  
 function isAdmin()
-  { return (myOverlay.meta.adminuser != null && myOverlay.meta.adminuser == 'true'); }
+  { return (isLoggedIn() && myOverlay.meta.adminuser != null && myOverlay.meta.adminuser == 'true'); }
 
 
 /* get login name */
@@ -346,7 +352,7 @@ function getXmlData(wait)
    xmlSeqno++;
    var sar_string = (sar_key == null ? '' : 'sar_'+sar_key+'/');
    var url = server_url + sar_string + (getLogin() ? 'srv/mapdata_sec?' : 'srv/mapdata?');
-
+  
    var i = myOverlay.loadXml(url+extentQuery() + "&scale="+currentScale+
                   (wait?"&wait=true":"") + (clientses!=null? "&clientses="+clientses : ""));
    lastXmlCall = i; 
@@ -375,7 +381,7 @@ function postLoadXml_Fail()
 {
   OpenLayers.Console.warn("XML Call: Not found");
   if (sar_key != null) {
-     alert("Ikke tilgang til SAR-modus info. Ugyldig nøkkel");
+     alert("Ikke tilgang til SAR info. Ugyldig nøkkel");
      sar_key = null;
      storage.removeItem('polaric.sarkey');
      show_SAR_access(false);

@@ -38,7 +38,7 @@ FilterProfile.prototype.selectProfile = function(pname) {
  
  FilterProfile.prototype.init = function() {
     var t = this;
-    var auth = canUpdate() || isAdmin();
+    var auth = isLoggedIn();
     if (t.done && auth == this.authorized)
         return;
         

@@ -83,8 +83,8 @@ ContextMenu.prototype.show = function (i, e, ax, ay)
              this.txt.add('Slett objekt', function() { popup_deleteObject(null); });
           }
           this.txt.add(null);
-	  this.txt.add('Sett SAR kode', popup_setSarKey);
-	  if (isMobileApp) {          
+	  if (isMobileApp) {   
+             this.txt.add('Sett SAR kode', popup_setSarKey);
 	     if (gpsTracker==null || !gpsTracker.isActive())
                  this.txt.add('Aktiver GPS pos.', function() {  
                      if (gpsTracker==null) gpsTracker = new GpsTracker(); 
@@ -336,7 +336,8 @@ function popup_setSarKey()
          ' <div><h1>Sett SAR kode</h1><div id="sarcodeform"><form> '+
          ' Kode: <input type="text" style="width: 6em" width="6" id="sarcode" value="'+ (sar_key==null ? '' : sar_key) + '"/>&nbsp; '+
          ' <input id="sarcodebutton" type="button"' +
-         ' value="Bekreft" /></div><br></div>', xpos, ypos, null); 
+         ' value="Bekreft" /></div><br></div>', 
+         xpos, ypos, null); 
   
   
   $('#sarcodebutton').click( function(e) {
