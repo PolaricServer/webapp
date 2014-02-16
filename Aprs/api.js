@@ -254,7 +254,7 @@
  
  function setSarKey(k)
  { 
-   sar_key = code;
+   sar_key = k;
    storage.removeItem('polaric.sarkey');
    storage['polaric.sarkey'] = k;
  }
