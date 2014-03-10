@@ -22,45 +22,10 @@ var isMobileApp = false;
 var storage = null;
 var ses_storage = null;
 var uid = null;
-var sar_key = null;
 
 var myCoordinates = myOverlay = myInterval = null;
 var filterProfiles = null; 
 
-/* Permissions */
-
-/* Return true if logged in user is a super user */  
-function isLoggedIn()
-  { return (myOverlay.meta.loginuser != null && myOverlay.meta.loginuser == 'true'); }
-
-
-/* Return true if logged in user is allowed to update information */
-function canUpdate()
-  { return (isLoggedIn() && myOverlay.meta.updateuser != null && myOverlay.meta.updateuser == 'true'); }
-
-
-/* Return true if logged in user is a super user */  
-function isAdmin()
-  { return (isLoggedIn() && myOverlay.meta.adminuser != null && myOverlay.meta.adminuser == 'true'); }
-
-
-/* get login name */
-function getLogin()
-{ 
-    if (sar_key != null || window.location.href.match(/.*\/sar_[0-9a-f]+/))
-       return "-SAR-";
-    if (/null/.test(myOverlay.meta.login)) 
-       return null;   
-    return myOverlay.meta.login; 
-}
-
-
-function show_SAR_access(a)
-{
-  var sdiv = document.getElementById('sarmode');
-  if (sdiv != null)
-    sdiv.innerHTML = (a ? '<img src="images/sar-o.png">' : '<img src="images/sar.png">');
-}
 
 
 function myOnLoad_iframe() {
@@ -189,9 +154,6 @@ function myMapInitialized() {
     init_labelStyle(storage, uid);
     OpenLayers.Console.info("UID=", uid);
     
-    if (isMobileApp)
-       powerMgmt_init();
-    
     permalink = (qstring.length >= 2 && qstring.match(/.*zoom\=.*/) && qstring.match(/.*lat\=.*/));
     if (!permalink) {
          var blayer = storage[uid+'.baselayer'];
@@ -266,9 +228,7 @@ function myInitialized() {
     myOverlay.registerForEvent(XMLOVERLAY_LOAD, null, postLoadXml);
    
     /* Set up filter profiles */
-    filterProfiles = new FilterProfile(); 
-//    setTimeout(filterProfiles.init, 2000); 
-    
+    filterProfiles = new FilterProfile();     
     
     if (args['findcall'] != null)
       findStation( args['findcall'], false); 
@@ -382,8 +342,7 @@ function postLoadXml_Fail()
   OpenLayers.Console.warn("XML Call: Not found");
   if (sar_key != null) {
      alert("Ikke tilgang til SAR info. Ugyldig nøkkel");
-     sar_key = null;
-     storage.removeItem('polaric.sarkey');
+     removeSarKey(); 
      show_SAR_access(false);
   }
 }
