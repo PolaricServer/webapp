@@ -26,6 +26,11 @@ case "$1" in
           if [ -d "/var/log/polaric/kamap" ]; then
              rm -R /var/log/polaric/kamap
           fi
+          if [ -d "/var/www/html" ]; then
+             if [ -h "/var/www/html/aprs" ]; then
+                rm /var/www/html/aprs
+             fi
+          fi
        fi
     ;;
 

@@ -25,6 +25,10 @@ case "$1" in
         fi
         ln -s /var/www/aprs/OpenLayers/theme /var/www/aprs/theme
         
+        if [ -d "/var/www/html" ]; then 
+            ln -s /var/www/aprs /var/www/html/aprs
+        fi
+        
         a2enmod proxy_http > /dev/null 2>&1
         a2enmod expires > /dev/null 2>&1
         a2enmod deflate > /dev/null 2>&1
