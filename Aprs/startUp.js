@@ -231,7 +231,19 @@ function myInitialized() {
     filterProfiles = new FilterProfile();     
     
     if (args['findcall'] != null)
-      findStation( args['findcall'], false); 
+      findItem( args['findcall'], false); 
+    
+    if (args['track'] != null) {
+      findItem( args['track'], false)
+      toggleTracked(args['track']);
+    }
+    
+    if (args['scale'] != null)
+    {
+      var scale = parseInt(args['scale'], 10); 
+      if (!isNaN(scale))
+         myKaMap.zoomToScale(scale); 
+    }
     
     switchMode('toolPan');    
     
