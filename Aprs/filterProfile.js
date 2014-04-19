@@ -24,6 +24,7 @@ FilterProfile.prototype.selectedProf = function() {
  
  
 FilterProfile.prototype.selectProfile = function(pname) {
+  var t = this; 
    if (pname == this.selected)
       return;
    this.selected = pname; 
@@ -32,11 +33,20 @@ FilterProfile.prototype.selectProfile = function(pname) {
       myOverlay.removePoint();
       getXmlData(false);
    }
+   setTimeout(function() { t.updateMenu(); }, 500); 
 }
 
 
+FilterProfile.prototype.updateMenu = function() {
+   for(var i in filterViews) {
+      if (filterViews[i].name == this.selected) 
+         document.forms[0].filters.selectedIndex = i;
+  }
+}
  
- FilterProfile.prototype.init = function() {
+ 
+ 
+FilterProfile.prototype.init = function() {
     var t = this;
     var auth = isLoggedIn();
     if (t.done && auth == this.authorized)

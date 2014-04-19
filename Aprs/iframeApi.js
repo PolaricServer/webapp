@@ -106,3 +106,6 @@ polaricApi.prototype.selectMap = function(ident)
   
 polaricApi.prototype.selectBaseLayer = function(ident)
   { this.invoke("selectBaseLayer", ident); }  
+  
+polaricApi.prototype.selectProfile = function(ident)
+  { this.invoke("selectProfile", ident); }  

@@ -48,7 +48,9 @@
      myKaMap.selectMap(args[1]);
    else if (op[0] == "selectBaseLayer")
      myKaMap.selectBaseLayer(args[1]);
-   
+   else if (op[0] == "selectProfile") 
+     filterProfiles.selectProfile(args[1]);
+         
    else if (op[0] == "_subscribe") {
       var event = args[1];
       if (event=='XMLOVERLAY_LOAD') {
