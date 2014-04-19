@@ -37,10 +37,14 @@ FilterProfile.prototype.selectProfile = function(pname) {
 }
 
 
+
 FilterProfile.prototype.updateMenu = function() {
+   var j = -1; 
    for(var i in filterViews) {
+      if (this.authorized || !filterViews[i].restricted)
+         j++;
       if (filterViews[i].name == this.selected) 
-         document.forms[0].filters.selectedIndex = i;
+         document.forms[0].filters.selectedIndex = j;
   }
 }
  
