@@ -230,6 +230,9 @@ function myInitialized() {
     /* Set up filter profiles */
     filterProfiles = new FilterProfile();     
     
+    if (args['filter'] != null)
+      filterProfiles.selectProfile(args['filter']);
+    
     if (args['findcall'] != null)
       findItem( args['findcall'], false); 
     
