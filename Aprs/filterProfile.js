@@ -28,7 +28,7 @@ FilterProfile.prototype.selectProfile = function(pname) {
    if (pname == this.selected)
       return;
    this.selected = pname; 
-   if (initialized) {
+   if (t.done) {
       storage[uid+'.filter'] = pname;
       myOverlay.removePoint();
       getXmlData(false);
@@ -53,10 +53,10 @@ FilterProfile.prototype.updateMenu = function() {
 FilterProfile.prototype.init = function() {
     var t = this;
     var auth = isLoggedIn();
-    if (t.done && auth == this.authorized)
+    if (t.done && auth == t.authorized)
         return;
         
-    this.authorized = auth; 
+    t.authorized = auth; 
     var flt = args['view'];
     if (flt)
        t.sFilter = flt;  
