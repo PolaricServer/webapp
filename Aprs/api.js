@@ -12,6 +12,10 @@
    var args = e.data.split("##");
    var op = args[0].split("#");
    
+   if (op[0] == "labelUp")
+     labelStyle.next();
+   else if (op[0] == "labelDown")
+     labelStyle.previous();
    if (op[0] == "zoomIn")
      myKaMap.zoomIn();
    else if (op[0] == "zoomOut")
