@@ -147,6 +147,8 @@ include_once( 'webappconfig.php' );
      echo('<script type="text/javascript" src="Aprs/popup.js"></script>');  
      echo('<script type="text/javascript" src="Aprs/menu.js"></script>');
      echo('<script type="text/javascript" src="Aprs/jscoord.js"></script>');
+     echo('<script type="text/javascript" src="Aprs/filterProfile.js"></script>');
+     echo('<script type="text/javascript" src="Aprs/auth.js"></script>');
      echo('<script type="text/javascript" src="Aprs/startUp.js"></script>');
   }
 ?>
