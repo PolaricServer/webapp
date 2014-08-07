@@ -56,6 +56,7 @@ function startUp() {
     
     /* Initialize kaMap and related tools */
     initDHTMLAPI()
+    
     myKaMap = new kaMap( 'PolaricVP' );
     myKaRuler = new myKaRuler(myKaMap);       
     myKaQuery = new kaQuery( myKaMap, KAMAP_POINT_QUERY ); 
@@ -288,6 +289,7 @@ function myInitialized() {
           { if (isMenu) menuMouseSelect(); e.cancelBubble = true;}       
      }
      initialized = true;
+     getXmlData(false, true); 
      
      /* Welcome info page */
      if (!isIframe && !isMobile && !ses_storage['polaric.welcomed']) {
@@ -322,14 +324,14 @@ var retry = 0;
 var lastXmlCall = 0;
 
 
-function getXmlData(wait)
+function getXmlData(wait, metaonly)
 {
    xmlSeqno++;
    var sar_string = (sar_key == null ? '' : 'sar_'+sar_key+'/');
    var url = server_url + sar_string + (getLogin() ? 'srv/mapdata_sec?' : 'srv/mapdata?');
-  
+   
    var i = myOverlay.loadXml(url+extentQuery() + "&scale="+currentScale+
-                  (wait?"&wait=true":"") + (clientses!=null? "&clientses="+clientses : ""));
+                  (wait?"&wait=true":"") + (clientses!=null? "&clientses="+clientses : "") + (metaonly? "&metaonly=true" : ""));
    lastXmlCall = i; 
    
    var _xmlSeq = xmlSeqno;
@@ -389,7 +391,7 @@ function postLoadXml()
         ldiv.innerHTML = getLogin(); 
         ldiv.className = 'login';
      }
-     if (myOverlay.seq >= 0) 
+     if (myOverlay.meta.metaonly == null || myOverlay.meta.metaonly != "true") 
         getXmlData(true);
 }
 
@@ -444,7 +446,7 @@ function myExtentChanged( eventID, extents )
                myKaMap.updateObjects();
            } 
           else
-               setTimeout( function() { getXmlData(false);}, 2000);
+           setTimeout( function() { getXmlData(false);}, 2000);
            prev_extents = extents;
        } 
        myKaRuler.reset();

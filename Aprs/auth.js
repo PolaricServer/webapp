@@ -4,7 +4,7 @@
  
  /* Permissions */
  
- /* Return true if logged in user is a super user */  
+ /* Return true if logged in user */  
  function isLoggedIn() { 
      return (myOverlay.meta.loginuser != null && myOverlay.meta.loginuser == 'true'); 
  }
