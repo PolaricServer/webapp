@@ -1,191 +1,129 @@
 var toolbar = document.getElementById('toolbar');
 var gpsTracker = null; 
 
-
-
-
-/************************************************************************
- * CONTEXT MENU
- ************************************************************************/
-
-
 var ctxtMenu = new ContextMenu(); 
-
-function ContextMenu()
-{
-   this.callbacks = new Array(); 
-   this.txt = new PopupMenu(null);
-}
-
 
 
 /* 
- * Register a callback function that adds menu-items to some context. 
- * Called by plugin code.
- * Context can be 'MAP', 'ITEM', SIGN or 'TOOLBAR' 
- */
-
-ContextMenu.prototype.addCallback = function (context, func)
-{
-   if (!this.callbacks[context])
-      this.callbacks[context] = new Array();
-   this.callbacks[context].push(func);
-}
-
-
-
-/*
- * Show the menu for a context
- * i identifier
- * e event object
- * ax and ay position on screen
+ * Callback functions that define default content for context menus: 
+ * 'MAP', 'ITEM', 'SIGN' and 'MAIN' 
  */ 
-ContextMenu.prototype.show = function (i, e, ax, ay)
+
+/************************************************
+ * Context 'MAP' - click on map 
+ ************************************************/
+
+ctxtMenu.addCallback('MAP', function(m) 
 {
-     var ident = i;
-     e = (e)?e:((event)?event:null); 
-     var x = (ax) ? ax : ((e.pageX) ? e.pageX : e.clientX); 
-     var y = (ay) ? ay : ((e.pageY) ? e.pageY : e.clientY);
-     var t = this; 
-     var p = myOverlay.getPointObject(ident);
-     var d = myKaMap.domObj;
-     t.txt.clear();
-     t.txt.ident = ident;
-     t.txt.x = x;
-     t.txt.y = y; 
-     
-     if (ident == null) {
-          this.txt.add('Vis kartreferanse',  function () { setTimeout('popup_posInfoPix('+x+', '+y+');',100); });
-          if (WXreport_enable)
-               this.txt.add('Værmelding', function() { setTimeout('popup_wxInfoPix('+x+', '+y+');',100); });
   
-          if (canUpdate()) 
-             this.txt.add('Legg på APRS objekt',function () { popup_editObject(x, y);});
-	  if (isAdmin())
-	     this.txt.add('Sett egen posisjon', function () { popup_setOwnPos(x, y);});
-	  
-          this.txt.add(null);
-          this.txt.add('Sentrer punkt', function()  { myZoomTo(x,y); });
-          this.txt.add('Zoom inn', function() {myKaMap.zoomIn(); } );
-          this.txt.add('Zoom ut',  function() {myKaMap.zoomOut(); } );
-          _doCallback('MAP');     }
-                                     
-     else if (ident == 'TOOLBAR') {   
-          d = toolbar;
-          this.txt.add('Finn APRS stasjon', function()  { setTimeout('popup_searchItems();',100);}); 
-          this.txt.add('Finn kartreferanse', function() { setTimeout('popup_refSearch();',100); });
-          if (statkartName_enable)
-              this.txt.add('Finn stedsnavn', function()  { setTimeout('popup_searchNames();',100);}); 
-          
-          
-          if (canUpdate()) {                 
-             this.txt.add('Legg inn objekt', function() { popup_editObject(null, null); });
-             this.txt.add('Slett objekt', function() { popup_deleteObject(null); });
-          }
-          this.txt.add(null);
-	  if (isMobileApp) {   
-             this.txt.add('Sett SAR kode', popup_setSarKey);
-	     if (gpsTracker==null || !gpsTracker.isActive())
-                 this.txt.add('Aktiver GPS pos.', function() {  
-                     if (gpsTracker==null) gpsTracker = new GpsTracker(); 
-                     gpsTracker.activate(); 
-                  } );
-	     else
-                 this.txt.add('De-aktiver GPS pos.', function() { gpsTracker.deactivate(); });
-             this.txt.add('Endre skjermoppløsning', switchViewportRes); 
-	  }
+  m.add('Vis kartreferanse',  function () { setTimeout('popup_posInfoPix('+m.x+', '+m.y+');',100); });
+  if (WXreport_enable)
+    m.add('Værmelding', function() { setTimeout('popup_wxInfoPix('+m.x+', '+m.y+');',100); });
+  
+  if (canUpdate()) 
+    m.add('Legg på APRS objekt',function () { popup_editObject(m.x, m.y);});
+  if (isAdmin())
+    m.add('Sett egen posisjon', function () { popup_setOwnPos(m.x, m.y);});
+  
+  m.add(null);
+  m.add('Sentrer punkt', function()  { myZoomTo(m.x, m.y); });
+  m.add('Zoom inn', function() {myKaMap.zoomIn(); } );
+  m.add('Zoom ut',  function() {myKaMap.zoomOut(); } );
+});
 
-          if (!traceIsHidden('ALL'))
-             this.txt.add('Skjul sporlogger', function() { myOverlay.hidePointTrace('ALL'); });
-          else
-             this.txt.add('Vis sporlogger', function() { myOverlay.showPointTrace('ALL'); });
-          this.txt.add(null);
-          this.txt.add('Skriftstørrelse +', function() { labelStyle.next(); });
-          this.txt.add('Skriftstørrelse -', function() { labelStyle.previous(); });
-	  
-          if (isAdmin() || canUpdate()) {
-             this.txt.add(null);
-             if (sarUrl) 
-                this.txt.add('SAR URL', popup_sarUrl);
-             this.txt.add('SAR modus', popup_sarMode);
-          }
-          _doCallback('TOOLBAR');    
-     }     
-     
-     
-     else if (p != null && p.isSign) {
-         this.txt.add('Vis info', function() { setTimeout( function() {popup_signInfo(p, x, y); });}); 
-         _doCallback('SIGN');
-     }
-     
-     
-     else {
-          this.txt.add('Vis info', function() { popup_stationInfo(ident, false, x, y);});
-          if (p != null && p.hasTrace)
-             this.txt.add('Siste bevegelser', function() { popup_stationHistory(ident,x, y);});
-          
-          if (canUpdate()) { 
-             this.txt.add('Globale innstillinger', function() { popup_stationInfo(ident, true);});
-             if (p != null) { 
-                if (p.own )
-                   this.txt.add('Slett objekt', function() { popup_deleteObject(ident); });
-                else
-                   this.txt.add('Nullstill info', function() { popup_resetInfo(ident); });
-             }   
-          }
-          
-          this.txt.add(null);
-          this.txt.add('Auto-sporing '+(isTracked(ident) ? 'AV' : 'PÅ'), function() { toggleTracked(ident); });
-          if (!labelIsHidden(ident))
-              this.txt.add('Skjul ident', function() { hidePointLabel(ident); } );
-          else
-              this.txt.add('Vis ident', function() { showPointLabel(ident); } );
-              
-          if (hasTrace(ident)) {
-             if (!traceIsHidden(ident))
-               this.txt.add('Skjul spor', function() { myOverlay.hidePointTrace(ident); });
-             else
-               this.txt.add('Vis spor', function() { myOverlay.showPointTrace(ident); });
-          } 
-          _doCallback('ITEM');
-      }                       
 
-     e.cancelBubble = true;       
-     menuMouseSelect();                      
-     this.txt.activate(d,x, y);
 
-   
-     /*
-      * Internal function that executes plugin callbacks
-      */
-     function _doCallback(ctxt)
-     {
-       var lst = t.callbacks[ctxt]; 
-       if (lst)
-       for (i=0; i<lst.length; i++) {
-          f = lst[i]; 
-          if (f != null) 
-             f(t.txt); 
-       }    
-     }
-     
-     
-} 
- 
+/************************************************
+ * Context 'MAIN' - main menu on toolbar
+ ************************************************/
 
-function mainMenu(icn, e)
+ctxtMenu.addCallback('MAIN', function(m)
 {
-     e = (e)?e:((event)?event:null);
-     x = icn.offsetLeft + 10; 
-     y = icn.offsetTop + icn.offsetHeight - 2;
-     ctxtMenu.show('TOOLBAR', e, x, y);
-     e.cancelBubble = true;   
-     return false; 
-}
+  m.d = toolbar;
+  m.add('Finn APRS stasjon', function()  { setTimeout('popup_searchItems();',100);}); 
+  m.add('Finn kartreferanse', function() { setTimeout('popup_refSearch();',100); });
+  if (statkartName_enable)
+    m.add('Finn stedsnavn', function()  { setTimeout('popup_searchNames();',100);}); 
+  
+  
+  if (canUpdate()) {                 
+    m.add('Legg inn objekt', function() { popup_editObject(null, null); });
+    m.add('Slett objekt', function() { popup_deleteObject(null); });
+  }
+  m.add(null);
+  if (isMobileApp) {   
+    m.add('Sett SAR kode', popup_setSarKey);
+    if (gpsTracker==null || !gpsTracker.isActive())
+      m.add('Aktiver GPS pos.', function() {  
+        if (gpsTracker==null) gpsTracker = new GpsTracker(); 
+            gpsTracker.activate(); 
+      } );
+    else
+      m.add('De-aktiver GPS pos.', function() { gpsTracker.deactivate(); });
+    m.add('Endre skjermoppløsning', switchViewportRes); 
+  }
+  
+  if (!traceIsHidden('ALL'))
+    m.add('Skjul sporlogger', function() { myOverlay.hidePointTrace('ALL'); });
+  else
+    m.add('Vis sporlogger', function() { myOverlay.showPointTrace('ALL'); });
+  m.add(null);
+  m.add('Skriftstørrelse +', function() { labelStyle.next(); });
+  m.add('Skriftstørrelse -', function() { labelStyle.previous(); });
+  
+  if (isAdmin() || canUpdate()) {
+    m.add(null);
+    if (sarUrl) 
+      m.add('SAR URL', popup_sarUrl);
+    m.add('SAR modus', popup_sarMode);
+  }
+}); 
 
-/******************** End of Context menu stuff  **********************/
+
+/************************************************
+ * Context 'SIGN' 
+ ************************************************/
+
+ctxtMenu.addCallback('SIGN', function(m) {
+  m.add('Vis info', function() { setTimeout( function() {popup_signInfo(m.p, m.x, m.y); });});  
+});
 
 
+
+/************************************************
+ * Context 'ITEM' - APRS object/station
+ ************************************************/
+
+ctxtMenu.addCallback('ITEM', function(m)
+{
+  m.add('Vis info', function() { popup_stationInfo(m.ident, false, m.x, m.y);});
+  if (m.p != null && m.p.hasTrace)
+    m.add('Siste bevegelser', function() { popup_stationHistory(m.ident, m.x, m.y);});
+  
+  if (canUpdate()) { 
+    m.add('Globale innstillinger', function() { popup_stationInfo(m.ident, true);});
+    if (m.p != null) { 
+      if ( m.p.own )
+        m.add('Slett objekt', function() { popup_deleteObject(m.ident); });
+      else
+        m.add('Nullstill info', function() { popup_resetInfo(m.ident); });
+    }   
+  }
+  
+  m.add(null);
+  m.add('Auto-sporing '+(isTracked(m.ident) ? 'AV' : 'PÅ'), function() { toggleTracked(m.ident); });
+  if (!labelIsHidden(m.ident))
+    m.add('Skjul ident', function() { hidePointLabel(m.ident); } );
+  else
+    m.add('Vis ident', function() { showPointLabel(m.ident); } );
+  
+  if (hasTrace(ident)) {
+    if (!traceIsHidden(m.ident))
+      m.add('Skjul spor', function() { myOverlay.hidePointTrace(m.ident); });
+    else
+      m.add('Vis spor', function() { myOverlay.showPointTrace(m.ident); });
+  }
+});
 
 
 
