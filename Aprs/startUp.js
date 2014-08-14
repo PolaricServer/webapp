@@ -198,30 +198,17 @@ function myInitialized() {
             myKaMap.selectMap(view, false);
     }
     
-    //get list of mapviews and populate the select box
+
+    /* Set up a callback for map-area context-menu */
     var aMaps = myKaMap.getMaps();
-    // Update map selection list if one is available
-    var oSelect = document.forms[0].maps;
-    if (oSelect)
-    {
-        var j = 0;
-        for(var i in aMaps) {
-          if (aMaps[i] && aMaps[i].name && aMaps[i].name.length > 1)
-            oSelect[j++] = new Option(aMaps[i].title, aMaps[i].name, false,false);
-        }
-
-        //make sure the map is selected ...
-        if (oSelect.options[oSelect.selectedIndex].value != view) {
-           for(var i = 0; i < oSelect.options.length; i++ ) {
-              if (oSelect.options[i].value == view) {
-                  oSelect.options[i].selected = true;
-                  break;
-              }
-           }
-        }   
-    }
-
+    ctxtMenu.addCallback('AREASELECT', function (m) {
+      for (var i in aMaps) 
+         if (aMaps[i] && aMaps[i].name && aMaps[i].name.length > 1)
+           m.add(aMaps[i].title, function(x) { myKaMap.selectMap(x, false); }, aMaps[i].name );
+    });
+    addContextMenu('areaSelect', 'AREASELECT');
  
+    
     /* Set up XML overlay */
     if (myOverlay == null)  
         myOverlay = new kaXmlOverlay( myKaMap, 1200 );
@@ -231,6 +218,7 @@ function myInitialized() {
     /* Set up filter profiles */
     filterProfiles = new FilterProfile();     
     
+    /* Deal with some request parameters */
     if (args['filter'] != null)
       filterProfiles.selectProfile(args['filter']);
     
@@ -257,14 +245,11 @@ function myInitialized() {
           gpsTracker.toggleSpeedDisplay(); 
       };
     
+    /* Main menu on toolbar */
+    if (!isIframe && !isMobile) 
+       addContextMenu('buttonMenu', 'MAIN');
     
-    if (!isIframe && !isMobile) {
-      buttonMenu = document.getElementById('buttonMenu');
-      buttonMenu.onclick = function(e)       
-         { return mainMenu(buttonMenu, e);}
-      buttonMenu.oncontextmenu = function(e) 
-         { return mainMenu(buttonMenu, e);}  
-    }      
+ 
     var vp = myKaMap.olMap.getViewport();
     vp.onmousedown = menuMouseSelect;
     vp.oncontextmenu = function(e) 
@@ -288,6 +273,9 @@ function myInitialized() {
        document.getElementById('toolbar').onmouseup = function(e)
           { if (isMenu) menuMouseSelect(); e.cancelBubble = true;}       
      }
+     
+     
+     
      initialized = true;
      getXmlData(false, true); 
      

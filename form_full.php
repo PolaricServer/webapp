@@ -7,21 +7,15 @@
    <div id="tools" style="text-align:center; padding-top:4px">
        <div class="kmTitle"><?php echo($screenTitle) ?></div>
 
-       <img id="buttonMenu" src="images/exec.gif" alt="Meny...">&nbsp;
        <div id="sarmode"><img src="images/sar.png" title="SAR modus"></div>
        <div id="login"><a href="login.php" title="Logg inn">
                   <img src="images/password.png"></a></div>&nbsp;
-           
-       <select name="maps" id="maps" onchange="mySetMap(this.options[this.selectedIndex].value)">
-           <option value=''>Choose your Area!</option>
-           <option value=''>------------------</option>
-       </select>
        
-       <select name="filters" id="filters" onchange="mySetMap(this.options[this.selectedIndex].value)">
-           <option value=''>Choose your Filter!</option>
-           <option value=''>------------------</option>
-       </select>
-
+       <img id="buttonMenu" src="images/exec.gif" alt="Meny...">&nbsp;
+       <img id="areaSelect" title="Velg område/kartutsnitt" src="images/areaselect.png">
+       <img id="filterMenu" title="Filter profil" src="images/filter.png">
+       <div id="filterChoice">..</div>
+       
        &nbsp;
        <img id="toolRuler" onclick="switchMode(this.id)" title="Measure distance" alt="Measure distance" src="KaMap/images/a_pixel.gif" > 
        <img id="toolQuery" onclick="switchMode(this.id)" title="Click and drag or double click to query the Map" alt="Click and drag or double click to query the Map" src="KaMap/images/a_pixel.gif" > 

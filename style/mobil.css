@@ -1,11 +1,12 @@
 
+
 div.view {
-    display: none;
-    padding: 0 6px;
+  display: none;
+  padding: 0 6px;
 }
 div.POPUPMENU {
-    font-size: 140%;
-    line-height: 1.4em;
+  font-size: 140%;
+  line-height: 1.4em;
 }    
 
 div.POPUPMENU > div { 
@@ -66,8 +67,8 @@ input[type=radio]:checked {
 }
 
 #tools * {
-  cursor: pointer;
-  margin-right:3px
+cursor: pointer;
+margin-right:3px
 }
 
 #toolRuler     { width: 29px; height: 24px; } 
@@ -99,7 +100,9 @@ screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 2.0)
   #toolZoomIn    { width: 34px; height: 34px; }
   #toolZoomOut   { width: 34px; height: 34px; }
   #toolZoomRubber{ width: 34px; height: 34px; }
-  #filters       { font-size: 90%; vertical-align: middle }
+  #areaSelect    { width: 36px; height: 36px; }
+  #filterMenu    { width: 36px; height: 36px; }
+  #filterChoice  { font-size: 100% }
   
   #toolbar { height: 45px; min-width: 352px;}
   #tools { height: 39px; }
@@ -118,13 +121,13 @@ screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 2.0)
   }
   .olControlLayerSwitcher img { top: 4px}
   #reference {
-    width: 270px; height: 120px;
+  width: 270px; height: 120px;
   }
   
   #geoPosition {
-    width: 268px;
-    height: 44px; 
-    font-size: 15px;
+  width: 268px;
+  height: 44px; 
+  font-size: 15px;
   }
   #scale { font-size: 13px; }
   .sbNumbersBox {font-size: 0.76em }
@@ -142,9 +145,11 @@ screen and (min-device-height: 1100px) and (min-height: 1000px)
   #toolZoomIn    { width: 44px; height: 44px; }
   #toolZoomOut   { width: 44px; height: 44px; }
   #toolZoomRubber{ width: 44px; height: 44px; }
-  #filters       { font-size: 117% }
+  #areaSelect    { width: 47px; height: 47px; margin-left: 20px !important }
+  #filterMenu    { width: 47px; height: 47px; } 
+  #filterChoice  { font-size: 110% !important }
   
-  #toolbar { height: 58px; min-width: 456px; }
+  #toolbar { height: 58px; min-width: 500px; }
   #tools { height: 51px; }
   #toolbarBackground {height: 57px;}
   #toolbarToggler { top: 65px; }
@@ -157,62 +162,62 @@ screen and (min-device-height: 1100px) and (min-height: 1000px)
   div.icon img {height: 28px; width: 28px}
   div.gpsposition img {height: 78px; width: 78px }
   canvas.direction img, canvas.direction {height: 39px; width: 39px }
- 
+  
   div.lstill, div.lobject, div.lmoving {left: 30px}
   
- input[type=checkbox],
- input[type=radio] {
-   font-size: 19px;
-   line-height: 1em;
-   width: 1.62em;
-   height: 1.62em;
- }
- .olControlLayerSwitcher img {width: 140%; right: 8px; top: 2px}
- 
- input[type=checkbox]:checked {
-   -webkit-background-size: 25px 25px; /* shrink high resolution background */
- }
- input[type=radio]:checked {
-   -webkit-background-size: 36px 36px; /* shrink high resolution background */
- }
- 
- #reference {
+  input[type=checkbox],
+  input[type=radio] {
+    font-size: 19px;
+    line-height: 1em;
+    width: 1.62em;
+    height: 1.62em;
+  }
+  .olControlLayerSwitcher img {width: 140%; right: 8px; top: 2px}
+  
+  input[type=checkbox]:checked {
+    -webkit-background-size: 25px 25px; /* shrink high resolution background */
+  }
+  input[type=radio]:checked {
+    -webkit-background-size: 36px 36px; /* shrink high resolution background */
+  }
+  
+  #reference {
   width: 351px; height: 156px;
- }
- 
- #geoPosition {
+  }
+  
+  #geoPosition {
   width: 348px;
   height: 57px; 
   font-size: 19px;
- }
- #scale { 
-   height: 19px; 
-   font-size: 17px; 
-   width: 351px;
-   margin-top: 59px;
- }
- .sbNumbersBox {top: -22px; font-size: 0.98em }
- .sbLabelBox {font-size: 1.2em }
-
- #scaleReference {
-   height: 91px;
- }
- #speedDisplay {font-size: 31px}
- #speedDisplay span.speed {font-size: 36px}
- #gpsheadd { margin-left: 26px; margin-right: 13px; }
-
-
- #refToggler, #toolbarToggler {
-   width: 26px; 
-   height: 21px; 
-   background-size: 20px 20px; 
- }
+  }
+  #scale { 
+  height: 19px; 
+  font-size: 17px; 
+  width: 351px;
+  margin-top: 59px;
+  }
+  .sbNumbersBox {top: -22px; font-size: 0.98em }
+  .sbLabelBox {font-size: 1.2em }
+  
+  #scaleReference {
+  height: 91px;
+  }
+  #speedDisplay {font-size: 31px}
+  #speedDisplay span.speed {font-size: 36px}
+  #gpsheadd { margin-left: 26px; margin-right: 13px; }
+  
+  
+  #refToggler, #toolbarToggler {
+  width: 26px; 
+  height: 21px; 
+  background-size: 20px 20px; 
+  }
 }
 
 
 
 @media screen and (max-device-width: 500px),
-       screen and (max-device-width: 20em) 
+screen and (max-device-width: 20em) 
 {
   form.mapref { width: 99% }
   .mapref span.sleftlab {float: none}
@@ -220,6 +225,7 @@ screen and (min-device-height: 1100px) and (min-height: 1000px)
 }
 @media screen and (max-device-height: 500px)
 {
-   div.POPUP img {max-height: 290px}
-   div.POPUP h1 {margin: 0em}}
-}
+  div.POPUP img {max-height: 290px}
+  div.POPUP h1 {margin: 0em}}
+  }
+  

@@ -129,7 +129,19 @@ div#login a img { border: none }
 
 div.login {background: white; padding: 2px 4px 2px 4px; border: 1px dotted red;}
 
-#maps, #filters { width: 8em }
+div#filterChoice { 
+   margin-right: 15px; 
+   margin-left: 0px; 
+   display: inline; 
+   color: #075; 
+   font-size: 80%; 
+   font-weight: bold; 
+   font-family: arial, sans-serif; 
+}
+
+img#filterMenu {margin-left: 2px}
+img#areaSelect {margin-left: -2px;}
+#buttonMenu {margin-left: 25px}
 
 #clogo {
   position: absolute;

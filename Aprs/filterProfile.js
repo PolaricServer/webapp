@@ -15,6 +15,8 @@ function FilterProfile() {
    this.initialized = false; 
    this.authorized = false; 
    this.done = false; 
+   this.filterMenu = null;
+   this.init();
 }
  
  
@@ -24,7 +26,7 @@ FilterProfile.prototype.selectedProf = function() {
  
  
 FilterProfile.prototype.selectProfile = function(pname) {
-  var t = this; 
+   var t = this; 
    if (pname == this.selected)
       return;
    this.selected = pname; 
@@ -33,19 +35,18 @@ FilterProfile.prototype.selectProfile = function(pname) {
       myOverlay.removePoint();
       getXmlData(false);
    }
-   setTimeout(function() { t.updateMenu(); }, 500); 
+   t.updateMenu(); 
 }
 
 
 
 FilterProfile.prototype.updateMenu = function() {
-   var j = -1; 
    for(var i in filterViews) {
-      if (this.authorized || !filterViews[i].restricted)
-         j++;
-      if (filterViews[i].name == this.selected) 
-         document.forms[0].filters.selectedIndex = j;
-  }
+      if (filterViews[i].name == this.selected) {
+         $('div#filterChoice').html(filterViews[i].title);
+         break;
+      }
+   } 
 }
  
  
@@ -62,32 +63,18 @@ FilterProfile.prototype.init = function() {
        t.sFilter = flt;  
     if (t.sFilter==null)
        t.sFilter = defaultFilterView;
- 
-    var fSelect = document.forms[0].filters;
-    if (fSelect) {
-        j = 0;
-        var selected = 0;
-   
-        /* Set up list of available filter profiles. 
-         * filterViews is defined in mapconfig.js (config file) 
-         */
+        
+     if (!t.done) ctxtMenu.addCallback('FILTERS', function (m) 
+     {
         for(var i in filterViews) {
-            var fv = filterViews[i];
-
-            if (fv.name && fv.name.length > 1 && (!fv.restricted || auth)) {
-                if (t.sFilter != null && t.sFilter == fv.name)  {
-                   selected = j; 
-                   t.selectProfile(t.sFilter);
-                }
-                fSelect[j++] = new Option(fv.title, fv.name, false, false);
-            } 
+           var fv = filterViews[i];
+           if (fv.name && fv.name.length > 1 && (!fv.restricted || auth)) 
+              m.add(fv.title, function(x) { t.selectProfile(x); }, fv.name);
         }
-        fSelect.onchange = function() { t.selectProfile(fSelect[fSelect.selectedIndex].value); }
-        if (selected >= j) 
-             selected = 0;
-        fSelect[selected].selected = true;
-        t.done = true; 
-    }
+      });
+      addContextMenu('filterMenu', 'FILTERS');
+      t.selectProfile(t.sFilter);
+      t.done = true; 
  }
 
  
