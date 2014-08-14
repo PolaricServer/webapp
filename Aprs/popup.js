@@ -38,9 +38,9 @@ function onPopup(on, off)
  * Create executable link item (for menus typically) 
  ************************************************************************/
 
-function createItem(text, actn)
+function createItem(text, actn, arg)
 {
-  function _executeItem(elem, actn)
+  function _executeItem(elem, actn, arg)
   { 
     if (elem.active)
         return;
@@ -48,15 +48,15 @@ function createItem(text, actn)
     elem.active=true;
     setTimeout(function() { 
         removePopup(); 
-        actn(); 
+        actn(arg); 
         elem.active=false; 
-    }, 500); 
+    }, 300); 
   }
-  
+ 
   var elem = document.createElement('div');
   elem.origCls = '';
-  elem.onmouseup   = function(e) { _executeItem(elem, actn);  e.cancelBubble=true;}
-  elem.onmousedown = function(e) { _executeItem(elem, actn);  e.cancelBubble=true;}
+  elem.onmouseup   = function(e) { _executeItem(elem, actn, arg);  e.cancelBubble=true;}
+  elem.onmousedown = function(e) { _executeItem(elem, actn, arg);  e.cancelBubble=true;}
   elem.onmouseover = function(e) { elem.origCls = elem.className; 
                                    elem.className += ' ITEM_hover'; }                                
   elem.onmouseout  = function(e) { elem.className = elem.origCls;}
@@ -86,14 +86,14 @@ PopupMenu.prototype.clear = function()
 
 
 
-PopupMenu.prototype.add = function(txt, func)
+PopupMenu.prototype.add = function(txt, func, arg)
 {
    if (txt == null) 
      this.lastItem.className = 'ITEM_sep';
    else {
      var atxt  = (txt == null ? '' : txt);
      var alink = (func == null ? '' : func);
-     this.lastItem = createItem(atxt, alink);
+     this.lastItem = createItem(atxt, alink, arg);
      this.menudiv.appendChild(this.lastItem);
   }
 }
