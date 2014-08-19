@@ -127,7 +127,13 @@ div#login {
 
 div#login a img { border: none }
 
-div.login {background: white; padding: 2px 4px 2px 4px; border: 1px dotted red;}
+
+div.login {
+  font-family: arial,sans-serif; 
+  background: #f5f5f5; 
+  padding: 2px 4px 2px 4px; 
+  border: 1px dotted red;
+}
 
 div#filterChoice { 
    margin-right: 15px; 
