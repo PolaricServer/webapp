@@ -26,6 +26,9 @@ case "$1" in
         ln -s /var/www/aprs/OpenLayers/theme /var/www/aprs/theme
         
         if [ -d "/var/www/html" ]; then 
+            if [ -d "/var/www/html/aprs" ]; then
+               rm /var/www/html/aprs
+            fi
             ln -s /var/www/aprs /var/www/html/aprs
         fi
         
