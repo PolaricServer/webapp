@@ -202,9 +202,11 @@ function myInitialized() {
     /* Set up a callback for map-area context-menu */
     var aMaps = myKaMap.getMaps();
     ctxtMenu.addCallback('AREASELECT', function (m) {
+
       for (var i in aMaps) 
-         if (aMaps[i] && aMaps[i].name && aMaps[i].name.length > 1)
-           m.add(aMaps[i].title, function(x) { myKaMap.selectMap(x, false); }, aMaps[i].name );
+         if (aMaps[i] && aMaps[i].name && aMaps[i].name.length > 1 && !aMaps[i].hidden)
+            m.add(aMaps[i].title, function(x) { myKaMap.selectMap(x, false); }, aMaps[i].name );
+      
     });
     addContextMenu('areaSelect', 'AREASELECT');
  

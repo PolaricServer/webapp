@@ -372,7 +372,7 @@ kaMap.prototype.initializeOL = function( szInit ) {
   t.plink = new OpenLayers.Control.Permalink();
   t.plink.setMap(t.olMap);  
   
-  /* Map views */
+  /* Map views. Dictionary using name as index */
   if (mapViews != null)
     for (var i = 0; i < mapViews.length; i++) {
       var x = new View (mapViews[i]);
@@ -1230,12 +1230,14 @@ function safeParseInt( val ) {
  * View
  * internal class used to store (possibly user defined) map views
  * (mainly extents)
+ * FIXME: Do we need this? Use objects directly from mapconfig?
  *******************************************************************/
  
  function View(o) {
     this.name = (typeof(o.name) != 'undefined') ? o.name : 'noname';
     this.title = (typeof(o.title) != 'undefined') ? o.title : 'no title';
     this.extent = (typeof(o.extent) != 'undefined') ? o.extent:[];
+    this.hidden = (typeof(o.hidden) != 'undefined') ? o.hidden : false;
  }
  
 
