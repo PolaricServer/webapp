@@ -102,20 +102,30 @@ var kaMapFirst = false;
  * koordinater [x1, y1, x2, y2] 
  */
 var getViewsFromKaMap = false; 
-var defaultView = 'nord';
+var defaultView = 'default';
 var mapViews = [
-   { name: 'nord',      title: 'Nord Norge',     extent: [326971, 7372044, 1108229, 7975928] }, 
-   { name: 'midt',      title: 'Midt Norge',     extent: [-65688, 6905591, 715569, 7509475] },
-   { name: 'sor',       title: 'Sør Norge',      extent: [-253894, 6466218, 527363, 7070102] },
-   { name: 'tromso',    title: 'Tromsø',         extent: [636159, 7722699, 672566, 7746300] },
-   { name: 'harnar',    title: 'Harstad/Narvik', extent: [503725, 7567049, 677574, 7664557] },
-   { name: 'helg',      title: 'Helgeland',      extent: [313207, 7292672, 514445, 7402007] }, 
-   { name: 'trondheim', title: 'Trondheim',      extent: [163472, 6991305, 385358, 7143461] },
-   { name: 'skarvet',   title: 'Hallingskarvet', extent: [78286, 6718318, 135323, 6750898] }, 
-   { name: 'bergen',    title: 'Bergen',         extent: [-78428, 6690844, 32514, 6766922] },
-   { name: 'stavanger', title: 'Stavanger',      extent: [-60738, 6544187, 32888, 6592940] },
-   { name: 'oslofj',    title: 'Oslofjorden',    extent: [144516, 6529253, 366402, 6681408] }
+   { name: 'finnm',     title: 'Finnmark',        extent: [647979, 7649450, 1146928, 7970009] },
+   { name: 'ntroms',    title: 'Nord-Troms',      extent: [554641,7639041,809193,7822170] },
+   { name: 'tromso',    title: 'Tromsø',          extent: [636159, 7722699, 672566, 7746300] },
+   { name: 'mtroms',    title: 'Midt/sør-Troms',  extent: [576304, 7606502, 701041, 7686642] },
+   { name: 'ofoten',    title: 'Ofoten/Lofoten',  extent: [408367, 7505452, 662919, 7688580] },
+   { name: 'salten',    title: 'Salten',          extent: [441921, 7409285, 569197, 7500849] },
+   { name: 'helg',      title: 'Helgeland',       extent: [289088, 7223533, 543640, 7406661] },  
+   { name: 'ntrond',    title: 'Nord-Trøndelag',  extent: [186099, 7040742, 465531, 7223871] },
+   { name: 'strond',    title: 'Sør-Trøndelag',   extent: [124238, 6913382, 373713, 7073662] },
+   { name: 'moreroms',  title: 'Møre og Romsdal', extent: [-2868,  6893749, 246606, 7054029] },
+   { name: 'sognf',     title: 'Sogn og fjordane',extent: [-84277, 6747855, 165196, 6908135] },
+   { name: 'hordal',    title: 'Hordaland',       extent: [-85972, 6631073, 163502, 6791353] },
+   { name: 'rogal',     title: 'Rogaland',        extent: [-113727, 6497704, 135747, 6657983] },
+   { name: 'agder',     title: 'Agder',           extent: [-65492, 6418664, 183981, 6578944] },
+   { name: 'tele',      title: 'Telemark',        extent: [43250, 6520468, 292724, 6680748] },
+   { name: 'hardanger', title: 'Hardangervidda/Buskerud', extent: [-10571, 6614740, 238902, 6775020] },
+   { name: 'oslofj',    title: 'Østfold/Vestfold',extent: [196589,6544205,321326,6624345] },
+   { name: 'osloaker',  title: 'Oslo/Akershus',   extent: [196009, 6607700, 335725, 6699264] },
+   { name: 'hedopp',    title: 'Hedmark/Oppland', extent: [134551, 6731607, 384025, 6891887] },
+   { name: 'default',   title: 'Utgangspunkt',    extent: [-207404, 6520269, 949709, 7188432], hidden: true }
 ];
+
 
 /* Filter menyen */
 var filterViews = [
@@ -127,7 +137,7 @@ var filterViews = [
    { name: 'moving', title: 'Bevegelige'}
 ];
 /* View to be selected by default */
-var defaultFilterView = 'track2';
+var defaultFilterView = 'track';
 
 
 /* Set to true to enable SAR URL */
