@@ -71,14 +71,15 @@ cursor: pointer;
 margin-right:3px
 }
 
-#toolRuler     { width: 29px; height: 24px; } 
 #toolQuery     { visibility: hidden; width: 0px; }
-#toolPan       { width: 28px; height: 28px; }
+#toolPan       { visibility: hidden; width: 0px; }
+#toolZoomRubber{ visibility: hidden; width: 0px; }
 #toolZoomIn    { width: 28px; height: 28px; }
 #toolZoomOut   { width: 28px; height: 28px; }
-#toolZoomRubber{ width: 28px; height: 28px; }
-#toolZoomFull  { width: 28px; height: 28px; }
-#toolRuler     { width: 29px; height: 24px; } 
+#areaSelect    { width: 29px; height: 29px;  padding-left: 13px;}
+#filterMenu    { width: 29px; height: 29px; }
+
+#sarmode       { width: 4px; }
 
 #toolbar { left: 10px; height: 39px; width: 16.5em;  min-width: 299px; }
 #tools { height: 33px; border: solid #999 1px; }
@@ -96,15 +97,13 @@ screen and (min-device-width: 1100px) and (-webkit-max-device-pixel-ratio: 2.0),
 screen and (min-device-height: 1100px) and (min-resolution: 110dpi),
 screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 2.0) 
 {
-  #toolPan       { width: 34px; height: 34px; }
   #toolZoomIn    { width: 34px; height: 34px; }
   #toolZoomOut   { width: 34px; height: 34px; }
-  #toolZoomRubber{ width: 34px; height: 34px; }
-  #areaSelect    { width: 36px; height: 36px; }
+  #areaSelect    { width: 36px; height: 36px; padding-left: 17px;}
   #filterMenu    { width: 36px; height: 36px; }
-  #filterChoice  { font-size: 100% }
+  #filterChoice  { font-size: 100% !important; bottom: -2px; position: relative }
   
-  #toolbar { height: 45px; min-width: 352px;}
+  #toolbar { height: 45px; min-width: 350px;}
   #tools { height: 39px; }
   #toolbarBackground {height: 45px; }
   #toolbarToggler { top: 50px; }
@@ -141,15 +140,13 @@ screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 2.0)
 @media screen and (min-device-width: 1100px) and (min-width: 1000px),
 screen and (min-device-height: 1100px) and (min-height: 1000px)
 {
-  #toolPan       { width: 44px; height: 44px; }
   #toolZoomIn    { width: 44px; height: 44px; }
   #toolZoomOut   { width: 44px; height: 44px; }
-  #toolZoomRubber{ width: 44px; height: 44px; }
-  #areaSelect    { width: 47px; height: 47px; margin-left: 20px !important }
+  #areaSelect    { width: 47px; height: 47px; margin-left: 19px !important }
   #filterMenu    { width: 47px; height: 47px; } 
-  #filterChoice  { font-size: 110% !important }
+  #filterChoice  { font-size: 130% !important; bottom: -5px; position: relative }
   
-  #toolbar { height: 58px; min-width: 500px; }
+  #toolbar { height: 58px; min-width: 450px; }
   #tools { height: 51px; }
   #toolbarBackground {height: 57px;}
   #toolbarToggler { top: 65px; }
@@ -167,40 +164,40 @@ screen and (min-device-height: 1100px) and (min-height: 1000px)
   
   input[type=checkbox],
   input[type=radio] {
-    font-size: 19px;
-    line-height: 1em;
-    width: 1.62em;
-    height: 1.62em;
+     font-size: 19px;
+     line-height: 1em;
+     width: 1.62em;
+     height: 1.62em;
   }
   .olControlLayerSwitcher img {width: 140%; right: 8px; top: 2px}
   
   input[type=checkbox]:checked {
-    -webkit-background-size: 25px 25px; /* shrink high resolution background */
+     -webkit-background-size: 25px 25px; /* shrink high resolution background */
   }
   input[type=radio]:checked {
-    -webkit-background-size: 36px 36px; /* shrink high resolution background */
+     -webkit-background-size: 36px 36px; /* shrink high resolution background */
   }
   
   #reference {
-  width: 351px; height: 156px;
+     width: 360px; height: 166px;
   }
   
   #geoPosition {
-  width: 348px;
-  height: 57px; 
-  font-size: 19px;
+     width: 358px;
+     height: 67px; 
+     font-size: 19px;
   }
   #scale { 
-  height: 19px; 
-  font-size: 17px; 
-  width: 351px;
-  margin-top: 59px;
+     height: 29px; 
+     font-size: 17px; 
+     width: 351px;
+     margin-top: 59px;
   }
   .sbNumbersBox {top: -22px; font-size: 0.98em }
   .sbLabelBox {font-size: 1.2em }
   
   #scaleReference {
-  height: 91px;
+     height: 91px;
   }
   #speedDisplay {font-size: 31px}
   #speedDisplay span.speed {font-size: 36px}
@@ -208,9 +205,9 @@ screen and (min-device-height: 1100px) and (min-height: 1000px)
   
   
   #refToggler, #toolbarToggler {
-  width: 26px; 
-  height: 21px; 
-  background-size: 20px 20px; 
+     width: 33px; 
+     height: 30px; 
+     background-size: 25px 25px; 
   }
 }
 
@@ -223,9 +220,10 @@ screen and (max-device-width: 20em)
   .mapref span.sleftlab {float: none}
   div.POPUP img {max-width: 310px}
 }
+
 @media screen and (max-device-height: 500px)
 {
   div.POPUP img {max-height: 290px}
-  div.POPUP h1 {margin: 0em}}
-  }
+  div.POPUP h1 {margin: 0em}
+}
   
