@@ -65,7 +65,7 @@
    _doCallback(context);
    e.cancelBubble = true;       
    menuMouseSelect();                      
-   this.txt.activate(d,x, y);
+   this.txt.activate(d,x, y).className += ' ctxt_'+context;
    
    
    /*

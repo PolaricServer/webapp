@@ -111,6 +111,7 @@ PopupMenu.prototype.activate = function(onDiv, x, y)
     wrapper.className = 'POPUPMENU';
     
     popup(onDiv, wrapper, x, y, false);  
+    return wrapper; 
 }
 
 /************ End of PopupMenu class  *************/
