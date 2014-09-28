@@ -11,9 +11,10 @@
 
 function GpsTracker ()
 {
+   this.gps_on = false; 
    this.my_point = null; 
    this.watchID = null; 
-   this.speedDisplay = false;
+   this.speedDisplay = 0;
 }   
    
 
@@ -21,6 +22,8 @@ GpsTracker.prototype.activate = function ()
 {
    var t = this; 
    var retry = 0;
+   t.gps_on = true; 
+
    
    /*
     * Called when we get a new or updated position from GPS
@@ -106,7 +109,10 @@ GpsTracker.prototype.activate = function ()
        else if (x.heading < 247) d = "SW";
        else if (x.heading < 292) d = "W"; 
        else d = "NW";
-       return '<span class="speed">'+Math.round(x.speed*3.6)+'</span> km/h '+d;
+       if (speedDisplay==2)
+            return '<span class="speed">'+Math.round(x.speed*1.94384449)+'</span> knop '+d;
+       else
+            return '<span class="speed">'+Math.round(x.speed*3.6)+'</span> km/h '+d;
    }
    
    
@@ -134,6 +140,7 @@ GpsTracker.prototype.isActive = function ()
 
 GpsTracker.prototype.deactivate = function ()
 {
+   this.gps_on = false; 
    myOverlay.removePoint('my_gps_position');
    this.my_point = null;
    navigator.geolocation.clearWatch(this.watchID);
@@ -146,10 +153,12 @@ GpsTracker.prototype.deactivate = function ()
 
 GpsTracker.prototype.toggleSpeedDisplay = function ()
 {
-    this.speedDisplay = !this.speedDisplay;
-    if (this.speedDisplay) 
-       setStatus('&nbsp; Vise <u>fart</u>: vent litt...');
-    else if (this.my_point)
+    this.speedDisplay = (this.speedDisplay + 1) % 3;
+    if (this.speedDisplay==1) 
+       setStatus('&nbsp; Vise <u>fart</u> (km/h): vent litt...');
+    else if (this.speedDisplay==2)
+       setStatus('&nbsp; Vise <u>fart</u> (knop): vent litt...');
+    else if (this.gps_on)
        setStatus('&nbsp; GPS <u>på</u>slått');
     else
        setStatus('&nbsp; GPS <u>av</u>slått');
