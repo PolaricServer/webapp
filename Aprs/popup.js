@@ -80,8 +80,8 @@ PopupMenu.prototype.clear = function()
 {  
    this.lastItem = null;
    this.menudiv = document.createElement('div');
-   this.menudiv.style.display = 'none';
-   this.menudiv.className = 'POPUPMENU';
+//   this.menudiv.style.display = 'none';
+//   this.menudiv.className = 'POPUPMENU';
 }
 
 
@@ -104,7 +104,13 @@ PopupMenu.prototype.activate = function(onDiv, x, y)
 {
     this.lastItem.className = 'ITEM_last';
     isMenu = true;
-    popup(onDiv, this.menudiv, x, y, false);  
+   
+    wrapper = document.createElement('div');
+    wrapper.appendChild(this.menudiv);
+    wrapper.style.display = 'none';
+    wrapper.className = 'POPUPMENU';
+    
+    popup(onDiv, wrapper, x, y, false);  
 }
 
 /************ End of PopupMenu class  *************/
@@ -211,7 +217,7 @@ function popup(onDiv, menudiv, x, y, img)
          activepopup.onclick = function(e) 
             {psubdiv.style.display = 'none';}; 
      }
-     
+
      onDiv.appendChild(activepopup);
      var xoff=0;
      var yoff=0;
@@ -225,14 +231,17 @@ function popup(onDiv, menudiv, x, y, img)
      if (document.body.clientWidth < 500 && menudiv.clientWidth > document.body.clientWidth)
        activepopup.style.minWidth   = document.body.clientWidth+'px'; 
      
+     /* Is the height of the content more than the available height?
+      * Then we need a scroller 
+      */
      if (menudiv.clientHeight+10 > document.body.clientHeight) {
          activepopup.style.maxHeight = document.body.clientHeight-5 + "px";
          menudiv.id = 'wrapper';
          
-         /* EXPERIMENTAL: Activate scroller */
+         /* Activate scroller */
          if (isMobile) 
             setTimeout(function () {
-              myScroll = new iScroll('wrapper');
+              myScroll = new iScroll(activepopup);
             }, 1000);
          else
            activepopup.style.overflowY  = 'scroll';
