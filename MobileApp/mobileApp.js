@@ -36,11 +36,10 @@ function getViewportRes() {
    isMobile = isMobileApp = true;
    document.addEventListener("deviceready", function() {
      document.addEventListener("menubutton", function(e) { 
-       if (popupActive())
-         return menuMouseSelect(); 
-       else
-         return mainMenu(document.getElementById('toolbar'), e); 
-       
+       if (popupActive()) 
+          return menuMouseSelect(); 
+       else 
+         return showContextMenu(document.getElementById('toolbar'), e, 'MAIN'); 
      }, false);
      
      
