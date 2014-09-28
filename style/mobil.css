@@ -4,6 +4,8 @@ div.view {
   display: none;
   padding: 0 6px;
 }
+
+
 div.POPUPMENU > div {
   font-size: 140%;
   line-height: 1.4em;
@@ -106,8 +108,14 @@ screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 2.0)
   #toolbar { height: 45px; min-width: 350px;}
   #tools { height: 39px; }
   #toolbarBackground {height: 45px; }
+  
   #toolbarToggler { top: 50px; }
-  #refToggler {width: 20px; height: 16px}
+  #refToggler, #toolbarToggler {     
+     width:  25px; 
+     height: 22px; 
+     background-size: 18px 18px; 
+  }
+   
   div.POPUP {font-size: 100% }
   div.layersDiv {font-size: 120% }
   div.POPUPMENU > div { line-height: 1.7em; }
@@ -120,20 +128,22 @@ screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 2.0)
   }
   .olControlLayerSwitcher img { top: 4px}
   #reference {
-  width: 270px; height: 120px;
+    width: 275px; height: 128px;
   }
+  
+  #scaleReference {height: 75px }
   
   #geoPosition {
-  width: 268px;
-  height: 44px; 
-  font-size: 15px;
+    width: 273px;
+    height: 46px; 
+    font-size: 16px;
   }
-  #scale { font-size: 13px; }
-  .sbNumbersBox {font-size: 0.76em }
-  .sbLabelBox {font-size: 0.9em }
+  #scale { font-size: 14px;  }
+  .sbNumbersBox {font-size: 0.80em }
+  .sbLabelBox {font-size: 0.92em }
   
   #speedDisplay {font-size: 24px; font-weight: bold}
-  #speedDisplay span.speed {font-size: 28px}
+  #speedDisplay span.speed {font-size: 34px}
 }
 
 
@@ -200,7 +210,7 @@ screen and (min-device-height: 1100px) and (min-height: 1000px)
      height: 91px;
   }
   #speedDisplay {font-size: 31px}
-  #speedDisplay span.speed {font-size: 36px}
+  #speedDisplay span.speed {font-size: 38px}
   #gpsheadd { margin-left: 26px; margin-right: 13px; }
   
   
