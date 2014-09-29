@@ -11,8 +11,10 @@ var myKaTracker = null;
 var initialized = false;
 var win1 = null;
 var eventz = null; 
-var utmzone = 33;
-var utmnzone = 'W';
+
+// FIXME: Not necessary to duplicate? 
+var utmzone = utm_zone; 
+
 var clientses = 0;
 var geopos;
 var isOpera = _BrowserIdent_isOpera();
@@ -321,7 +323,8 @@ function getXmlData(wait, metaonly)
    var url = server_url + sar_string + (getLogin() ? 'srv/mapdata_sec?' : 'srv/mapdata?');
    
    var i = myOverlay.loadXml(url+extentQuery() + "&scale="+currentScale+
-                  (wait?"&wait=true":"") + (clientses!=null? "&clientses="+clientses : "") + (metaonly? "&metaonly=true" : ""));
+                  (wait?"&wait=true":"") + (clientses!=null? "&clientses="+clientses : "") + 
+                   (metaonly? "&metaonly=true" : "") + "&utmz="+utmzone );
    lastXmlCall = i; 
    
    var _xmlSeq = xmlSeqno;
@@ -360,10 +363,6 @@ function postLoadXml_Fail()
 function postLoadXml() 
 {
      retry = 0;
-     if (myOverlay.meta.utmzone != null)
-        utmzone = myOverlay.meta.utmzone;
-     if (myOverlay.meta.utmnzone != null)
-        utmnzone = myOverlay.meta.utmnzone;
      if (myOverlay.meta.clientses != null)
         clientses = myOverlay.meta.clientses;   
         
@@ -476,7 +475,8 @@ function myMapClicked( eventID, coords ) {
  * Event handler (KaMap callback)
  */
 function myMouseMoved( eventID, position) {
-    var uref = new UTMRef(position.x, position.y, this.utmnzone, this.utmzone);
+    /* Note. Zone letter in UTM reference is redundant. */ 
+    var uref = new UTMRef(position.x, position.y, 'W', utmzone);
     var llref = uref.toLatLng();     
     geopos.innerHTML = '&nbsp; ' + llref.toUTMRef() + '<br>'+ll2Maidenhead(llref.lat, llref.lng);
 }

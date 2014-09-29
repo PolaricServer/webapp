@@ -1,3 +1,14 @@
+/* 
+ * Seems like we need to define projections explicitly. 
+ * Alternatively, Openlayers may be set up to query this information online (??)
+ *
+ * FIXME: Need to investigate this more. Put definitions in a separate file?  
+ */
+Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
+Proj4js.defs["EPSG:32635"] = "+proj=utm +zone=35 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
+
+
+
 /*
  * Base URL of server. Leave it empty if the server
  * and the js document are at the same location. 
@@ -13,7 +24,7 @@ var use_kaMap_maps = true;
 /* System projection.  
  */
 var utm_projection = new OpenLayers.Projection("EPSG:32633");
-
+var utm_zone = 33;
 
 /*
  * Bacground color for maps

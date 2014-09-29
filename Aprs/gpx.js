@@ -1,7 +1,4 @@
 
-Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
-
-
 function add_Gpx_Layer(name, url, color)
 {
     var gpx_format = new OpenLayers.Format.GPX();
@@ -29,7 +26,7 @@ function add_Gpx_Layer(name, url, color)
        var features = gpx_format.read(request.responseText);
        for(var i = 0; i<features.length;i++){
   	  features[i].geometry.transform(new OpenLayers.Projection('EPSG:4326'), 
-	                                 new OpenLayers.Projection('EPSG:32633'));
+	                                 utm_projection );
        }
        layer.addFeatures(features);
     }

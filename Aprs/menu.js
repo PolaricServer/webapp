@@ -137,7 +137,7 @@ function popup_editObject(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
     fullPopupWindow('Objekt', server_url + 'srv/addobject' +
-          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]), 550, 280);
+          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1])+'&utmz='+utmzone, 550, 280);
 }
 
 
@@ -149,7 +149,7 @@ function popup_setOwnPos(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
     fullPopupWindow('Posisjon', server_url + 'srv/setownpos' +
-          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]), 500, 200);
+           (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1])+'&utmz='+utmzone, 500, 200);
 }
 
 
