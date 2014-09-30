@@ -30,7 +30,7 @@ GpsTracker.prototype.activate = function ()
     */
    function gps_onSuccess(position) {
      retry = 0;
-     if (position.coords.accuracy > 60) {
+     if (position.coords.accuracy > 160) {
         if (t.my_point != null) {
            t.my_point.removeFromMap();
            t.my_point = null;
@@ -38,14 +38,14 @@ GpsTracker.prototype.activate = function ()
         setStatus('&nbsp; GPS upresis posisjon ('+position.coords.accuracy+' m)');
         return;
      }
-        
+
      var ll = new LatLng(position.coords.latitude, position.coords.longitude);
      var uref = ll.toUTMRef();
-     var uref_map = uref.toLatLng().toUTMRef(utmnzone, utmzone);
+     var uref_map = uref.toLatLng().toUTMRef('W', utmzone);
      myZoomToGeo(uref_map.easting, uref_map.northing, 0.2);
      
      /* Show speed and heading */
-     if (t.speedDisplay) {
+     if (t.speedDisplay > 0) {
        setStatus('<div id="speedDisplay">'
          +(position.coords.speed > 0.3 ? '<div id="gpsheadd"><img id="gpsheading" src="images/ptr1.png"></div>' : '')  
          + speedHeading(position.coords) + '</div>');
@@ -109,8 +109,8 @@ GpsTracker.prototype.activate = function ()
        else if (x.heading < 247) d = "SW";
        else if (x.heading < 292) d = "W"; 
        else d = "NW";
-       if (speedDisplay==2)
-            return '<span class="speed">'+Math.round(x.speed*1.94384449)+'</span> knop '+d;
+       if (t.speedDisplay==2)
+            return '<span class="speed">'+Math.round(x.speed*1.94384449*10)/10+'</span> knop '+d;
        else
             return '<span class="speed">'+Math.round(x.speed*3.6)+'</span> km/h '+d;
    }
