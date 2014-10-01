@@ -30,7 +30,7 @@ GpsTracker.prototype.activate = function ()
     */
    function gps_onSuccess(position) {
      retry = 0;
-     if (position.coords.accuracy > 160) {
+     if (position.coords.accuracy > 60) {
         if (t.my_point != null) {
            t.my_point.removeFromMap();
            t.my_point = null;
@@ -47,10 +47,12 @@ GpsTracker.prototype.activate = function ()
      /* Show speed and heading */
      if (t.speedDisplay > 0) {
        setStatus('<div id="speedDisplay">'
-         +(position.coords.speed > 0.3 ? '<div id="gpsheadd"><img id="gpsheading" src="images/ptr1.png"></div>' : '')  
+         +((false && position.coords.speed > 0.3)s ? '<div id="gpsheadd"><img id="gpsheading" src="images/ptr1.png"></div>' : '')  
          + speedHeading(position.coords) + '</div>');
-       var hd = new ImgRotate('gpsheading');
-       hd.rotate(position.coords.heading);
+       
+      //   FIXME: Rotated arrow doesn't work. Not important. 
+      //   var hd = new ImgRotate('gpsheading');
+      //   hd.rotate(position.coords.heading);
      }
      else
         setStatus('&nbsp; GPS posisjon ok <br>' + uref + '&nbsp;/&nbsp;'+ speedHeading(position.coords));

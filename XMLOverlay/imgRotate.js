@@ -5,10 +5,6 @@ function ImgRotate (img)
      this.rdeg = 0;
      this.image = document.getElementById(img);
      this.canvas = _BrowserIdent_newCanvas(this.image.parentNode);
-     if (window.matchMedia( "(min-width: 1000px)" )) {
-       this.image.width = "39px";
-       this.image.height = "39px"; 
-     }
      this.canvas.setAttribute('width', this.image.width);
      this.canvas.setAttribute('height', this.image.height);
      
@@ -30,7 +26,6 @@ ImgRotate.prototype.rotate = function (deg)
      clearCanvas(this.canvasCtxt, this.canvas);
      var p_rad = deg * Math.PI / 180;
      this.canvasCtxt.rotate(p_rad);
-   
      var xoff = Math.cos(p_rad)*0.5*this.image.width - Math.sin(p_rad)*0.5*this.image.height; 
      var yoff = Math.cos(p_rad)*0.5*this.image.width + Math.sin(p_rad)*0.5*this.image.height;
      var y = xoff - 0.5*this.image.width;
