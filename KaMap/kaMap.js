@@ -158,11 +158,6 @@ function kaMap( szID ) {
     //directory in which init.php, tile.php and the other scripts are located.
     this.server = this.server = server_url ? server_url : '';
 
-    //similarly, this is the global initialization script called once per page
-    //load ... the result of this script tell the client what other scripts
-    //are used for the other functions
-    this.init = "KaMap/init.php";
-
     //these are the values that need to be initialized by the init script
     this.tileURL = null;
 
@@ -239,28 +234,8 @@ kaMap.prototype.initialize = function() {
         t.triggerEvent( KAMAP_WARNING, 'WARNING: ka-Map! is currently initializing ... wait for the KAMAP_INITIALIZED event to be triggered.' );
         return false;
     }
-    t.initializationState = 1;
-    /* call initialization script on the server */
-    var szURL = t.server+t.init;
-
-    var sep = (t.init.indexOf("?") == -1) ? "?" : "&";
-
-    if (arguments.length > 0 && arguments[0] != '') {
-        szURL = szURL + sep + "map="+ arguments[0];
-        sep = "&";
-    }
-    if (arguments.length > 1 && arguments[1] != '') {
-        szURL = szURL + sep + "extents="+ arguments[1];
-        sep = "&";
-    }
-    if (arguments.length > 2 && arguments[2] != '') {
-        szURL = szURL + sep + "centerPoint="+ arguments[2];
-        sep = "&";
-    } 
-    if (use_kaMap_maps) 
-         call(szURL, t, t.initializeCallback);
-    else
-         setTimeout( function() {t.initializeCallback(null); }, 200);
+    t.initializationState = 1; 
+    setTimeout( function() {t.initializeCallback(null); }, 200);
     return true;
 };
 
@@ -270,21 +245,11 @@ kaMap.prototype.initialize = function() {
 /**
  * hidden function on callback from init.php
  */
-kaMap.prototype.initializeCallback = function( szInit ) 
+kaMap.prototype.initializeCallback = function( ) 
 {
     var t = this; 
-    // szInit contains /*init*/ if it worked, or some php error otherwise
-    if (use_kaMap_maps && /\/\*init\*\$/.test(szInit.substr(0, 10))) { 
-        this.triggerEvent( KAMAP_ERROR, 'ERROR: ka-Map! initialization '+
-                          'failed on the server.  Message returned was:\n' +
-                          szInit);
-        return false;
-    }
-    
-
     this.utmProjection = utm_projection;
 
-    
     /* Remove null layers */
     if (baseLayers != null) 
     while (true) {
@@ -296,7 +261,7 @@ kaMap.prototype.initializeCallback = function( szInit )
       else break;
     }
     
-    this.initializeOL(szInit);
+    this.initializeOL();
     this.initializationState = 2;      
 };
 
@@ -304,7 +269,7 @@ kaMap.prototype.initializeCallback = function( szInit )
 
 
 
-kaMap.prototype.initializeOL = function( szInit ) {
+kaMap.prototype.initializeOL = function( ) {
   var t = this; 
   /* map OpenLayers events to kaMap events */
   function zoomEnd() {
@@ -350,15 +315,8 @@ kaMap.prototype.initializeOL = function( szInit ) {
   t.viewportWidth = t.getObjectWidth(t.domObj);
   t.viewportHeight = t.getObjectHeight(t.domObj);
   
-  
-  /* Get baselayers from kaMap backend */
-  if (use_kaMap_maps && kaMapFirst)
-    eval(szInit);
   if (baseLayers != null && baseLayers.length > 0)
     t.olMap.addLayers(baseLayers);
-  if (use_kaMap_maps && !kaMapFirst)
-    eval(szInit);
-  
   
   /* OL controls, Permalink setup, etc.. */  
   t.olMap.events.register("changebaselayer", t, layerChange);
