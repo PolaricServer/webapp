@@ -253,7 +253,7 @@ function myInitialized() {
     if (!isIframe && !isMobile) 
        addContextMenu('buttonMenu', 'MAIN');
     
- 
+    /* Context menus */
     var vp = myKaMap.olMap.getViewport();
     vp.onmousedown = menuMouseSelect;
     vp.oncontextmenu = function(e) 
@@ -578,30 +578,6 @@ function histList_click(ident, index)
 
 
 
-function myZoomToGeo(x, y, t)
-{      
-    var extents = myKaMap.getGeoExtents();
-    var xx = extents[0];
-    var xy = extents[1]; 
-    var cx = (extents[2] - extents[0])/2;
-    var cy = (extents[3] - extents[1])/2;
-    if (!t)
-        t = 0.05; 
-    var tx = cx * t;
-    var ty = cy * t; 
-    if (x < xx+cx-tx || x > xx+cx+tx || y < xy+cy-ty || y > xy+cy+ty) {
-       myKaMap.zoomTo(x,y);
-    }
-}
-
-
-function myZoomTo(x,y,t)
-{ 
-    var coord = myKaMap.pixToGeo(x,y-5);
-    myZoomToGeo(coord[0], coord[1], t);
-}
-
-
 
 function ll2Maidenhead(lat, lng) 
 {
@@ -728,22 +704,6 @@ function toggleReference(obj) {
         obj.style.bottom = (getObjectHeight('reference') + 5) + 'px';
     }
 }
-
-
-
-function dialogToggle( href, szObj) {
-    var obj = getObject(szObj);
-    if (obj.display == 'none') {
-        obj.display = 'block';
-        href.childNodes[0].src = server_url+ 'KaMap/images/dialog_shut.png';
-    } else {
-        obj.display = 'none';
-        href.childNodes[0].src = server_url+ 'KaMap/images/dialog_open.png';
-    }
-}
-
-
-
 
 
 

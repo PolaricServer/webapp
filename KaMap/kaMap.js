@@ -160,7 +160,7 @@ kaMap.prototype.initialize = function() {
         return false;
     }
     t.utmProjection = utm_projection;
-    setTimeout( function() { t.initializeOL(); }, 200); 
+    setTimeout( function() { t.initializeOL(); }, 50); 
     t.initializationState = 1;
     return true; 
 };
@@ -203,30 +203,29 @@ kaMap.prototype.initializeOL = function( ) {
   }
   
   
-  
   /*
    * OpenLayers integration.
    * The options and the layers are defined in mapconfig.js
    */
   t.olMap = new OpenLayers.Map(mapOptions);
-  t.olMap.render(t.domObj);   
-  t.olMap.getViewport().appendChild(t.theInsideLayer);
-
-  t.domObj.style.overflow = 'hidden';
-  t.viewportWidth = t.getObjectWidth(t.domObj);
-  t.viewportHeight = t.getObjectHeight(t.domObj);
-  t.setBackgroundColor( backgroundColor ); 
   
-  /* Get configuration */
+  /* Get layer setup from configuration */
   if (baseLayers != null && baseLayers.length > 0)
     t.olMap.addLayers(baseLayers);
-  
+
   /* Map views. Dictionary using name as index */
   if (mapViews != null)
     for (var i = 0; i < mapViews.length; i++) {
       var x = new View (mapViews[i]);
       t.aMaps[x.name] = x;
     }
+  
+  t.olMap.getViewport().appendChild(t.theInsideLayer);
+  t.domObj.style.overflow = 'hidden';
+  t.viewportWidth = t.getObjectWidth(t.domObj);
+  t.viewportHeight = t.getObjectHeight(t.domObj);
+  t.setBackgroundColor( backgroundColor );  
+  t.triggerEvent( KAMAP_MAP_INITIALIZED );
   
   /* 
    * Set up OL controls, Permalink setup, etc.. 
@@ -243,11 +242,10 @@ kaMap.prototype.initializeOL = function( ) {
   t.plink.setMap(t.olMap);  
   document.getElementById('permolink').appendChild(this.plink.draw());
   t.plink.element.innerHTML="link to this view";
-  
+  t.olMap.render(t.domObj);
 
   setGray()
   
-  t.triggerEvent( KAMAP_MAP_INITIALIZED );
   t.triggerEvent( KAMAP_INITIALIZED );
   t.triggerEvent( KAMAP_SCALE_CHANGED, t.getCurrentScale()); 
   this.initializationState = 2; 
@@ -294,7 +292,6 @@ kaMap.prototype.createLayers = function() {
         this.theInsideLayer.style.cursor = this.currentTool.cursor;
     }
     
-    // this.domObj.appendChild(this.theInsideLayer);
     this.domObj.kaMap = this;
     this.theInsideLayer.onclick = function (e) { t.onclick(e); }
     this.theInsideLayer.onmousedown = function (e) { t.onmousedown(e); }
@@ -378,19 +375,42 @@ kaMap.prototype.getObjectHeight = function(obj)  {
 
    
 /**
- * kaMap.zoomTo( lon, lat [, scale] )
+ * kaMap.zoomTo( lon, lat )
  *
- * zoom to some geographic point (in current projection) and optionally scale
+ * zoom to some geographic point (in current projection) 
  *
  * lon - the x coordinate to zoom to
  * lat - the y coordinate to zoom to
- * scale - optional. The scale to use
  */
 kaMap.prototype.zoomTo = function( x, y ) {
      var p = new OpenLayers.LonLat(x, y);
      p.transform(this.utmProjection, this.getMapProjection());
      this.olMap.setCenter(p);
 };
+
+
+kaMap.prototype.zoomToPix = function(x, y, t)
+{ 
+  var coord = this.pixToGeo(x,y-5);
+  this.zoomToGeo(coord[0], coord[1], t);
+}
+
+
+kaMap.prototype.zoomToGeo = function(x, y, t)
+{      
+  var extents = this.getGeoExtents();
+  var xx = extents[0];
+  var xy = extents[1]; 
+  var cx = (extents[2] - extents[0])/2;
+  var cy = (extents[3] - extents[1])/2;
+  if (!t)
+    t = 0.05; 
+  var tx = cx * t;
+  var ty = cy * t; 
+  if (x < xx+cx-tx || x > xx+cx+tx || y < xy+cy-ty || y > xy+cy+ty) {
+    this.zoomTo(x,y);
+  }
+}
 
 
 
@@ -956,11 +976,6 @@ kaMap.prototype.zoomOut = function() {
 
 kaMap.prototype.zoomToScale = function( scale ) {
      this.olMap.zoomToScale(scale);
-};
-
-
-kaMap.prototype.zoomByFactor = function( nZoomFactor ) {
-      throw "zoomByFactor not implemented";
 };
 
 

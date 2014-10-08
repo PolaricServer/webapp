@@ -15,11 +15,6 @@ Proj4js.defs["EPSG:32635"] = "+proj=utm +zone=35 +ellps=WGS84 +datum=WGS84 +unit
  */ 
 var server_url = '';
 
-/* set to true to add map-layers from ka-map.
- * Metadata will be fetched with an AJAX call to the server.
- */
-var use_kaMap_maps = true;
-
 
 /* System projection.  
  */
@@ -101,18 +96,11 @@ var backgroundColor = '#A1C1C9';
 
 
 
-
-/* Ka-map kart (lagres på server) kommer først i lista over kartlag, hvis du 
- * setter denne til true: 
- */
-var kaMapFirst = false;
-
 /*
  * Kartutsnitt-menyen. 
  * Extents er øverste venstre hjørne og nederste høyre hjørne i UTM sone 33
  * koordinater [x1, y1, x2, y2] 
  */
-var getViewsFromKaMap = false; 
 var defaultView = 'default';
 var mapViews = [
    { name: 'finnm',     title: 'Finnmark',        extent: [647979, 7649450, 1146928, 7970009] },

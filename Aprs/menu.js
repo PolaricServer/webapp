@@ -26,7 +26,7 @@ ctxtMenu.addCallback('MAP', function(m)
     m.add('Sett egen posisjon', function () { popup_setOwnPos(m.x, m.y);});
   
   m.add(null);
-  m.add('Sentrer punkt', function()  { myZoomTo(m.x, m.y); });
+  m.add('Sentrer punkt', function()  { myKaMap.zoomToPix(m.x, m.y); });
   m.add('Zoom inn', function() {myKaMap.zoomIn(); } );
   m.add('Zoom ut',  function() {myKaMap.zoomOut(); } );
 });
