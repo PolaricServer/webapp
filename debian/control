@@ -8,7 +8,7 @@ Homepage: http://aprs.no/dokuwiki
 
 Package: polaric-webapp
 Architecture: all
-Depends: apache2, libapache2-mod-php5, php5, php5-gd, php5-mapscript, polaric-aprsd (>= 1.3), ${misc:Depends}
+Depends: apache2, libapache2-mod-php5, php5, libapache2-mod-mapcache, mapcache-tools, polaric-aprsd (>= 1.5), ${misc:Depends}
 Recommends: 
 Description: Polaric Server: Web application. 
  The "Polaric Server" is mainly a web based service to present APRS 
@@ -19,7 +19,7 @@ Description: Polaric Server: Web application.
  .
  The web application lets the user browse maps. It can present live APRS 
  infomation (from the aprsd backend) on top of the map. Users can update 
- information, add objects, etc.. The application comes with its own server 
- side map server (based on KaMap/Mapserver) that can render and/or cache maps. 
- Web clients can also be set up to use external map sources directly. 
+ information, add objects, etc.. With the use of mapcache and possibly 
+ mapserver libraries, the application can render and/or cache map tiles. 
+ Web clients can also be set up to use local or external map sources. 
  
