@@ -90,8 +90,9 @@ function kaMap( szID ) {
     //keep a reference to the inside layer since we use it a lot
     this.theInsideLayer = null;
 
-    //an array of available maps. Consider changing name to aViews
+    // an array of available maps (pre-selected areas). C
     this.aMaps = new Array(); 
+    this.currentMap = '';
     
     //event manager
     this.eventManager = new _eventManager();
@@ -213,7 +214,9 @@ kaMap.prototype.initializeOL = function( ) {
   if (baseLayers != null && baseLayers.length > 0)
     t.olMap.addLayers(baseLayers);
 
-  /* Map views. Dictionary using name as index */
+  /* Map views (pre-selected areas). Initialize a dictionary 
+   * using name as index 
+   */
   if (mapViews != null)
     for (var i = 0; i < mapViews.length; i++) {
       var x = new View (mapViews[i]);
@@ -244,10 +247,11 @@ kaMap.prototype.initializeOL = function( ) {
   t.plink.element.innerHTML="link to this view";
   t.olMap.render(t.domObj);
 
-  setGray()
   
   t.triggerEvent( KAMAP_INITIALIZED );
-  t.triggerEvent( KAMAP_SCALE_CHANGED, t.getCurrentScale()); 
+  t.triggerEvent( KAMAP_SCALE_CHANGED, t.getCurrentScale());   
+  
+  setGray()
   this.initializationState = 2; 
 }
 /* End of initializeOL */
@@ -880,13 +884,21 @@ kaMap.prototype.setCursor = function(cursor) {
 
 /**
  * kaMap.getMaps()
- *
- * return an array of all the _map objects that kaMap knows about.  These can
- * be used to generate controls to switch between maps and to get information
- * about the layers (groups) and scales available in a given map.
+ * return an array of predefined map-areas. These can
+ * be used to generate controls to switch between those areas.
  */
 kaMap.prototype.getMaps = function() {
     return this.aMaps;
+};
+
+
+
+/**
+ * kaMap.getCurrentMap()
+ * returns the currently selected map area object. 
+ */
+kaMap.prototype.getCurrentMap = function() {
+  return this.aMaps[this.currentMap];
 };
 
 
@@ -895,22 +907,19 @@ kaMap.prototype.getMaps = function() {
 /**
  * kaMap.selectMap( name )
  *
- * select one of the maps that kaMap knows about and re-initialize kaMap with
- * this new map.  This function returns true if name is valid and false if the
- * map is invalid.  Note that a return of true does not imply that the map is
- * fully active.  You must register for the KAMAP_MAP_INITIALIZED event since
- * the map initialization happens asynchronously.
+ * select one of the predefined map area and zoom the map to show the area. 
+ * This function returns true if name is valid and false if the
+ * map is invalid.  
  *
- * name - string, the name of the map to select
+ * name - string, the name of the area to select
+ * donZoom - true if we are not to zoom to the extent when selected. 
  */
-
-
  
 kaMap.prototype.selectMap = function( name, dontZoom )
 {   
     OpenLayers.Console.info("selectMap: "+name);
     if (!this.aMaps[name]) {
-        OpenLayers.Console.warn("Map view not found: "+name);
+        OpenLayers.Console.warn("Map area not found: "+name);
         return false;
     } else {
         /* FIXME: This should not be done if extent is given in
