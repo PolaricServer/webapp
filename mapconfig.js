@@ -60,29 +60,29 @@ var backgroundColor = '#A1C1C9';
  var baseLayers = [
 
     new OpenLayers.Layer.WMS(
-             "KV Topo2/Europa (cache)", "http://localhost/mapcache?",
+          "KV Topo2/Europa (cache)", server_url+"/mapcache?",
              {  layers: 'kv_topo2',
                 format: 'image/jpeg'},
              {  attribution: _kv_attr }
         ),      
     new OpenLayers.Layer.WMS(
-            "KV Grunnkart (cache)", "http://localhost/mapcache?",
+          "KV Grunnkart (cache)", server_url+"/mapcache?",
             {  layers: 'kv_grunnkart',
                format: 'image/jpeg'},
             {  attribution: _kv_attr,
                gray: '0' }
         ),    
     new OpenLayers.Layer.WMS(
-          "Kartverket Raster", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
-          {  layers: 'toporaster2',
-             format: 'image/png'},
-          {  attribution: _kv_attr }
+         "Kartverket Raster", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
+           {  layers: 'toporaster2',
+              format: 'image/png'},
+           {  attribution: _kv_attr }
         ),                  
     new OpenLayers.Layer.WMS(
-             "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
-             {  layers: 'sjo_hovedkart2',
-                format: 'image/png'},
-             {  attribution: _kv_attr }
+         "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
+           {  layers: 'sjo_hovedkart2',
+              format: 'image/png'},
+           {  attribution: _kv_attr }
         )
     /* Example of how to add a GPX layer: Uncomment and modify the line below.. */
     /* , add_Gpx_Layer("Skarverennet", "gpx/Skarverennet.gpx")  */  
