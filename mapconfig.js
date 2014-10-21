@@ -4,8 +4,8 @@
  *
  * FIXME: Need to investigate this more. Put definitions in a separate file?  
  */
-Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
-Proj4js.defs["EPSG:32635"] = "+proj=utm +zone=35 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
+// Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
+// Proj4js.defs["EPSG:32635"] = "+proj=utm +zone=35 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
 
 
 
@@ -16,33 +16,28 @@ Proj4js.defs["EPSG:32635"] = "+proj=utm +zone=35 +ellps=WGS84 +datum=WGS84 +unit
 var server_url = '';
 
 
-/* System projection.  
+/* 
+ * Default system projection. Currently we assume that this is a UTM projection. 
+ * Please also state which UTM zone this is. 
  */
-var utm_projection = new OpenLayers.Projection("EPSG:32633");
-var utm_zone = 33;
+var utm_projection = "EPSG:32633";
+var utm_zone       = 33;
+
+/*
+ * Default map extents. Resolutions and number of zoom levels.
+ * Can (probably) be overridden by the individual base layers.  
+ */ 
+var max_extent     = [-2500000.0,3500000.0,3045984.0,9045984.0];
+var max_resolution = 1354.0; 
+var min_resolution = 0.6611328;
+var max_zoomlevels = 12; 
+
 
 /*
  * Bacground color for maps
  */
 var backgroundColor = '#A1C1C9';
-
-
-/* 
- * Options for the map (common to all layers) 
- */
- var mapOptions = {
-     projection: new OpenLayers.Projection('EPSG:32633'),
-     displayProjection: new OpenLayers.Projection('EPSG:32633'),
-     numZoomLevels: 12,
-     zoomMethod: null,
-     maxExtent: new OpenLayers.Bounds(-2500000.0,3500000.0,3045984.0,9045984.0),
-     maxResolution: 1354.0, 
-     minResolution: 0.6611328, 
-     units: "m",
-     controls: [new OpenLayers.Control.Navigation(), new OpenLayers.Control.Attribution()]
- };
-
-         
+ 
 
   
 /* Attribution of Statens Kartverk */
@@ -60,29 +55,30 @@ var backgroundColor = '#A1C1C9';
  var baseLayers = [
 
     new OpenLayers.Layer.WMS(
-          "KV Topo2/Europa (cache)", server_url+"/mapcache?",
+             "KV Topo2/Europa (cache)", "http://osys.no/mapcache?",
              {  layers: 'kv_topo2',
-                format: 'image/jpeg'},
+                format: 'image/jpeg'
+             },
              {  attribution: _kv_attr }
         ),      
     new OpenLayers.Layer.WMS(
-          "KV Grunnkart (cache)", server_url+"/mapcache?",
+            "KV Grunnkart (cache)", "http://osys.no/mapcache?",
             {  layers: 'kv_grunnkart',
                format: 'image/jpeg'},
             {  attribution: _kv_attr,
                gray: '0' }
         ),    
     new OpenLayers.Layer.WMS(
-         "Kartverket Raster", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
-           {  layers: 'toporaster2',
-              format: 'image/png'},
-           {  attribution: _kv_attr }
+          "Kartverket Raster", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
+          {  layers: 'toporaster2',
+             format: 'image/png'},
+          {  attribution: _kv_attr }
         ),                  
     new OpenLayers.Layer.WMS(
-         "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
-           {  layers: 'sjo_hovedkart2',
-              format: 'image/png'},
-           {  attribution: _kv_attr }
+             "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
+             {  layers: 'sjo_hovedkart2',
+                format: 'image/png'},
+             {  attribution: _kv_attr }
         )
     /* Example of how to add a GPX layer: Uncomment and modify the line below.. */
     /* , add_Gpx_Layer("Skarverennet", "gpx/Skarverennet.gpx")  */  

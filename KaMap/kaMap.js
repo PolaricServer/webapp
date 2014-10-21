@@ -119,6 +119,19 @@ function kaMap( szID ) {
     
     this.thandler = new touchHandler();
     this.createLayers();
+    
+    /* OpenLayers map options */
+    this.mapOptions = {
+      projection: utm_projection,
+      displayProjection: utm_projection,
+      numZoomLevels: max_zoomlevels,
+      zoomMethod: null,
+      maxExtent: new OpenLayers.Bounds(max_extent[0], max_extent[1], max_extent[2], max_extent[3]),
+      maxResolution: max_resolution, 
+      minResolution: min_resolution, 
+      controls: [new OpenLayers.Control.Navigation(), new OpenLayers.Control.Attribution()]
+    };
+    
 };
  
  
@@ -196,7 +209,7 @@ kaMap.prototype.initializeOL = function( ) {
     t.triggerEvent(KAMAP_LAYERS_CHANGED);
   }
   
-  function setGray() {
+  function setGray() {    
     if (t.getBaseLayer().gray)
        $('#canvasBG').css('opacity', t.getBaseLayer().gray); 
     else
@@ -208,7 +221,7 @@ kaMap.prototype.initializeOL = function( ) {
    * OpenLayers integration.
    * The options and the layers are defined in mapconfig.js
    */
-  t.olMap = new OpenLayers.Map(mapOptions);
+  t.olMap = new OpenLayers.Map(t.mapOptions);
   
   /* Get layer setup from configuration */
   if (baseLayers != null && baseLayers.length > 0)
