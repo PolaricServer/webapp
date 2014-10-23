@@ -119,19 +119,6 @@ function kaMap( szID ) {
     
     this.thandler = new touchHandler();
     this.createLayers();
-    
-    /* OpenLayers map options */
-    this.mapOptions = {
-      projection: utm_projection,
-      displayProjection: utm_projection,
-      numZoomLevels: max_zoomlevels,
-      zoomMethod: null,
-      maxExtent: new OpenLayers.Bounds(max_extent[0], max_extent[1], max_extent[2], max_extent[3]),
-      maxResolution: max_resolution, 
-      minResolution: min_resolution, 
-      controls: [new OpenLayers.Control.Navigation(), new OpenLayers.Control.Attribution()]
-    };
-    
 };
  
  
@@ -213,7 +200,7 @@ kaMap.prototype.initializeOL = function( ) {
     if (t.getBaseLayer().gray)
        $('#canvasBG').css('opacity', t.getBaseLayer().gray); 
     else
-       $('#canvasBG').css('opacity', '0.33');
+       $('#canvasBG').css('opacity', '0.33'); 
   }
   
   
@@ -221,11 +208,29 @@ kaMap.prototype.initializeOL = function( ) {
    * OpenLayers integration.
    * The options and the layers are defined in mapconfig.js
    */
-  t.olMap = new OpenLayers.Map(t.mapOptions);
+  t.olMap = new OpenLayers.Map(
+     {
+        projection       : utm_projection,
+        displayProjection: utm_projection,
+        numZoomLevels    : max_zoomlevels,
+        zoomMethod       : null,
+        maxExtent        : new OpenLayers.Bounds(max_extent[0], max_extent[1], max_extent[2], max_extent[3]),
+        maxResolution    : max_resolution, 
+        minResolution    : min_resolution, 
+        controls         : [new OpenLayers.Control.Navigation(), new OpenLayers.Control.Attribution()]
+     });
   
-  /* Get layer setup from configuration */
-  if (baseLayers != null && baseLayers.length > 0)
-    t.olMap.addLayers(baseLayers);
+  
+  /* Get layer setup from configuration 
+   * Add some default properties if necessary 
+   */
+   if (baseLayers != null && baseLayers.length > 0) {
+     for (var i=0; i < baseLayers.length; i++) {
+        if ( !baseLayers[i].attribution )
+           baseLayers[i].attribution = default_attribution;     
+     }
+     t.olMap.addLayers(baseLayers);
+   }
 
   /* Map views (pre-selected areas). Initialize a dictionary 
    * using name as index 

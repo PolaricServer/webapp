@@ -32,16 +32,13 @@ var max_resolution = 1354.0;
 var min_resolution = 0.6611328;
 var max_zoomlevels = 12; 
 
+var default_attribution = 'Kart: <a href="http://www.statkart.no">Statens kartverk</a>, <a href="http://www.statkart.no/nor/Land/Fagomrader/Geovekst/">Geovekst</a> og <a href="http://www.statkart.no/?module=Articles;action=Article.publicShow;ID=14194">kommuner</a>';
+
 
 /*
  * Bacground color for maps
  */
 var backgroundColor = '#A1C1C9';
- 
-
-  
-/* Attribution of Statens Kartverk */
- var _kv_attr = 'Kart: <a href="http://www.statkart.no">Statens kartverk</a>, <a href="http://www.statkart.no/nor/Land/Fagomrader/Geovekst/">Geovekst</a> og <a href="http://www.statkart.no/?module=Articles;action=Article.publicShow;ID=14194">kommuner</a>';
 
 
 /*
@@ -52,37 +49,30 @@ var backgroundColor = '#A1C1C9';
  * use the function add_Gpx_Layer(name, file) to add them to the list like 
  * in the example below. 
  */
- var baseLayers = [
+var baseLayers = [
 
-    new OpenLayers.Layer.WMS(
-             "KV Topo2/Europa (cache)", "http://osys.no/mapcache?",
-             {  layers: 'kv_topo2',
-                format: 'image/jpeg'
-             },
-             {  attribution: _kv_attr }
-        ),      
-    new OpenLayers.Layer.WMS(
-            "KV Grunnkart (cache)", "http://osys.no/mapcache?",
-            {  layers: 'kv_grunnkart',
-               format: 'image/jpeg'},
-            {  attribution: _kv_attr,
-               gray: '0' }
-        ),    
-    new OpenLayers.Layer.WMS(
-          "Kartverket Raster", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
-          {  layers: 'toporaster2',
-             format: 'image/png'},
-          {  attribution: _kv_attr }
-        ),                  
-    new OpenLayers.Layer.WMS(
-             "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
-             {  layers: 'sjo_hovedkart2',
-                format: 'image/png'},
-             {  attribution: _kv_attr }
-        )
-    /* Example of how to add a GPX layer: Uncomment and modify the line below.. */
-    /* , add_Gpx_Layer("Skarverennet", "gpx/Skarverennet.gpx")  */  
- ];       
+  new OpenLayers.Layer.TMS(
+     "KV Topo2/Europa (cache)", "http://osys.no/mapcache/tms/",
+       {  layername: 'kv_topo2', type: 'jpg' }
+  ),      
+  new OpenLayers.Layer.TMS(
+     "KV Grunnkart (cache)", "http://osys.no/mapcache/tms/",
+       {  layername: 'kv_grunnkart', type: 'jpg', gray: '0'}
+  ),    
+  new OpenLayers.Layer.WMS(
+     "Kartverket Raster", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
+       {  layers: 'toporaster2',
+          format: 'image/png' }
+  ),                  
+  new OpenLayers.Layer.WMS(
+     "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
+       {  layers: 'sjo_hovedkart2',
+          format: 'image/png' }
+  )
+  
+/* Example of how to add a GPX layer: Uncomment and modify the line below.. */
+/* , add_Gpx_Layer("Skarverennet", "gpx/Skarverennet.gpx")  */  
+];       
 
 
 
@@ -125,6 +115,7 @@ var filterViews = [
    { name: 'ainfra', title: 'Aktiv Infrastr'},
    { name: 'moving', title: 'Bevegelige'}
 ];
+
 /* View to be selected by default */
 var defaultFilterView = 'track';
 
