@@ -155,7 +155,7 @@
  
  function gotoPos(x, y)
  {
-   doRefSearchUtm(x, y, this.utmnzone, this.utmzone, true)
+   doRefSearchUtm(x, y, 'W', this.utmzone, true)
  }
  
  
@@ -171,7 +171,7 @@
       return;
  
     var ext = myKaMap.getGeoExtents();
-    var cref = new UTMRef((ext[0] + ext[2]) / 2, (ext[1] + ext[3]) / 2,  this.utmnzone,  this.utmzone);
+    var cref = new UTMRef((ext[0] + ext[2]) / 2, (ext[1] + ext[3]) / 2,  'W',  this.utmzone);
     cref = cref.toLatLng().toUTMRef(); 
     var bx = Math.floor(cref.easting  / 100000) * 100000;
     var by = Math.floor(cref.northing / 100000) * 100000; 
@@ -225,7 +225,7 @@
  
  function _doRefSearchUtm(uref, hide) {
    /* This is a hack, but the coordinates need to be in the same zone as the map */
-   var uref_map = uref.toLatLng().toUTMRef(this.utmnzone, this.utmzone);
+   var uref_map = uref.toLatLng().toUTMRef('W', this.utmzone);
    myKaMap.zoomTo(uref_map.easting, uref_map.northing);
    setTimeout( function() { popup_posInfoUtm(uref_map, hide);}, 1500 );
  }

@@ -182,7 +182,7 @@
      this.setPosition(x,y);
      /* Tracking of object: Move object to center of display */
      if (tracked) 
-       myZoomToGeo(x, y, 0.2);          
+        this.xml_overlay.kaMap.zoomToGeo(x, y, 0.2);          
    }          
    // Need redraw?
    if (redraw) {           

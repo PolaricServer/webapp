@@ -26,7 +26,7 @@ ctxtMenu.addCallback('MAP', function(m)
     m.add('Sett egen posisjon', function () { popup_setOwnPos(m.x, m.y);});
   
   m.add(null);
-  m.add('Sentrer punkt', function()  { myZoomTo(m.x, m.y); });
+  m.add('Sentrer punkt', function()  { myKaMap.zoomToPix(m.x, m.y); });
   m.add('Zoom inn', function() {myKaMap.zoomIn(); } );
   m.add('Zoom ut',  function() {myKaMap.zoomOut(); } );
 });
@@ -192,7 +192,7 @@ function popup_sarMode() {
 
 function popup_signInfo(p, x, y)
 { 
-  var uref = new UTMRef(p.geox, p.geoy,  this.utmnzone,  this.utmzone);
+  var uref = new UTMRef(p.geox, p.geoy,  'W',  this.utmzone);
   var llref = uref.toLatLng();
   var sref = "" + llref.toUTMRef();
   var ustring = showUTMstring(sref);
@@ -380,7 +380,7 @@ function popup_refSearch()
 {
    /* TODO: Mulighet for å skrive inn kartreferanse i maidenhead */
     var ext = myKaMap.getGeoExtents();
-    var cref = new UTMRef((ext[0]+ext[2])/2, (ext[1]+ext[3])/2, this.utmnzone, this.utmzone);
+    var cref = new UTMRef((ext[0]+ext[2])/2, (ext[1]+ext[3])/2, 'W', this.utmzone);
     cref = cref.toLatLng().toUTMRef(); 
 
 
@@ -524,7 +524,7 @@ function popup_posInfoPix(x, y)
  *******************************************************************************/
 function popup_posInfo(coords)
 {
-   popup_posInfoUtm( new UTMRef(coords[0], coords[1], this.utmnzone, this.utmzone)); 
+   popup_posInfoUtm( new UTMRef(coords[0], coords[1], 'W', this.utmzone)); 
 }
 
 
@@ -588,7 +588,7 @@ var wx = new WXreport(WXreport_url);
 
 function popup_wxInfoPix(x, y) {
   var coord = myKaMap.pixToGeo(x, y);
-  var u = new UTMRef(coord[0], coord[1], this.utmnzone, this.utmzone);
+  var u = new UTMRef(coord[0], coord[1], 'W', this.utmzone);
   popup_wxInfo(u);
 }
 

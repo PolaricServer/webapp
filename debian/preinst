@@ -1,0 +1,33 @@
+#!/bin/bash
+set -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+
+case "$1" in
+    install)
+        ;;
+
+    upgrade)
+        if [ -e "/var/www/aprs/KaMap/mapserv" ]; then
+           rm -R /var/www/aprs/KaMap/mapserv
+        fi
+        if [ -e "/var/www/aprs/kacache2" ]; then
+           echo "Removing old kamap cache..."
+           rm -R /var/www/aprs/kacache2
+        fi
+        ;;
+        
+    abort-upgrade)
+        ;;
+
+    *)
+        echo "preinst called with unknown argument \`$1'" >&2
+        exit 0
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

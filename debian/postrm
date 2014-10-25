@@ -3,19 +3,13 @@ set -e
 
 case "$1" in
     remove|purge)
-       if [ -d "/var/www/aprs/kacache2" ]; then
-          rm -R /var/www/aprs/kacache2
+       if [ -d "/var/lib/polaric/mapcache" ]; then
+          rm -R /var/lib/polaric/mapcache
        fi
        
        if [ "$1" == "purge" ] ; then
           if [ -e "/etc/polaric-webapp/users" ]; then
              rm /etc/polaric-webapp/users
-          fi
-          if [ -e "/var/www/aprs/KaMap/mapserv" ]; then
-             rm /var/www/aprs/KaMap/mapserv
-          fi
-          if [ -e "/etc/polaric-webapp/mapserv" ]; then
-             rmdir /etc/polaric-webapp/mapserv
           fi
           if [ -h "/var/www/aprs/img" ]; then
              rm /var/www/aprs/img
@@ -23,9 +17,6 @@ case "$1" in
           if [ -h "/var/www/aprs/theme" ]; then
              rm /var/www/aprs/theme
           fi          
-          if [ -d "/var/log/polaric/kamap" ]; then
-             rm -R /var/log/polaric/kamap
-          fi
           if [ -d "/var/www/html" ]; then
              if [ -h "/var/www/html/aprs" ]; then
                 rm /var/www/html/aprs

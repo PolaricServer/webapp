@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 # Source debconf library.
@@ -10,11 +10,7 @@ case "$1" in
         if [ -e "/etc/cron.daily/polaric-webapp.dpkg-old" ]; then
            rm -R /etc/cron.daily/polaric-webapp.dpkg-old
         fi 
-        if [ -e "/var/www/aprs/KaMap/mapserv" ]; then
-           rm -R /var/www/aprs/KaMap/mapserv
-        fi
-        ln -s /etc/polaric-webapp/mapserv /var/www/aprs/KaMap/mapserv
-
+        
         if [ -e "/var/www/aprs/img" ]; then
            rm -R /var/www/aprs/img
         fi
@@ -36,8 +32,7 @@ case "$1" in
         a2enmod expires > /dev/null 2>&1
         a2enmod deflate > /dev/null 2>&1
         a2ensite aprs.conf > /dev/null 2>&1 
-        chown www-data:www-data /var/www/aprs/kacache2 /var/log/polaric/kamap
-        chmod 755 /var/log/polaric/kamap
+        chown www-data:www-data /var/lib/polaric/mapcache
         db_stop
     ;;
 

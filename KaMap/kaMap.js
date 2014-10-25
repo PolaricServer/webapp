@@ -18,7 +18,7 @@
  **********************************************************************
  *
  * Copyright (c) 2005, DM Solutions Group Inc.
- * Copyright (c) 2009, Øyvind Hanssen, LA7ECA (ohanssen@acm.org)
+ * Copyright (c) 2009-2014, Øyvind Hanssen, LA7ECA (ohanssen@acm.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -71,27 +71,13 @@ var KAMAP_MOVE_END = gnLastEventId++;
  * szID - string, the id of a div to put the kaMap! into
  *
  *****************************************************************************/
-function kaMap( szID ) {
-    this.isCSS = false;
-    this.isW3C = false;
-    this.isIE4 = false;
-    this.isNN4 = false;
-    this.isIE6CSS = false;
 
-    if (document.images) {
-        this.isCSS = (document.body && document.body.style) ? true : false;
-        this.isW3C = (this.isCSS && document.getElementById) ? true : false;
-        this.isIE4 = (this.isCSS && document.all) ? true : false;
-        this.isNN4 = (document.layers) ? true : false;
-        this.isIE6CSS = (document.compatMode && document.compatMode.indexOf("CSS1") >= 0) ? true : false;
-    }
+function kaMap( szID ) {
+
     this.szID = szID;
     this.domObj = this.getRawObject( szID );
     this.domObj.style.overflow = 'hidden';
 
-    this.hideLayersOnMove = false;
-    //if true layer not checked are loaded if false aren't loaded
-    this.loadUnchecked=false;
     /**
      * initialization states
      * 0 - not initialized
@@ -100,53 +86,16 @@ function kaMap( szID ) {
      */
     this.initializationState = 0;
 
-    //track mouse down events
-    this.bMouseDown = false;
-
-    //track last recorded mouse position
-    this.lastx = 0;
-    this.lasty = 0;
 
     //keep a reference to the inside layer since we use it a lot
     this.theInsideLayer = null;
 
-    //viewport width and height are used in many calculations
-    this.viewportWidth = this.getObjectWidth(this.domObj);
-    this.viewportHeight = this.getObjectHeight(this.domObj);
-
-    //track amount the inside layer has moved to help in wrapping images
-    this.xOffset = 0;
-    this.yOffset = 0;
-
-    /* the name of the current map. 
-       FIXME: is this needed? */
-    this.currentMap = '';
-
-    //the current width and height in tiles
-    this.nWide = 0;
-    this.nHigh = 0;
-
-    //current top and left are tracked when the map moves
-    //to start the map at some offset, these would be set to
-    //the appropriate pixel value.
-    this.nCurrentTop = 0; //null;
-    this.nCurrentLeft = 0; //null;
-
-    //an array of available maps. Consider changing name to aViews
+    // an array of available maps (pre-selected areas). C
     this.aMaps = new Array(); 
-    
-    
-    //size of a pixel, geographically - assumed to be square
-    this.cellSize = null;
+    this.currentMap = '';
     
     //event manager
     this.eventManager = new _eventManager();
-
-    //slider stuff
-    this.as=slideid=null;
-    this.accelerationFactor=1;
-    this.pixelsPerStep = 30;
-    this.timePerStep = 25;
 
     //this is a convenience to allow redirecting the client code to a server
     //other than the one that this file was loaded from.  This may not
@@ -158,18 +107,8 @@ function kaMap( szID ) {
     //directory in which init.php, tile.php and the other scripts are located.
     this.server = this.server = server_url ? server_url : '';
 
-    //similarly, this is the global initialization script called once per page
-    //load ... the result of this script tell the client what other scripts
-    //are used for the other functions
-    this.init = "KaMap/init.php";
-
-    //these are the values that need to be initialized by the init script
-    this.tileURL = null;
-
     this.aObjects = [];
     this.aCanvases = [];
-    this.layersHidden = false;
-
     this.aTools = [];
     this.aInfoTools = [];
 
@@ -199,24 +138,8 @@ kaMap.prototype.getResolution = function()
 
 
 
-kaMap.prototype.seekLayer = function(doc, name) {
-    var theObj;
-    for (var i = 0; i < doc.layers.length; i++) {
-        if (doc.layers[i].name == name) {
-            theObj = doc.layers[i];
-            break;
-        }
-        // dive into nested layers if necessary
-        if (doc.layers[i].document.layers.length > 0) {
-            theObj = this.seekLayer(document.layers[i].document, name);
-        }
-    }
-    return theObj;
-};
-
-
 /**
- * kaMap.initialize( [szMap] )
+ * kaMap.initialize( )
  *
  * main initialization of kaMap.  This must be called after page load and
  * should only be called once (i.e. on page load).  It does not perform
@@ -224,12 +147,10 @@ kaMap.prototype.seekLayer = function(doc, name) {
  * before initialization is complete.  To determine when initialization is
  * complete, the calling application must register for the KAMAP_INITIALIZED
  * event.
- *
- * szMap - string, optional, the name of a map to initialize by default.  If
- *         not set, use the default configuration map file.
- *
+ * 
  * returns true
  */
+
 kaMap.prototype.initialize = function() {
     var t = this;
     if (t.initializationState == 2) {
@@ -239,73 +160,18 @@ kaMap.prototype.initialize = function() {
         t.triggerEvent( KAMAP_WARNING, 'WARNING: ka-Map! is currently initializing ... wait for the KAMAP_INITIALIZED event to be triggered.' );
         return false;
     }
+    t.utmProjection = utm_projection;
+    setTimeout( function() { t.initializeOL(); }, 50); 
     t.initializationState = 1;
-    /* call initialization script on the server */
-    var szURL = t.server+t.init;
-
-    var sep = (t.init.indexOf("?") == -1) ? "?" : "&";
-
-    if (arguments.length > 0 && arguments[0] != '') {
-        szURL = szURL + sep + "map="+ arguments[0];
-        sep = "&";
-    }
-    if (arguments.length > 1 && arguments[1] != '') {
-        szURL = szURL + sep + "extents="+ arguments[1];
-        sep = "&";
-    }
-    if (arguments.length > 2 && arguments[2] != '') {
-        szURL = szURL + sep + "centerPoint="+ arguments[2];
-        sep = "&";
-    } 
-    if (use_kaMap_maps) 
-         call(szURL, t, t.initializeCallback);
-    else
-         setTimeout( function() {t.initializeCallback(null); }, 200);
-    return true;
+    return true; 
 };
 
 
 
 
-/**
- * hidden function on callback from init.php
- */
-kaMap.prototype.initializeCallback = function( szInit ) 
-{
-    var t = this; 
-    // szInit contains /*init*/ if it worked, or some php error otherwise
-    if (use_kaMap_maps && /\/\*init\*\$/.test(szInit.substr(0, 10))) { 
-        this.triggerEvent( KAMAP_ERROR, 'ERROR: ka-Map! initialization '+
-                          'failed on the server.  Message returned was:\n' +
-                          szInit);
-        return false;
-    }
-    
-
-    this.utmProjection = utm_projection;
-
-    
-    /* Remove null layers */
-    if (baseLayers != null) 
-    while (true) {
-      for (idx=0; idx<baseLayers.length; idx++) 
-         if (baseLayers[idx] == null)
-            break;
-      if (idx < baseLayers.length)
-          baseLayers.splice(idx,1);
-      else break;
-    }
-    
-    this.initializeOL(szInit);
-    this.initializationState = 2;      
-};
-
-
-
-
-
-kaMap.prototype.initializeOL = function( szInit ) {
+kaMap.prototype.initializeOL = function( ) {
   var t = this; 
+  
   /* map OpenLayers events to kaMap events */
   function zoomEnd() {
     t.triggerEvent(KAMAP_SCALE_CHANGED, this.getCurrentScale());
@@ -330,67 +196,81 @@ kaMap.prototype.initializeOL = function( szInit ) {
     t.triggerEvent(KAMAP_LAYERS_CHANGED);
   }
   
-  function setGray() {
+  function setGray() {    
     if (t.getBaseLayer().gray)
        $('#canvasBG').css('opacity', t.getBaseLayer().gray); 
     else
-       $('#canvasBG').css('opacity', '0.33');
+       $('#canvasBG').css('opacity', '0.33'); 
   }
-  
   
   
   /*
    * OpenLayers integration.
    * The options and the layers are defined in mapconfig.js
    */
-  t.olMap = new OpenLayers.Map(mapOptions);
-  
-  t.domObj = t.getRawObject( t.szID );
-  t.domObj.style.overflow = 'hidden';
-  t.viewportWidth = t.getObjectWidth(t.domObj);
-  t.viewportHeight = t.getObjectHeight(t.domObj);
-  
-  
-  /* Get baselayers from kaMap backend */
-  if (use_kaMap_maps && kaMapFirst)
-    eval(szInit);
-  if (baseLayers != null && baseLayers.length > 0)
-    t.olMap.addLayers(baseLayers);
-  if (use_kaMap_maps && !kaMapFirst)
-    eval(szInit);
+  t.olMap = new OpenLayers.Map(
+     {
+        projection       : utm_projection,
+        displayProjection: utm_projection,
+        numZoomLevels    : max_zoomlevels,
+        zoomMethod       : null,
+        maxExtent        : new OpenLayers.Bounds(max_extent[0], max_extent[1], max_extent[2], max_extent[3]),
+        maxResolution    : max_resolution, 
+        minResolution    : min_resolution, 
+        controls         : [new OpenLayers.Control.Navigation(), new OpenLayers.Control.Attribution()]
+     });
   
   
-  /* OL controls, Permalink setup, etc.. */  
-  t.olMap.events.register("changebaselayer", t, layerChange);
-  t.olMap.events.register("zoomend", t, zoomEnd);
-  t.olMap.events.register("moveend", t, moveEnd);
-  t.olMap.events.register("movestart", t, moveStart);
-  if (!isMobile) 
-    t.olMap.addControl( new OpenLayers.Control.PanZoomBar() );
-  
-  t.olMap.addControl( new OpenLayers.Control.LayerSwitcher() );
-  t.plink = new OpenLayers.Control.Permalink();
-  t.plink.setMap(t.olMap);  
-  
-  /* Map views. Dictionary using name as index */
+  /* Get layer setup from configuration 
+   * Add some default properties if necessary 
+   */
+   if (baseLayers != null && baseLayers.length > 0) {
+     for (var i=0; i < baseLayers.length; i++) {
+        if ( !baseLayers[i].attribution )
+           baseLayers[i].attribution = default_attribution;     
+     }
+     t.olMap.addLayers(baseLayers);
+   }
+
+  /* Map views (pre-selected areas). Initialize a dictionary 
+   * using name as index 
+   */
   if (mapViews != null)
     for (var i = 0; i < mapViews.length; i++) {
       var x = new View (mapViews[i]);
       t.aMaps[x.name] = x;
     }
-    
-  t.triggerEvent( KAMAP_MAP_INITIALIZED );
-  t.olMap.render(t.domObj);   
   
   t.olMap.getViewport().appendChild(t.theInsideLayer);
+  t.domObj.style.overflow = 'hidden';
+  t.viewportWidth = t.getObjectWidth(t.domObj);
+  t.viewportHeight = t.getObjectHeight(t.domObj);
+  t.setBackgroundColor( backgroundColor );  
+  t.triggerEvent( KAMAP_MAP_INITIALIZED );
   
+  /* 
+   * Set up OL controls, Permalink setup, etc.. 
+   */  
+  t.olMap.events.register("changebaselayer", t, layerChange);
+  t.olMap.events.register("zoomend", t, zoomEnd);
+  t.olMap.events.register("moveend", t, moveEnd);
+  t.olMap.events.register("movestart", t, moveStart);
+
+  if (!isMobile) 
+    t.olMap.addControl( new OpenLayers.Control.PanZoomBar() );
+  t.olMap.addControl( new OpenLayers.Control.LayerSwitcher() );
+  t.plink = new OpenLayers.Control.Permalink();
+  t.plink.setMap(t.olMap);  
   document.getElementById('permolink').appendChild(this.plink.draw());
-  t.plink.element.innerHTML="link to this view";    
-  t.setBackgroundColor( backgroundColor ); 
+  t.plink.element.innerHTML="link to this view";
+  t.olMap.render(t.domObj);
+
   
   t.triggerEvent( KAMAP_INITIALIZED );
-  t.triggerEvent( KAMAP_SCALE_CHANGED, t.getCurrentScale());
-  setGray(); 
+  t.triggerEvent( KAMAP_SCALE_CHANGED, t.getCurrentScale());   
+  
+  setGray()
+  this.initializationState = 2; 
 }
 /* End of initializeOL */
 
@@ -434,7 +314,6 @@ kaMap.prototype.createLayers = function() {
         this.theInsideLayer.style.cursor = this.currentTool.cursor;
     }
     
-    // this.domObj.appendChild(this.theInsideLayer);
     this.domObj.kaMap = this;
     this.theInsideLayer.onclick = function (e) { t.onclick(e); }
     this.theInsideLayer.onmousedown = function (e) { t.onmousedown(e); }
@@ -466,10 +345,6 @@ kaMap.prototype.createLayers = function() {
    this.olMap = null;
 };
 
-kaMap.prototype.showLayers = function() {}
-kaMap.prototype.hideLayers = function() {}
-kaMap.prototype.getPlink = function() {return this.plink; }
-
 
 
 
@@ -478,31 +353,13 @@ kaMap.prototype.getPlink = function() {return this.plink; }
 kaMap.prototype.getRawObject = function(obj) {
     var theObj;
     if (typeof obj == "string") {
-        if (this.isW3C) {
-            theObj = document.getElementById(obj);
-        } else if (this.isIE4) {
-            theObj = document.all(obj);
-        } else if (this.isNN4) {
-            theObj = seekLayer(document, obj);
-        }
+        theObj = document.getElementById(obj);
     } else {
-        // pass through object reference
         theObj = obj;
     }
     return theObj;
 };
 
-
-
-// Convert object name string or object reference
-// into a valid style (or NN4 layer) reference
-kaMap.prototype.getObject = function(obj) {
-    var theObj = this.getRawObject(obj);
-    if (theObj && this.isCSS) {
-        theObj = theObj.style;
-    }
-    return theObj;
-};
 
 
 
@@ -540,19 +397,42 @@ kaMap.prototype.getObjectHeight = function(obj)  {
 
    
 /**
- * kaMap.zoomTo( lon, lat [, scale] )
+ * kaMap.zoomTo( lon, lat )
  *
- * zoom to some geographic point (in current projection) and optionally scale
+ * zoom to some geographic point (in current projection) 
  *
  * lon - the x coordinate to zoom to
  * lat - the y coordinate to zoom to
- * scale - optional. The scale to use
  */
 kaMap.prototype.zoomTo = function( x, y ) {
      var p = new OpenLayers.LonLat(x, y);
      p.transform(this.utmProjection, this.getMapProjection());
      this.olMap.setCenter(p);
 };
+
+
+kaMap.prototype.zoomToPix = function(x, y, t)
+{ 
+  var coord = this.pixToGeo(x,y-5);
+  this.zoomToGeo(coord[0], coord[1], t);
+}
+
+
+kaMap.prototype.zoomToGeo = function(x, y, t)
+{      
+  var extents = this.getGeoExtents();
+  var xx = extents[0];
+  var xy = extents[1]; 
+  var cx = (extents[2] - extents[0])/2;
+  var cy = (extents[3] - extents[1])/2;
+  if (!t)
+    t = 0.05; 
+  var tx = cx * t;
+  var ty = cy * t; 
+  if (x < xx+cx-tx || x > xx+cx+tx || y < xy+cy-ty || y > xy+cy+ty) {
+    this.zoomTo(x,y);
+  }
+}
 
 
 
@@ -776,6 +656,8 @@ kaMap.prototype.geoToPix = function( gX, gY ) {
     return [Math.floor(p.x), Math.floor(p.y)];
 };
 
+
+
 /**
  * kaMap.pixToGeo( pX, pY [, bAdjust] )
  *
@@ -955,10 +837,6 @@ kaMap.prototype.cancelEvent = function(e) {
 
 
 
-
-
-
-
 kaMap.prototype.registerTool = function( toolObj ) {
     this.aTools.push( toolObj );
 };
@@ -1021,76 +899,24 @@ kaMap.prototype.setCursor = function(cursor) {
 
 
 
-/**
- * kaMap.addMap( oMap )
- *
- * add a new instance of _map to kaMap.  _map is an internal class that
- * represents a map file from the configuration file.  This function is
- * intended for internal use by the init.php script.
- *
- * oMap - object, an instance of _map
- */
- 
-kaMap.prototype.addMap = function( oMap ) {
-
-        if (!use_kaMap_maps)
-           return;
-        
-        OpenLayers.Console.info("addMap: ", oMap.name);   
-        // straight from original kaMap.js
-        oMap.kaMap = this;
-        if (getViewsFromKaMap) {
-            this.aMaps[oMap.name] = new View(oMap.name, oMap.title, oMap.defaultExtents); 
-        }  
-        
-        // add all layers
-        var kaLayer, olLayer, options, scales;
-        for(var layerIndex=0; layerIndex<oMap.aLayers.length; ++layerIndex)
-        {
-            kaLayer = oMap.aLayers[layerIndex];
-            scales = [];
-            for(var scaleIndex=0; scaleIndex<oMap.aScales.length; ++scaleIndex) {
-                if(kaLayer.scales[scaleIndex] == '1') {
-                    scales.push(oMap.aScales[scaleIndex]);
-                }
-            }
-  
-            olLayer = new OpenLayers.Layer.KaMap
-                  (  oMap.title+" (ka-map)", this.server+"KaMap/tile.php",
-                     { i: kaLayer.imageformat,
-                       g: kaLayer.name,
-                       map: oMap.name },
-                     { scales: scales, buffer: 2 } );
-            this.olMap.addLayer(olLayer);
-        }
-
-};
-
-
-
-
 
 /**
  * kaMap.getMaps()
- *
- * return an array of all the _map objects that kaMap knows about.  These can
- * be used to generate controls to switch between maps and to get information
- * about the layers (groups) and scales available in a given map.
+ * return an array of predefined map-areas. These can
+ * be used to generate controls to switch between those areas.
  */
 kaMap.prototype.getMaps = function() {
     return this.aMaps;
 };
 
 
+
 /**
  * kaMap.getCurrentMap()
- *
- * returns the currently selected _map object.  This can be used to get
- * information about the layers (groups) and scales available in the current
- * map.
+ * returns the currently selected map area object. 
  */
 kaMap.prototype.getCurrentMap = function() {
-    return this.aMaps[this.currentMap];
+  return this.aMaps[this.currentMap];
 };
 
 
@@ -1099,24 +925,19 @@ kaMap.prototype.getCurrentMap = function() {
 /**
  * kaMap.selectMap( name )
  *
- * select one of the maps that kaMap knows about and re-initialize kaMap with
- * this new map.  This function returns true if name is valid and false if the
- * map is invalid.  Note that a return of true does not imply that the map is
- * fully active.  You must register for the KAMAP_MAP_INITIALIZED event since
- * the map initialization happens asynchronously.
+ * select one of the predefined map area and zoom the map to show the area. 
+ * This function returns true if name is valid and false if the
+ * map is invalid.  
  *
- * name - string, the name of the map to select
- * zoom - (optional) array of 3 (centerx, centery, scale) or 4 (minx, miny,
- *        maxx,maxy) values to zoom to.
+ * name - string, the name of the area to select
+ * donZoom - true if we are not to zoom to the extent when selected. 
  */
-
-
  
 kaMap.prototype.selectMap = function( name, dontZoom )
 {   
     OpenLayers.Console.info("selectMap: "+name);
     if (!this.aMaps[name]) {
-        OpenLayers.Console.warn("Map view not found: "+name);
+        OpenLayers.Console.warn("Map area not found: "+name);
         return false;
     } else {
         /* FIXME: This should not be done if extent is given in
@@ -1185,11 +1006,6 @@ kaMap.prototype.zoomToScale = function( scale ) {
 };
 
 
-kaMap.prototype.zoomByFactor = function( nZoomFactor ) {
-      throw "zoomByFactor not implemented";
-};
-
-
 kaMap.prototype.getCurrentScale = function() {
     return this.olMap==null ? null : this.olMap.getScale();
 };
@@ -1240,198 +1056,5 @@ function safeParseInt( val ) {
     this.hidden = (typeof(o.hidden) != 'undefined') ? o.hidden : false;
  }
  
-
-
-/******************************************************************************
- * _map
- *
- * internal class used to store map objects coming from the init script
- *
- * szName - string, the layer name (or group name, in this case ;))
- *
- * szTitle - string, the human-readable title of the map
- *
- * nCurrentScale - integer, the current scale as an index into aszScales;
- *
- * aszScales - array, an array of scale values for zooming.  The first scale is
- *             assumed to be the default scale of the map
- *
- * aszLayers - array, an array of layer names and statuses.  The array is indexed by
- *             the layer name and the value is true or false for the status.
- *
- *****************************************************************************/
-
-function _map(o) {
-    this.aLayers = [];
-    this.aZoomTo = [];
-    this.kaMap = null;
-    this.name = (typeof(o.name) != 'undefined') ? o.name : 'noname';
-    this.title = (typeof(o.title) != 'undefined') ? o.title : 'no title';
-    this.aScales = (typeof(o.scales) != 'undefined') ? o.scales : [1];
-    this.currentScale = (typeof(o.currentScale) != 'undefined') ? parseFloat(o.currentScale) : 0;
-    this.units = (typeof(o.units) != 'undefined') ? o.units : 5;
-    this.resolution = (typeof(o.resolution) != 'undefined') ? o.resolution:72; //used in scale calculations
-    this.defaultExtents = (typeof(o.defaultExtents) != 'undefined') ? o.defaultExtents:[];
-    this.currentExtents = (typeof(o.currentExtents) != 'undefined') ? o.currentExtents:[];
-    this.maxExtents = (typeof(o.maxExtents) != 'undefined') ? o.maxExtents : [];
-    this.backgroundColor = (typeof(o.backgroundColor) != 'undefined') ? o.backgroundColor : '#ffffff';
-    //to be used for versioning the map file ...
-    this.version = (typeof(o.version) != 'undefined') ? o.version : "";
-};
-
-_map.prototype.addLayer = function( layer ) {
-    layer._map = this;
-    layer.zIndex = this.aLayers.length;
-    this.aLayers.push( layer );
-};
-
-//added by cappu
-_map.prototype.removeLayer = function( l ) {
-  var alayer=Array();
-  for(i=0,a=0;i<this.aLayers.length;i++) {
-      if(this.aLayers[i]!=l) {
-          alayer[a]=this.aLayers[i];
-          a++;
-      }
-  }
-  this.aLayers=alayer;
-  return true;
-};
-
-//modified by cappu return only layer querable and visible for current scale
-_map.prototype.getQueryableLayers = function() {
-    var r = [];
-    var l = this.getLayers();
-    for( var i=0; i<l.length; i++) {
-        if (l[i].isQueryable()) {
-            r.push(l[i]);
-        }
-    }
-    return r;
-};
-
-//modified by cappu, return only layer visible and checked for current scale !!
-_map.prototype.getLayers = function() {
-    var r = [];
-    for( var i=0; i<this.aLayers.length; i++) {
-        if (this.aLayers[i].isVisible() &&
-            (this.aLayers[i].visible || this.kaMap.loadUnchecked) ) {
-            r.push(this.aLayers[i]);
-        }
-    }
-    return r;
-};
-
-//added by cappu replace old getQueryableLayers
-_map.prototype.getAllQueryableLayers = function() {
-    var r = [];
-    for( var i=0; i<this.aLayers.length; i++) {
-        if (this.aLayers[i].isQueryable()) {
-            r.push(this.aLayers[i]);
-        }
-    }
-    return r;
-};
-
-//added by cappu replace old getLayers
-_map.prototype.getAllLayers = function() {
-    return this.aLayers;
-};
-
-_map.prototype.getLayer = function( name ) {
-    for (var i=0; i<this.aLayers.length; i++) {
-        if (this.aLayers[i].name == name) {
-            return this.aLayers[i];
-        }
-    }
-};
-
-_map.prototype.getScales = function() {
-    return this.aScales;
-};
-
-
-
-_map.prototype.setLayerQueryable = function( name, bQueryable ) {
-    var layer = this.getLayer( name );
-    if(typeof(layer) != 'undefined') {
-        layer.setQueryable( bQueryable );
-    }
-};
-
-
-_map.prototype.setDefaultExtents = function( minx, miny, maxx, maxy ){
-    this.defaultExtents = [minx, miny, maxx, maxy];
-    if (this.currentExtents.length == 0)
-        this.setCurrentExtents( minx, miny, maxx, maxy );
-};
-
-_map.prototype.setCurrentExtents = function( minx, miny, maxx, maxy ) {
-    this.currentExtents = [minx, miny, maxx, maxy];
-};
-
-_map.prototype.setMaxExtents = function( minx, miny, maxx, maxy ) {
-    this.maxExtents = [minx, miny, maxx, maxy];
-};
-
-_map.prototype.setBackgroundColor = function( szBgColor ) {
-    this.backgroundColor = szBgColor;
-};
-
-
-
-
-/******************************************************************************
- * _layer
- *
- * internal class used to store map layers within a map.  Map layers track
- * visibility of the layer in the user interface.  Parameters are passed
- * as an object with the following attributes:
- *
- * name - string, the name of the layer
- * visible - boolean, the current state of the layer (true is visible)
- * opacity - integer, between 0 (transparent) and 100 (opaque), controls opacity
- *           of the layer as a whole
- * imageformat - string, the format to request the tiles in for this layer.  Can
- *               be used to optimize file sizes for different layer types
- *               by using GIF for images with fewer colours and JPEG or PNG24
- *               for high-colour layers (such as raster imagery).
- *
- * queryable - boolean, is the layer queryable?  This is different from the
- *              layer being included in queries.  bQueryable marks a layer as
- *              being capable of being queried.  The layer also has to have
- *              it's query state turned on using setQueryable
- * scales     - array to containing the layer visibility for each scale
- * force    - force layer
- *****************************************************************************/
-function _layer( o ) {
-    this.domObj = null;
-    this._map = null;
-    this.name = (typeof(o.name) != 'undefined') ? o.name : 'unnamed';
-    this.queryable = (typeof(o.queryable) != 'undefined') ? o.queryable : false;
-    this.queryState = (typeof(o.queryable) != 'undefined') ? o.queryable : false;
-    this.tileSource = (typeof(o.tileSource) != 'undefined') ? o.tileSource : 'auto';
-    this.scales = (typeof(o.scales) != 'undefined') ? o.scales : new Array(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
-    this.toLoad=0;
-
-};
-
-_layer.prototype.isQueryable = function() {
-    return this.queryState;
-};
-
-_layer.prototype.setQueryable = function( bQueryable ) {
-    if (this.queryable) {
-        this.queryState = bQueryable;
-    }
-};
-
-
-_layer.prototype.setZIndex = function( zIndex ) {
-    this.zIndex = zIndex;
-    if (this.domObj) {
-        this.domObj.style.zIndex = zIndex;
-    }
-};
 
 
