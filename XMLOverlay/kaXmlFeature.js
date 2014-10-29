@@ -254,8 +254,8 @@
        pt.title = point.pid+" "+showTime(this.tn[i]);
        pt.className = 'trailPoint';
        this.ldiv.appendChild(pt);
-       pt.style.left = this.xn[i] +'px';
-       pt.style.top = this.yn[i]+'px';
+       pt.style.left = this.xn[i]-4 +'px';
+       pt.style.top = this.yn[i]-4 +'px';
        pt.style.width = pt.style.height = '14px';
        pt.style.zIndex = '1190';
        pt._index = i;
