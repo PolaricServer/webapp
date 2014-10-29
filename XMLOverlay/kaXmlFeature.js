@@ -41,7 +41,8 @@
    // Calculate the min cellSize
    // It seems like it does not matter much what maxScale is set to...
    this.maxScale = point.xml_overlay.kaMap.getMaxScale();
-   this.mcs = point.xml_overlay.kaMap.getResolution() / (point.xml_overlay.kaMap.getCurrentScale() / this.maxScale);
+   this.mcs = point.xml_overlay.kaMap.getResolution() / 
+              (point.xml_overlay.kaMap.getCurrentScale() / this.maxScale);
  }
  
  
@@ -123,13 +124,20 @@
    this.cxmax = 0;
    this.coords = "";
    var i;
+
    for (i=0; i<xArray.length; i++) {
       var x=xArray[i];
       var y=yArray[i];
-      if (i==0 || x<this.cxmin) this.cxmin = x;
-      if (i==0 || y>this.cymax) this.cymax = y;
-      if (i==0 || y<this.cymin) this.cymin = y;
-      if (i==0 || x>this.cxmax) this.cxmax = x;
+
+      var p = point.xml_overlay.kaMap.geoToPix(x, y);
+      
+      if (i==0 || p[0] < this.cxmin) this.cxmin = p[0];
+      if (i==0 || p[1] > this.cymax) this.cymax = p[1];
+      if (i==0 || p[1] < this.cymin) this.cymin = p[1];
+      if (i==0 || p[0] > this.cxmax) this.cxmax = p[0];
+      
+      xArray[i]=p[0]; 
+      yArray[i]=p[1]; 
    }
    
    this.xn = new Array();
@@ -137,10 +145,10 @@
    
    // Normalize the coordinates
    for (i=0; i<xArray.length; i++) {
-      var x = (xArray[i] - this.cxmin) / this.mcs;
-      var y = (this.cymax - yArray[i]) / this.mcs;
-      if (i>0) this.coords += ",";
-          this.coords += Math.round(x) + "," + Math.round(y);
+      var x = (xArray[i] - this.cxmin);
+      var y = (yArray[i] - this.cymin);
+      if (i>0) this.coords += ", ";
+          this.coords += "("+Math.round(x) + "," + Math.round(y)+")";
       this.xn.push(x);
       this.yn.push(y);
    }
@@ -185,20 +193,16 @@
        return;
     }
  
-    var xy = point.xml_overlay.kaMap.geoToPix( this.cxmin, this.cymax );
-    var x0 = xy[0];
-    var y0 = xy[1];
- 
-    xy = point.xml_overlay.kaMap.geoToPix( this.cxmax, this.cymin );
-    var x1 = xy[0];
-    var y1 = xy[1];
+    var x0 = this.cxmin;
+    var y0 = this.cymin;
+    var x1 = this.cxmax;
+    var y1 = this.cymax; 
  
     xy = point.xml_overlay.kaMap.geoToPix( point.div.lon, point.div.lat );
     var xr = xy[0];
     var yr = xy[1];
  
     var border = 5;
-    var scf = point.xml_overlay.kaMap.getCurrentScale() / this.maxScale;
  
     var sizex = (x1 - x0) + (border*2);
     var sizey = (y1 - y0) + (border*2);
@@ -212,6 +216,7 @@
        
     this.ldiv.setAttribute('id', point.pid+"_trace");
     this.ldiv.style.position = 'absolute';
+    this.ldiv.style.border = 'dotted red 1px'; 
    
     if ( _sstorage['polaric.hidetrace.'+point.pid] == 'T' || _sstorage['polaric.hidetrace.ALL'] == 'T')
        this.ldiv.style.visibility = 'hidden';
@@ -231,18 +236,18 @@
     ctx.globalAlpha = this.opacity;
     ctx.lineWidth = this.stroke;
     ctx.beginPath();  
-    ctx.moveTo(this.xn[0]/scf, this.yn[0]/scf);
+    ctx.moveTo(this.xn[0], this.yn[0]);
  
     var i;
     for (i=1; i<this.xn.length; i++) 
-       ctx.lineTo(this.xn[i]/scf, this.yn[i]/scf);
+       ctx.lineTo(this.xn[i], this.yn[i]);
     ctx.stroke();
     ctx.strokeStyle = '#' + this.color2;
     ctx.beginPath();
  
     for (i=1; i<this.xn.length; i++) {
-       ctx.moveTo(this.xn[i]/scf, this.yn[i]/scf);
-       ctx.arc(this.xn[i]/scf, this.yn[i]/scf, 1, 0, Math.PI*2, false);
+       ctx.moveTo(this.xn[i], this.yn[i]);
+       ctx.arc(this.xn[i], this.yn[i], 1, 0, Math.PI*2, false);
    
        var pt = document.createElement('div');
        pt._time = this.tn[i];
@@ -250,8 +255,8 @@
        pt.title = point.pid+" "+showTime(this.tn[i]);
        pt.className = 'trailPoint';
        this.ldiv.appendChild(pt);
-       pt.style.left = (this.xn[i]/scf-4) +'px';
-       pt.style.top = (this.yn[i]/scf-4)+'px';
+       pt.style.left = this.xn[i] +'px';
+       pt.style.top = this.yn[i]+'px';
        pt.style.width = pt.style.height = '14px';
        pt.style.zIndex = '1190';
        pt._index = i;
@@ -274,86 +279,6 @@
  }
  
  
- 
- 
- 
- /*****************************************************************************
-  * kaXmlPolygon
-  * Construct a Polygon from the XML element
-  *****************************************************************************/
- 
- function kaXmlPolygon( point ) 
- {
-    kaXmlFeature.apply(this, [point]);
-   
-    if (_BrowserIdent_hasCanvasSupport())
-       kaXmlPolygon.prototype['draw'] = kaXmlPolygon.prototype['draw_canvas'];
-    else
-       kaXmlPolygon.prototype['draw'] = function() {};
-   
-    for (var p in kaXmlFeature.prototype) {
-       if (!kaXmlPolygon.prototype[p]) 
-          kaXmlPolygon.prototype[p]= kaXmlFeature.prototype[p];
-   }
- }
- 
- 
- 
- kaXmlPolygon.prototype.draw_canvas = function(point) 
- {
-    var xy = point.xml_overlay.kaMap.geoToPix( this.cxmin, this.cymax );
-    var x0 = xy[0];
-    var y0 = xy[1];
-   
-    xy = point.xml_overlay.kaMap.geoToPix( this.cxmax, this.cymin );
-    var x1 = xy[0];
-    var y1 = xy[1];
-   
-    xy = point.xml_overlay.kaMap.geoToPix( point.div.lon, point.div.lat );
-    var xr = xy[0];
-    var yr = xy[1];
-   
-    var border = 5;
-    var scf = point.xml_overlay.kaMap.getCurrentScale() / this.maxScale;
-   
-    var sizex = (x1 - x0) + (border*2);
-    var sizey = (y1 - y0) + (border*2);
-   
-    if (this.canvas == null) {
-       this.ldiv = document.createElement( 'div' );
-       this.ldiv.style.position = 'absolute';
-       point.div.appendChild(this.ldiv);
-       this.canvas = _BrowserIdent_newCanvas(this.ldiv);
-    } 
-   
-    this.ldiv.style.left  = (x0 - xr - border) + 'px';
-    this.ldiv.style.top = (y0 - yr - border) + 'px';
-    _BrowserIdent_setCanvasHW(this.canvas,sizey,sizex);
-   
-    var ctx = _BrowserIdent_getCanvasContext(this.canvas);
-    ctx.save();
-    ctx.clearRect(0, 0, sizex, sizey);
-    ctx.translate(border,border);
-    if (this.color != null) 
-        ctx.fillStyle = this.color;
-    if (this.bcolor != null && this.bcolor != "") 
-        ctx.strokeStyle = this.bcolor;
-    ctx.globalAlpha = this.opacity;
-    ctx.lineWidth = this.stroke;
-    ctx.beginPath();
-    ctx.moveTo(this.xn[0]/scf, this.yn[0]/scf);
-   
-    var i;
-    for (i=1; i<this.xn.length; i++) {
-       ctx.lineTo(this.xn[i]/scf, this.yn[i]/scf);
-    }
-   
-    if (this.color != null) 
-       ctx.fill();
-    if (this.bcolor != null && this.bcolor != "") 
-       ctx.stroke();
-    ctx.restore();
- }
  
  
  
@@ -387,25 +312,21 @@
      return;
    }
    
-   var xy = point.xml_overlay.kaMap.geoToPix( this.cxmin, this.cymax );
-   var x0 = xy[0];
-   var y0 = xy[1];
-   
-   xy = point.xml_overlay.kaMap.geoToPix( this.cxmax, this.cymin );
-   var x1 = xy[0];
-   var y1 = xy[1];
+   var x0 = this.cxmin;
+   var y0 = this.cymin;
+   var x1 = this.cxmax;
+   var y1 = this.cymax; 
    
    xy = point.xml_overlay.kaMap.geoToPix( point.div.lon, point.div.lat );
    var xr = xy[0];
    var yr = xy[1];
    
    var border = 5;
-   var scf = point.xml_overlay.kaMap.getCurrentScale() / this.maxScale;
-   
+  
    var sizex = (x1 - x0) + (border*2);
    var sizey = (y1 - y0) + (border*2);
    
-   /* Skip if trail is too small to be visible? */
+   /* Skip if cloud is too small to be visible? */
    if (sizex <= border*2+15 && sizey <= border*2+15)
      return;
    
@@ -419,7 +340,6 @@
      point.div.appendChild(this.ldiv);
      this.canvas = _BrowserIdent_newCanvas(this.ldiv);
    } 
-   
    this.ldiv.style.left = (x0 - xr - border)+'px';
    this.ldiv.style.top = (y0 - yr - border)+'px';
    _BrowserIdent_setCanvasHW(this.canvas, sizey, sizex);
@@ -437,7 +357,7 @@
    
    for (i=1; i<this.xn.length; i++) {
      ctx.beginPath();
-     ctx.arc(this.xn[i]/scf, this.yn[i]/scf, 4, 0, Math.PI*4, true);  
+     ctx.arc(this.xn[i], this.yn[i], 4, 0, Math.PI*4, true);  
      ctx.fill();
    }
    ctx.restore();

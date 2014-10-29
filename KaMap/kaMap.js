@@ -203,7 +203,7 @@ kaMap.prototype.initializeOL = function( ) {
        $('#canvasBG').css('opacity', '0.33'); 
   }
   
-  
+
   /*
    * OpenLayers integration.
    * The options and the layers are defined in mapconfig.js
@@ -212,6 +212,7 @@ kaMap.prototype.initializeOL = function( ) {
      {
         projection       : utm_projection,
         displayProjection: utm_projection,
+        units            : 'm',
         numZoomLevels    : max_zoomlevels,
         zoomMethod       : null,
         maxExtent        : new OpenLayers.Bounds(max_extent[0], max_extent[1], max_extent[2], max_extent[3]),
@@ -219,15 +220,17 @@ kaMap.prototype.initializeOL = function( ) {
         minResolution    : min_resolution, 
         controls         : [new OpenLayers.Control.Navigation(), new OpenLayers.Control.Attribution()]
      });
-  
+
   
   /* Get layer setup from configuration 
    * Add some default properties if necessary 
    */
    if (baseLayers != null && baseLayers.length > 0) {
-     for (var i=0; i < baseLayers.length; i++) {
+     for (var i=0; i < baseLayers.length; i++) { 
         if ( !baseLayers[i].attribution )
            baseLayers[i].attribution = default_attribution;     
+        if ( !baseLayers[i].transitionEffect )
+           baseLayers[i].transitionEffect = null;
      }
      t.olMap.addLayers(baseLayers);
    }
@@ -247,7 +250,7 @@ kaMap.prototype.initializeOL = function( ) {
   t.viewportHeight = t.getObjectHeight(t.domObj);
   t.setBackgroundColor( backgroundColor );  
   t.triggerEvent( KAMAP_MAP_INITIALIZED );
-  
+
   /* 
    * Set up OL controls, Permalink setup, etc.. 
    */  
@@ -265,11 +268,10 @@ kaMap.prototype.initializeOL = function( ) {
   t.plink.element.innerHTML="link to this view";
   t.olMap.render(t.domObj);
 
-  
   t.triggerEvent( KAMAP_INITIALIZED );
   t.triggerEvent( KAMAP_SCALE_CHANGED, t.getCurrentScale());   
-  
-  setGray()
+
+  setGray();
   this.initializationState = 2; 
 }
 /* End of initializeOL */
@@ -405,7 +407,7 @@ kaMap.prototype.getObjectHeight = function(obj)  {
  * lat - the y coordinate to zoom to
  */
 kaMap.prototype.zoomTo = function( x, y ) {
-     var p = new OpenLayers.LonLat(x, y);
+     var p = new OpenLayers.LonLat(x, y)
      p.transform(this.utmProjection, this.getMapProjection());
      this.olMap.setCenter(p);
 };
@@ -630,8 +632,6 @@ kaMap.prototype.updateObjects = function()
         obj.style.left = left + "px";
     }
 };
-
-
 
 
 
@@ -976,6 +976,8 @@ kaMap.prototype.getUnits = function() {
 };
 
 
+
+
 /**
  * kaMap.getGeoExtents()
  *
@@ -983,7 +985,9 @@ kaMap.prototype.getUnits = function() {
  * (inx, miny, maxx, maxy)
  */
 kaMap.prototype.getGeoExtents = function() {
-    var b = this.olMap.getExtent();
+    var b = this.olMap.getExtent()
+        .transform(this.getMapProjection(), this.utmProjection);
+    
     if (b!=null)
        return b.toArray();
     OpenLayers.Console.warn("getGeoExtents: extent is null");
