@@ -216,7 +216,6 @@
        
     this.ldiv.setAttribute('id', point.pid+"_trace");
     this.ldiv.style.position = 'absolute';
-    this.ldiv.style.border = 'dotted red 1px'; 
    
     if ( _sstorage['polaric.hidetrace.'+point.pid] == 'T' || _sstorage['polaric.hidetrace.ALL'] == 'T')
        this.ldiv.style.visibility = 'hidden';
