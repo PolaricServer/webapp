@@ -23,7 +23,17 @@ v1.3.1 - removed a typo that affected .sbBar with borders (thanks jlivni)
        - added condition to deal with @import styles (thanks dokai)
 
 */
-
+function getPPI() {
+         var DOM_body = document.getElementsByTagName('body')[0];        
+         var DOM_div = document.createElement('div');
+         DOM_div.style = 'width: 1in; visibility:hidden;';
+         DOM_body.appendChild(DOM_div);
+         var w = document.defaultView.getComputedStyle(DOM_div, null).getPropertyValue('width');
+         DOM_body.removeChild(DOM_div);
+         return parseInt(w);
+  }
+  
+  
 function ScaleBar(scaleDenominator) {
     // default properties
     // may be modified after construction
@@ -37,7 +47,7 @@ function ScaleBar(scaleDenominator) {
     this.showMinorMeasures = false;
     this.abbreviateLabel = false;
     this.singleLine = false;
-    this.resolution = 72; // dpi
+    this.resolution = getPPI(); // dpi
     this.align = 'center'; // left, center, or right supported
     // create scalebar elements
     this.container = document.createElement('div');
@@ -67,6 +77,12 @@ function ScaleBar(scaleDenominator) {
     barPieceAlt.className = 'sbBarAlt';
     this.graphicsContainer.appendChild(barPieceAlt);
 }
+
+
+
+
+
+
 ScaleBar.prototype.update = function(scaleDenominator) {
     if(scaleDenominator != null) {
         this.scaleDenominator = scaleDenominator;
@@ -113,12 +129,21 @@ ScaleBar.prototype.update = function(scaleDenominator) {
         this.tieBreaker = bestTieBreaker;
         this.numDec = handsomeNumDec;
     };
+    
+    
+    
     HandsomeNumber.prototype.toString = function() {
         return this.value.toString();
     };
+    
+    
+    
     HandsomeNumber.prototype.valueOf = function() {
         return this.value;
     };
+    
+    
+    
     function styleValue(aSelector, styleKey) {
         // returns an integer value associated with a particular selector and key
         // given a stylesheet with .someSelector {border: 2px solid red}
@@ -155,6 +180,9 @@ ScaleBar.prototype.update = function(scaleDenominator) {
         // if the styleKey was not found, the equivalent value is zero
         return aValue ? aValue : 0;
     };
+    
+    
+    
     function formatNumber(aNumber, numDecimals) {
         numDecimals = (numDecimals) ? numDecimals : 0;
         var formattedInteger = '' + Math.round(aNumber);
@@ -175,21 +203,26 @@ ScaleBar.prototype.update = function(scaleDenominator) {
             return formattedInteger;
         }
     };
+    
     // update the container title (for displaying scale as a tooltip)
     this.container.title = 'scale 1:' + formatNumber(this.scaleDenominator);
+    
     // measurementProperties holds display units, abbreviations,
     // and conversion to inches (since we're using dpi) - per measurement sytem
     var measurementProperties = new Object();
+    
     measurementProperties.english = {
         units: ['miles', 'feet', 'inches'],
         abbr: ['mi', 'ft', 'in'],
         inches: [63360, 12, 1]
     };
+    
     measurementProperties.metric = {
         units: ['kilometers', 'meters', 'centimeters'],
         abbr: ['km', 'm', 'cm'],
         inches: [39370.07874, 39.370079, 0.393701]
     };
+    
     // check each measurement unit in the display system
     var comparisonArray = new Array();
     for(var unitIndex = 0; unitIndex < measurementProperties[this.displaySystem].units.length; ++unitIndex) {
@@ -260,6 +293,7 @@ ScaleBar.prototype.update = function(scaleDenominator) {
         xOffsetMarkerMajor = 0.5;
         xOffsetMarkerMinor = 0.5;
     }
+    
     // clean out any old content from containers
     while(this.labelContainer.hasChildNodes()) {
         this.labelContainer.removeChild(this.labelContainer.firstChild);
@@ -429,6 +463,9 @@ ScaleBar.prototype.update = function(scaleDenominator) {
     this.container.appendChild(this.labelContainer);
     this.container.appendChild(this.numbersContainer);
 };
+
+
+
 ScaleBar.prototype.place = function(elementId) {
     if(elementId == null) {
         document.body.appendChild(this.container);

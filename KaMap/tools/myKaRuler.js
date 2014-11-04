@@ -232,7 +232,7 @@ myKaRuler.prototype.onmousemove = function(e) {
     e = (e)?e:((event)?event:null);
    //show coordinate
     var x = e.pageX || (e.clientX +
-                    (document.documentElement.scrollLeft || document.body.scrollLeft));
+          (document.documentElement.scrollLeft || document.body.scrollLeft));
     var y = e.pageY || (e.clientY +
           (document.documentElement.scrollTop || document.body.scrollTop));
       
@@ -244,7 +244,7 @@ myKaRuler.prototype.onmousemove = function(e) {
 
     if(this.input)
     {
-      if(this.kaMap.getCurrentMap().units == 5)
+      if(this.kaMap.getCurrentMap().units == 'degrees')
           this.input.value = "Lon.: "+gX+" Lat.: "+gY;
       else
           this.input.value = "X: "+gX+" Y: "+gY;
@@ -257,7 +257,7 @@ myKaRuler.prototype.onmousemove = function(e) {
     {
        this.endx=x;
        this.endy=y;
-       if(this.kaMap.getCurrentMap().units == 5)    {
+       if(this.kaMap.getCurrentMap().units == 'degrees')    {
           this.measureSeg.value =
              this.showDist(this.measureSphericalDistance2Points(this.startx,this.starty,this.endx,this.endy));
        }else{
@@ -306,7 +306,7 @@ myKaRuler.prototype.onmousedown = function(e) {
            this.endy=y;
        }
                
-       if(this.kaMap.getCurrentMap().units == 5)    {
+       if(this.kaMap.getCurrentMap().units == 'degrees')    {
            this.total += 
               this.measureSphericalDistance2Points(this.startx,this.starty,this.endx,this.endy);
        }else{
@@ -352,8 +352,8 @@ myKaRuler.prototype.onmouseup = function(e) {
 myKaRuler.prototype.measureSphericalDistance2Points = 
 function(pix1,piy1,pix2,piy2)
 {
-    var pt1 = this.kaMap.pixToGeo(pix1,piy1);
-    var pt2 = this.kaMap.pixToGeo(pix2,piy2);
+    var pt1 = this.kaMap.pixToGeo(pix1, piy1);
+    var pt2 = this.kaMap.pixToGeo(pix2, piy2);
     /* Convert all the degrees to radians */
     var la1 = pt1[0] * Math.PI/180.0;
     var lo1 = pt1[1] * Math.PI/180.0;
@@ -362,8 +362,8 @@ function(pix1,piy1,pix2,piy2)
     /* Find the Great Circle distance */
     var EARTH_RADIUS = 6378;//kilometers //3956;//miles
     var distance = 
-Math.acos(Math.sin(la1)*Math.sin(la2)+Math.cos(la1)*Math.cos(la2)*Math.cos(lo2-lo1)) 
-* EARTH_RADIUS ;
+    Math.acos(Math.sin(la1)*Math.sin(la2)+Math.cos(la1)*Math.cos(la2)*Math.cos(lo2-lo1)) 
+     * EARTH_RADIUS ;
     return distance ;
 };
 
@@ -379,14 +379,11 @@ Math.acos(Math.sin(la1)*Math.sin(la2)+Math.cos(la1)*Math.cos(la2)*Math.cos(lo2-l
 */
 myKaRuler.prototype.measure2points = function(p1X,p1Y,p2X,p2Y)
 {
-    // Diff X/Y between current new and previous click
-    var x_delta = p1X - p2X;
-    var y_delta = p1Y - p2Y;
-    // Segment length in Pixel
-    var segLenPix = Math.sqrt((Math.pow(x_delta, 2)) + (Math.pow(y_delta, 2)));
-    // Segment length in  map coordinates,  write values to input boxes
-    var extent = this.kaMap.getGeoExtents();
-    var xdelta_geo = extent[2]-extent[0];
-    var segLenGEO = parseInt( ((segLenPix/this.kaMap.viewportWidth ) * xdelta_geo)*100 )/100;
+    var pt1 = this.kaMap.pixToGeo(p1X, p1Y);
+    var pt2 = this.kaMap.pixToGeo(p2X, p1Y);
+    var x_delta = pt1[0] - pt2[0]; 
+    var y_delta = pt1[1] - pt2[1]; 
+    
+    var segLenGEO = Math.sqrt((Math.pow(x_delta, 2)) + (Math.pow(y_delta, 2)));
     return segLenGEO;
 };
