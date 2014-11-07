@@ -395,13 +395,23 @@ var currentScale = -1;
 function myScaleChanged( eventID, scale ) 
 {
     scale = Math.round(scale);   
+    OpenLayers.Console.info("SCALE CHANGED: ", scale);
     currentScale = scale;
     myScalebar.update(scale);    
+    if (scale >= 1000)
+        scale = Math.round(scale / 100) * 100;
+    if (scale >= 10000)
+        scale = Math.round(scale / 1000) * 1000;
+   
     if (scale >= 1000000) {
+        scale = Math.round(scale / 100000) * 100000; 
         scale = scale / 1000000;
         scale = scale + " Million";
     }
-    var outString = 'current scale 1 : '+ scale;
+    else if (scale >= 10000)
+        scale = (Math.round(scale/1000) + " 000");
+    
+    var outString = 'current scale  1 : '+ scale;
     getRawObject('scale').innerHTML = outString;
 }
 
