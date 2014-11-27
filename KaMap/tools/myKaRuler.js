@@ -380,7 +380,7 @@ function(pix1,piy1,pix2,piy2)
 myKaRuler.prototype.measure2points = function(p1X,p1Y,p2X,p2Y)
 {
     var pt1 = this.kaMap.pixToGeo(p1X, p1Y);
-    var pt2 = this.kaMap.pixToGeo(p2X, p1Y);
+    var pt2 = this.kaMap.pixToGeo(p2X, p2Y);
     var x_delta = pt1[0] - pt2[0]; 
     var y_delta = pt1[1] - pt2[1]; 
     
