@@ -1,11 +1,16 @@
 /* 
- * Seems like we need to define projections explicitly. 
- * Alternatively, Openlayers may be set up to query this information online (??)
+ * Configuration file for polaric-webapp. This is actually javascript code.
+ * 
+ * Version 1.6 supports changing UTM projection for maps. This is experimental. 
+ * If changing You may need to add the EPSG definition, e.g. if you want to use 
+ * zone 35. 
  *
- * FIXME: Need to investigate this more. Put definitions in a separate file?  
+ * Proj4js.defs["EPSG:32635"] = "+proj=utm +zone=35 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";*
+ *
+ * If you change projection/zone you must update max_extent and you may need to 
+ * update layers and mapcache.xml as well. 
+ *
  */
-// Proj4js.defs["EPSG:32633"] = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
-// Proj4js.defs["EPSG:32635"] = "+proj=utm +zone=35 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
 
 
 
@@ -52,11 +57,11 @@ var backgroundColor = '#A1C1C9';
 var baseLayers = [
 
   new OpenLayers.Layer.TMS(
-     "KV Topo2/Europa (cache)", "http://osys.no/mapcache/tms/",
+     "KV Topo2/Europa (cache)", "/mapcache/tms/",
        {  layername: 'kv_topo2', type: 'jpg' }
   ),      
   new OpenLayers.Layer.TMS(
-     "KV Grunnkart (cache)", "http://osys.no/mapcache/tms/",
+     "KV Grunnkart (cache)", "/mapcache/tms/",
        {  layername: 'kv_grunnkart', type: 'jpg', gray: '0'}
   ),    
   new OpenLayers.Layer.WMS(
