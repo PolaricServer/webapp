@@ -136,8 +136,8 @@ ctxtMenu.addCallback('ITEM', function(m)
 function popup_editObject(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
-    fullPopupWindow('Objekt', server_url + 'srv/addobject' +
-          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1])+'&utmz='+utmzone, 550, 280);
+    fullPopupWindow('Objekt', server_url + 'srv/addobject' + '?utmz='+utmzone +
+          (x==null ? "" : '&x=' + coord[0] + '&y='+ coord[1]), 550, 300);
 }
 
 
@@ -148,8 +148,8 @@ function popup_editObject(x, y)
 function popup_setOwnPos(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
-    fullPopupWindow('Posisjon', server_url + 'srv/setownpos' +
-           (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1])+'&utmz='+utmzone, 500, 200);
+    fullPopupWindow('Posisjon', server_url + 'srv/setownpos' + '?utmz='+utmzone +
+           (x==null ? "" : '&x=' + coord[0] + '&y='+ coord[1]), 500, 220);
 }
 
 
@@ -169,7 +169,7 @@ function popup_deleteObject(ident) {
  ***************************************************************/
 
 function popup_resetInfo(ident) {
-    fullPopupWindow('Stasjon', server_url + 'srv/resetinfo'+ (ident==null ? "" : '?objid='+ident), 350, 200);
+    fullPopupWindow('Stasjon', server_url + 'srv/resetinfo'+ (ident==null ? "" : '?objid='+ident), 420, 200);
 }
 
 
@@ -180,7 +180,7 @@ function popup_resetInfo(ident) {
  ***********************************************************/ 
 
 function popup_sarMode() {
-    fullPopupWindow('SarMode', server_url + 'srv/sarmode', 480, 310);
+    fullPopupWindow('SarMode', server_url + 'srv/sarmode', 480, 330);
 }
 
 
@@ -222,7 +222,7 @@ function popup_stationInfo(ident, edit, x, y)
       
   else {
       var url = server_url + (getLogin() ? 'srv/station_sec?id=' : 'srv/station?id=');
-      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 730, 520);
+      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 770, 570);
   } 
 }
 
