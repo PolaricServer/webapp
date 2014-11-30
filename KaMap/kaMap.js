@@ -119,6 +119,18 @@ function kaMap( szID ) {
     
     this.thandler = new touchHandler();
     this.createLayers();
+    
+    /*
+     * OpenLayes dont always get right DPI for screen. 
+     * This is a workaround. 
+     */
+    var DOM_body = document.getElementsByTagName('body')[0];        
+    var DOM_div = document.createElement('div');
+    DOM_div.style = 'width: 1in; visibility:hidden;';
+    DOM_body.appendChild(DOM_div);
+    var w = document.defaultView.getComputedStyle(DOM_div, null).getPropertyValue('width');
+    DOM_body.removeChild(DOM_div);
+    OpenLayers.DOTS_PER_INCH = parseInt(w);
 };
  
  
@@ -202,6 +214,8 @@ kaMap.prototype.initializeOL = function( ) {
     else
        $('#canvasBG').css('opacity', '0.33'); 
   }
+  
+
   
 
   /*
@@ -415,7 +429,7 @@ kaMap.prototype.zoomTo = function( x, y ) {
 
 kaMap.prototype.zoomToPix = function(x, y, t)
 { 
-  var coord = this.pixToGeo(x,y-5);
+  var coord = this.pixToGeo(x, y-5);
   this.zoomToGeo(coord[0], coord[1], t);
 }
 
@@ -432,7 +446,7 @@ kaMap.prototype.zoomToGeo = function(x, y, t)
   var tx = cx * t;
   var ty = cy * t; 
   if (x < xx+cx-tx || x > xx+cx+tx || y < xy+cy-ty || y > xy+cy+ty) {
-    this.zoomTo(x,y);
+    this.zoomTo(x, y);
   }
 }
 
