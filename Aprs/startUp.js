@@ -396,6 +396,7 @@ function myScaleChanged( eventID, scale )
 {
     scale = Math.round(scale);   
     OpenLayers.Console.info("SCALE CHANGED: ", scale);
+    OpenLayers.Console.info("--resolution: ", myKaMap.getResolution());
     currentScale = scale;
     myScalebar.update(scale);    
     if (scale >= 1000)
@@ -439,13 +440,13 @@ function myExtentChanged( eventID, extents )
                storage[uid+'.extents.3'] = Math.round(extents[3]).toString();
                storage[uid+'.baselayer'] = myKaMap.getBaseLayer().id; 
            }
-           
+           setTimeout(function() {myKaMap.evaluateLayers();}, 50);
            if (initialized) {
                setTimeout( function() { getXmlData(false);}, 500);
                myKaMap.updateObjects();
            } 
-          else
-           setTimeout( function() { getXmlData(false);}, 2000);
+           else
+               setTimeout( function() { getXmlData(false);}, 2000);
            prev_extents = extents;
        } 
        myKaRuler.reset();

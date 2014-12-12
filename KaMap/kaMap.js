@@ -119,6 +119,9 @@ function kaMap( szID ) {
     
     this.thandler = new touchHandler();
     this.createLayers();
+    this.prevProj = null; 
+    this.prevScale = 0;
+    this.prevGda = 1;
     
     /*
      * OpenLayes dont always get right DPI for screen. 
@@ -184,9 +187,12 @@ kaMap.prototype.initialize = function() {
 kaMap.prototype.initializeOL = function( ) {
   var t = this; 
   
+  
   /* map OpenLayers events to kaMap events */
   function zoomEnd() {
-    t.triggerEvent(KAMAP_SCALE_CHANGED, this.getCurrentScale());
+    OpenLayers.Console.info("ZOOM END: scale=", this.getCurrentScale());
+    this.prevScale = this.getCurrentScale();
+    t.triggerEvent(KAMAP_SCALE_CHANGED, this.prevScale);
     t.triggerEvent(KAMAP_EXTENTS_CHANGED, this.getGeoExtents());
   }
   
@@ -202,11 +208,38 @@ kaMap.prototype.initializeOL = function( ) {
     t.triggerEvent(KAMAP_MOVE_START);
   }
   
-  /* Triggered each time user changes base layer */
-  function layerChange() {
+  
+  /* This function is called each time the user changes base layer */
+  function layerChange() { 
+    
+    /* First, get the center point of the map, transform the coordinates
+     * and re-center the map of the layer. This is necessary if switching
+     * from a UTM to a spherical mercator projection. 
+     */
+    var center = this.olMap.getCenter(); 
+    if (center==null)
+       return;  
+    center = center.transform(this.prevProj, this.getMapProjection());
+    t.olMap.setCenter(center);
+    
+    /* If the projection is sperical mercator, we do a geodetic adjustment 
+     * of the scale. It may be necessary to zoom the map accordingly, if 
+     * switching to/from a spherical mercator projection. 
+     */
+    var gda = this.geodeticAdjustment(); 
+    if (gda < 1)
+       t.zoomToScale(t.olMap.getScale()/(gda*1.4), true);
+    else if (t.prevGda < 1) 
+       t.zoomToScale(t.olMap.getScale()*(t.prevGda/1.4), true);
+    
+    this.prevProj = this.getMapProjection();
+    this.prevGda = gda;
+  
     setGray();
     t.triggerEvent(KAMAP_LAYERS_CHANGED);
+    t.triggerEvent(KAMAP_SCALE_CHANGED, this.getCurrentScale());
   }
+  
   
   function setGray() {    
     if (t.getBaseLayer().gray)
@@ -225,7 +258,7 @@ kaMap.prototype.initializeOL = function( ) {
   t.olMap = new OpenLayers.Map(
      {
         projection       : utm_projection,
-        displayProjection: utm_projection,
+//        displayProjection: utm_projection,
         units            : 'm',
         numZoomLevels    : max_zoomlevels,
         zoomMethod       : null,
@@ -235,20 +268,10 @@ kaMap.prototype.initializeOL = function( ) {
         controls         : [new OpenLayers.Control.Navigation(), new OpenLayers.Control.Attribution()]
      });
 
-  
-  /* Get layer setup from configuration 
-   * Add some default properties if necessary 
-   */
-   if (baseLayers != null && baseLayers.length > 0) {
-     for (var i=0; i < baseLayers.length; i++) { 
-        if ( !baseLayers[i].attribution )
-           baseLayers[i].attribution = default_attribution;     
-        if ( !baseLayers[i].transitionEffect )
-           baseLayers[i].transitionEffect = null;
-     }
-     t.olMap.addLayers(baseLayers);
-   }
+   t.addLayers();
 
+
+   
   /* Map views (pre-selected areas). Initialize a dictionary 
    * using name as index 
    */
@@ -281,14 +304,54 @@ kaMap.prototype.initializeOL = function( ) {
   document.getElementById('permolink').appendChild(this.plink.draw());
   t.plink.element.innerHTML="link to this view";
   t.olMap.render(t.domObj);
-
+  this.prevScale = this.getCurrentScale();
+  
   t.triggerEvent( KAMAP_INITIALIZED );
   t.triggerEvent( KAMAP_SCALE_CHANGED, t.getCurrentScale());   
 
   setGray();
+  this.prevProj = this.getMapProjection();
   this.initializationState = 2; 
 }
 /* End of initializeOL */
+
+
+kaMap.prototype.addLayers = function() {
+  if (mapLayers != null && mapLayers.length > 0) 
+    for (var i=0; i < mapLayers.length; i++) 
+        this.olMap.addLayer(mapLayers[i].layer);
+};
+
+
+/*
+ * Re-evaluate what layers to be shown in layer switcher list. 
+ */
+kaMap.prototype.evaluateLayers = function() {
+  var vlayer = -1; 
+  if (mapLayers != null && mapLayers.length > 0) {
+     for (var i=0; i < mapLayers.length; i++) { 
+        var pred = mapLayers[i].predicate(); 
+        mapLayers[i].layer.displayInLayerSwitcher = pred;
+        
+        if (mapLayers[i].layer.isBaseLayer && mapLayers[i].layer.getVisibility()) {
+            mapLayers[i].layer.setVisibility(false);
+            if (pred) 
+                vlayer = i; 
+        }
+     }
+     if (vlayer == -1) {
+       for (var i=0; i < mapLayers.length; i++)  
+         if (mapLayers[i].layer.isBaseLayer && mapLayers[i].layer.displayInLayerSwitcher) {
+              this.olMap.baseLayer = mapLayers[i].layer;
+              this.olMap.events.triggerEvent("changebaselayer");
+              mapLayers[i].layer.setVisibility(true);  
+              return; 
+          }
+     }  
+     else
+        mapLayers[vlayer].layer.setVisibility(true);
+  }
+};
 
 
 
@@ -466,6 +529,11 @@ kaMap.prototype.zoomToExtents = function(minx, miny, maxx, maxy) {
       b.transform(this.utmProjection, this.getMapProjection());
       this.olMap.zoomToExtent(b, true);
 };
+
+
+kaMap.prototype.getExtent = function () {
+   return this.olMap.getExtent(); 
+}
 
 
 
@@ -1024,8 +1092,20 @@ kaMap.prototype.zoomToScale = function( scale ) {
 };
 
 
+kaMap.prototype.geodeticAdjustment = function() {
+    if (/EPSG:(900913|3857|4326)/.test(this.olMap.getProjection()) && this.olMap.getCenter() != null) { 
+       var center = this.olMap.getCenter().transform(this.getMapProjection(), "EPSG:4326");
+       return Math.cos(center.lat/180*Math.PI ); 
+    }
+    else
+       return 1;
+};
+
+
 kaMap.prototype.getCurrentScale = function() {
-    return this.olMap==null ? null : this.olMap.getScale();
+    if (this.olMap==null)
+       return null;
+    return this.olMap.getScale()*this.geodeticAdjustment();
 };
 
 
