@@ -32,6 +32,8 @@ var utm_zone       = 33;
  * Default map extents. Resolutions and number of zoom levels.
  * Can (probably) be overridden by the individual base layers.  
  */ 
+
+
 var max_extent     = [-2500000.0,3500000.0,3045984.0,9045984.0];
 var max_resolution = 1354.0; 
 var min_resolution = 0.6611328;
@@ -48,36 +50,113 @@ var backgroundColor = '#A1C1C9';
 
 /*
  * List of base layers. This is a fairly straightforward OpenLayers way
- * of setting up layers. See OpenLayers documentation if you want hack this..
+ * of setting up layers. Use the LAYER function to add a set of layers. This 
+ * can be used more than once. 
+ * 
+ * The LAYERS function takes three arguments: 
+ *    - if this is a base layer (boolean)
+ *    - A predicate (a function returning a boolean value). This acts as a filter. 
+ *      if evaluated to true the layers are shown in layer list. The predefined TRUE 
+ *      always evaluates to true.
+ *    - An array of layers. See OpenLayers documentation. 
  *
  * To add GPX vector layers, put the gpx files in directory /gpx and
  * use the function add_Gpx_Layer(name, file) to add them to the list like 
  * in the example below. 
  */
-var baseLayers = [
+     
 
-  new OpenLayers.Layer.TMS(
-     "KV Topo2/Europa (cache)", "/mapcache/tms/",
-       {  layername: 'kv_topo2', type: 'jpg' }
-  ),      
-  new OpenLayers.Layer.TMS(
-     "KV Grunnkart (cache)", "/mapcache/tms/",
-       {  layername: 'kv_grunnkart', type: 'jpg', gray: '0'}
-  ),    
-  new OpenLayers.Layer.WMS(
+/*
+LAYERS ( base-layer (boolean), 
+         predicate (function), 
+         [ ... ] );
+*/
+
+var Danmark = POLYGON( [ 
+        {lat:54.528, lng:12.177}, {lat:54.453, lng:8.178},  {lat:56.948, lng:7.861},  {lat:57.986, lng:10.707}, 
+        {lat:56.171, lng:12.450}, {lat:55.868, lng:12.746}, {lat:54.951, lng:12.703}, {lat:54.432, lng:11.928} ] );
+
+var Norge = POLYGON( [
+        {lat:58.979, lng:11.557}, {lat:58.692, lng:9.725},  {lat:57.819, lng:7.408},  {lat:58.911, lng:4.911}, 
+        {lat:62.343, lng:4.428},  {lat:64.567, lng:9.962},  {lat:67.99,  lng:11.675}, {lat:70.029, lng:16.842}, 
+        {lat:71.528, lng:26.154}, {lat:70.39,  lng:31.944}, {lat:69.19,  lng:29.1},   {lat:70.05,  lng:27.899}, 
+        {lat:68.481, lng:24.854}, {lat:68.979, lng:21.04},  {lat:68.306, lng:20.021}, {lat:68.349, lng:18.581}, 
+        {lat:64.618, lng:13.877}, {lat:64.414, lng:14.363}, {lat:63.957, lng:14.014}, {lat:63.963, lng:12.853},
+        {lat:61.782, lng:12.287}, {lat:61.244, lng:12.971} ] );
+
+
+
+LAYERS (true, TRUE, [
+   new OpenLayers.Layer.TMS(
+      "KV Topo2/Europa (cache)", "https://aprs.no/mapcache/tms/",
+      {  layername: 'kv_topo2eu', type: 'jpg' }
+   ),
+   new OpenLayers.Layer.OSM("OpenStreetMap", null, {gray: '0.1'})
+]);
+
+
+
+LAYERS (true, function() { return is_visible(Norge); },
+[
+   new OpenLayers.Layer.TMS(
+      "KV Grunnkart (cache)", "/mapcache/tms/",
+      {  layername: 'kv_grunnkart', type: 'jpg', gray: '0'}
+   ),
+   new OpenLayers.Layer.WMS(
      "Kartverket Raster", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
-       {  layers: 'toporaster2',
-          format: 'image/png' }
-  ),                  
-  new OpenLayers.Layer.WMS(
+     {  layers: 'toporaster2',
+       format: 'image/png' }
+   ),
+   new OpenLayers.Layer.WMS(
      "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
-       {  layers: 'sjo_hovedkart2',
-          format: 'image/png' }
-  )
-  
-/* Example of how to add a GPX layer: Uncomment and modify the line below.. */
-/* , add_Gpx_Layer("Skarverennet", "gpx/Skarverennet.gpx")  */  
-];       
+     {  layers: 'sjo_hovedkart2',
+       format: 'image/png' }
+   )
+] );
+
+
+
+LAYERS (false, TRUE,
+[  
+    new OpenLayers.Layer.WMS(
+      "UTM/MGRS Rutenett", "http://openwms.statkart.no/skwms1/wms.rutenett",
+      {layers:'UTMrutenett',transparent: true},
+      {isBaseLayer: false, singleTile: true, ratio: 1, visibility: false}
+    )
+]);
+
+
+
+LAYERS ( false, 
+         function() { return is_visible(Norge) && projection() == utm_projection; },
+[  
+   new OpenLayers.Layer.WMS(
+      "Kartblad", "http://wms.geonorge.no/skwms1/wms.kartblad",
+      {layers:'Kartblad_WMS',transparent: true},
+      {isBaseLayer: false,singleTile: true, ratio: 1, visibility: false}
+   ), 
+   new OpenLayers.Layer.WMS(
+     "Naturvernområder (DN)", "http://arcgisproxy.dirnat.no/arcgis/services/vern/MapServer/WmsServer",
+     {layers:'naturvern_klasser_omrade',transparent: true},
+     {isBaseLayer: false, singleTile: true, ratio: 1, visibility: false}
+   )
+]);
+                         
+
+
+LAYERS ( true, 
+         function()  { return scale() < 1000000 && is_visible(Danmark); }, 
+[
+   new OpenLayers.Layer.TMS(
+      "Danmark (cache)", "https://aprs.no/mapcache/tms/",
+         { layername: 'danmark', type: 'jpg', gray: '0.25'}
+   ),
+   new OpenLayers.Layer.TMS(
+     "Danmark Topo(cache)", "https://aprs.no/mapcache/tms/",
+         { layername: 'danmark_topo', type: 'jpg'}
+   )
+] );
+
 
 
 
