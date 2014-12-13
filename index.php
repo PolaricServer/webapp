@@ -109,7 +109,7 @@ include_once( 'webappconfig.php' );
 <script type="text/javascript" src="jquery/jquery-ui-min.js"></script>
 <script type="text/javascript" src="OpenLayers/openlayers-polaric.js"></script>
 <script type="text/javascript" src="proj4js-compressed.js"></script>
-<script type="text/javascript" src="Aprs/gpx.js"></script>
+<script type="text/javascript" src="Aprs/configSupport.js"></script>
 <script type="text/javascript" src="mapconfig.js"></script>
 
 
@@ -140,7 +140,6 @@ include_once( 'webappconfig.php' );
      echo('<script type="text/javascript" src="Aprs/statkartWPS.js"></script>');
      echo('<script type="text/javascript" src="Aprs/statkartName.js"></script>');
      echo('<script type="text/javascript" src="Aprs/WXreport.js"></script>');
-     echo('<script type="text/javascript" src="Aprs/gpx.js"></script>');
      echo('<script type="text/javascript" src="Aprs/api.js"></script>');
      echo('<script type="text/javascript" src="Aprs/iscroll.js"></script>');
      echo('<script type="text/javascript" src="Aprs/popup.js"></script>');  
