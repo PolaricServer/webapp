@@ -227,9 +227,9 @@ kaMap.prototype.initializeOL = function( ) {
      * switching to/from a spherical mercator projection. 
      */
     var gda = this.geodeticAdjustment(); 
-    if (gda < 1)
+    if (gda < 1 && t.prevGda == 1) 
        t.zoomToScale(t.olMap.getScale()/(gda*1.4), true);
-    else if (t.prevGda < 1) 
+    else if (t.prevGda < 1 & gda == 1) 
        t.zoomToScale(t.olMap.getScale()*(t.prevGda/1.4), true);
     
     this.prevProj = this.getMapProjection();
