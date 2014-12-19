@@ -145,6 +145,8 @@ div .transparentBackground {
     font-size: 12px;
 }
 
+#geoPosition .latlng {font-size: smaller; color: blue; background: #dd9; margin-left: 1em; padding: 1px 3px 1px 3px}
+
 #legend {
     position: relative;
     width: 250px;

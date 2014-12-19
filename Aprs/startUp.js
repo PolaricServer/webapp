@@ -298,22 +298,29 @@ function welcome()
 }
 
 
-/* Construct a query string (for server) representing the current map extent */
+/*
+ * Construct a query string (for server) representing the current map extent 
+ */
 function extentQuery()
 {
     var ext = myKaMap.getGeoExtents();
     var flt = "";
     if (filterProfiles.selectedProf() != null)
         flt = "&filter="+filterProfiles.selectedProf();
-    return "x1="  + Math.round(ext[0]) + "&x2="+ Math.round(ext[1]) +
-           "&x3=" + Math.round(ext[2]) + "&x4="+ Math.round(ext[3]) + flt ;
+    return "x1="  + roundDeg(ext[0]) + "&x2="+ roundDeg(ext[1]) +
+           "&x3=" + roundDeg(ext[2]) + "&x4="+ roundDeg(ext[3]) + flt ;
 }
 
+function roundDeg(x)
+   { return Math.round(x*1000)/1000; } 
 
-/* Get XML data from server */
+/* 
+ * Get XML overlay data from server.  
+ */
 var xmlSeqno = 0;
 var retry = 0;
 var lastXmlCall = 0;
+
 
 
 function getXmlData(wait, metaonly)
@@ -324,7 +331,7 @@ function getXmlData(wait, metaonly)
    
    var i = myOverlay.loadXml(url+extentQuery() + "&scale="+currentScale+
                   (wait?"&wait=true":"") + (clientses!=null? "&clientses="+clientses : "") + 
-                   (metaonly? "&metaonly=true" : "") + "&utmz="+utmzone );
+                  (metaonly? "&metaonly=true" : "") + "&utmz="+utmzone );
    lastXmlCall = i; 
    
    var _xmlSeq = xmlSeqno;
@@ -346,7 +353,9 @@ function getXmlData(wait, metaonly)
 }
 
 
-
+/*
+ * Called if Ajax call to server fails. 
+ */
 function postLoadXml_Fail()
 {
   OpenLayers.Console.warn("XML Call: Not found");
@@ -395,25 +404,26 @@ var currentScale = -1;
 function myScaleChanged( eventID, scale ) 
 {
     scale = Math.round(scale);   
-    OpenLayers.Console.info("SCALE CHANGED: ", scale);
-    OpenLayers.Console.info("--resolution: ", myKaMap.getResolution());
-    currentScale = scale;
-    myScalebar.update(scale);    
-    if (scale >= 1000)
-        scale = Math.round(scale / 100) * 100;
-    if (scale >= 10000)
-        scale = Math.round(scale / 1000) * 1000;
+    if (scale != currentScale) {
+        OpenLayers.Console.info("SCALE CHANGED: ", scale);
+        currentScale = scale;
+        myScalebar.update(scale);    
+        if (scale >= 1000)
+            scale = Math.round(scale / 100) * 100;
+        if (scale >= 10000)
+            scale = Math.round(scale / 1000) * 1000;
    
-    if (scale >= 1000000) {
-        scale = Math.round(scale / 100000) * 100000; 
-        scale = scale / 1000000;
-        scale = scale + " Million";
-    }
-    else if (scale >= 10000)
-        scale = (Math.round(scale/1000) + " 000");
+        if (scale >= 1000000) {
+            scale = Math.round(scale / 100000) * 100000; 
+            scale = scale / 1000000;
+            scale = scale + " Million";
+        }
+        else if (scale >= 10000)
+            scale = (Math.round(scale/1000) + " 000");
     
-    var outString = 'current scale  1 : '+ scale;
-    getRawObject('scale').innerHTML = outString;
+        var outString = 'current scale  1 : '+ scale;
+        getRawObject('scale').innerHTML = outString;
+    }
 }
 
 
@@ -450,6 +460,7 @@ function myExtentChanged( eventID, extents )
            prev_extents = extents;
        } 
        myKaRuler.reset();
+       myScaleChanged(null, myKaMap.getCurrentScale());
 }
 
 
@@ -468,7 +479,7 @@ function myLayersChanged(eventID, map) {
 function myQuery( eventID, queryType, coords ) 
 {
     if (menuMouseSelect()) {
-       popup_posInfo(coords); 
+       popup_posInfoXY(coords[0], coords[1]); 
     }
     return false;  
 }
@@ -486,12 +497,18 @@ function myMapClicked( eventID, coords ) {
  * Event handler (KaMap callback)
  */
 function myMouseMoved( eventID, position) {
-    /* Note. Zone letter in UTM reference is redundant. */ 
-    var uref = new UTMRef(position.x, position.y, 'W', utmzone);
-    var llref = uref.toLatLng();     
-    geopos.innerHTML = '&nbsp; ' + llref.toUTMRef() + '<br>'+ll2Maidenhead(llref.lat, llref.lng);
-}
+    var llref = new LatLng(position.y, position.x);     
+    var uref = llref.toUTMRef();
+    geopos.innerHTML = llref.toUTMRef() + '<br>'+ll2Maidenhead(llref.lat, llref.lng) + '&nbsp;<span class="latlng">' + 
+        formatDeg(llref)+'</span>';
 
+  function formatDeg(llref) {
+     latD = Math.floor(Math.abs(llref.lat)); 
+     lonD = Math.floor(Math.abs(llref.lng));
+     return latD+"\u00B0 " + Math.round((Math.abs(llref.lat)-latD)*60)+"\' " + (llref.lat<0 ? "S " : "N ") + "&nbsp;" + 
+            lonD+"\u00B0 " + Math.round((Math.abs(llref.lng)-lonD)*60)+"\' " + (llref.lng<0 ? "W" : "E") ;
+  }
+}
 
 
 function myObjectClicked(ident, e, href, title) 

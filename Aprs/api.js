@@ -129,8 +129,8 @@
       var args = info.split(/\s*,\s*/g);
       if (args == null || args.length < 3)
          return;
-      var x = parseInt(args[1], 10);
-      var y = parseInt(args[2], 10);
+      var x = parseFloat(args[1]);
+      var y = parseFloat(args[2]);
       if (isNaN(x) || isNaN(y))
          return;
       myKaMap.zoomTo(x, y);
@@ -155,7 +155,7 @@
  
  function gotoPos(x, y)
  {
-   doRefSearchUtm(x, y, 'W', this.utmzone, true)
+   doRefSearchUtm(x, y, this.utmnzone, this.utmzone, true)
  }
  
  
@@ -169,36 +169,38 @@
     var y = parseInt(ay, 10);
     if (isNaN(x) || isNaN(y))
       return;
- 
-    var ext = myKaMap.getGeoExtents();
-    var cref = new UTMRef((ext[0] + ext[2]) / 2, (ext[1] + ext[3]) / 2,  'W',  this.utmzone);
-    cref = cref.toLatLng().toUTMRef(); 
+    
+    /* find center of map */
+    var center = myKaMap.getCenter();
+    var ref = new LatLng(center.lat, center.lon); 
+    var cref = ref.toUTMRef();
+    
+    /* Replace part of the UTM reference with arguments */
     var bx = Math.floor(cref.easting  / 100000) * 100000;
     var by = Math.floor(cref.northing / 100000) * 100000; 
     var uref = new UTMRef(bx + x * 100,  by + y * 100, cref.latZone, cref.lngZone); 
  
     /* TODO: We should actually try to show a 100x100m area */
-    _doRefSearchUtm(uref);
+    doRefSearch(uref.toLatLng());
  }
  
- 
+
  
  
  /**************************************************************************************
-  * doRefSearchLatLong - Move map to a specific location
+  * doRefSearchDM - Move map to a specific location
   *    nd, nm, ed, em - coordinates in LatLong projection
   **************************************************************************************/
- 
- function doRefSearchLatlong(nd, nm, ed, em)
+ // FIXME : order -> lon, lat
+ function doRefSearchDM(nd, nm, ed, em)
  {  
    removePopup();
    var yd = parseInt(nd, 10);
    var ym = parseFloat(nm);
    var xd = parseInt(ed, 10);
    var xm = parseFloat(em);
-   var ll = new LatLng(yd+ym/60, xd+xm/60);
-   var uref = ll.toUTMRef();
-   _doRefSearchUtm(uref);
+   var ref = new LatLng(yd+ym/60, xd+xm/60);
+   doRefSearch(ref);
  }
  
  
@@ -219,15 +221,14 @@
    if (isNaN(x) || isNaN(y) || isNaN(z))
      return;
    var uref = new UTMRef(x, y, nz, z);
-   _doRefSearchUtm(uref, hide);
+   var ref = uref.toLatLng();
+   doRefSearch(ref, hide);
  }
  
  
- function _doRefSearchUtm(uref, hide) {
-   /* This is a hack, but the coordinates need to be in the same zone as the map */
-   var uref_map = uref.toLatLng().toUTMRef('W', this.utmzone);
-   myKaMap.zoomTo(uref_map.easting, uref_map.northing);
-   setTimeout( function() { popup_posInfoUtm(uref_map, hide);}, 1500 );
+ function doRefSearch(ref, hide) {
+   myKaMap.zoomTo(ref.lng, ref.lat);
+   setTimeout( function() { popup_posInfo(ref, hide);}, 1500 );
  }
  
  

@@ -122,6 +122,7 @@ function kaMap( szID ) {
     this.prevProj = null; 
     this.prevScale = 0;
     this.prevGda = 1;
+    this.llProjection = "EPSG:4326";
     
     /*
      * OpenLayes dont always get right DPI for screen. 
@@ -484,8 +485,8 @@ kaMap.prototype.getObjectHeight = function(obj)  {
  * lat - the y coordinate to zoom to
  */
 kaMap.prototype.zoomTo = function( x, y ) {
-     var p = new OpenLayers.LonLat(x, y)
-     p.transform(this.utmProjection, this.getMapProjection());
+     var p = new OpenLayers.LonLat(x, y);
+     p.transform(this.llProjection, this.getMapProjection());
      this.olMap.setCenter(p);
 };
 
@@ -499,6 +500,7 @@ kaMap.prototype.zoomToPix = function(x, y, t)
 
 kaMap.prototype.zoomToGeo = function(x, y, t)
 {      
+  // FIXME: Must do the proper transformation of extent here?????
   var extents = this.getGeoExtents();
   var xx = extents[0];
   var xy = extents[1]; 
@@ -526,7 +528,7 @@ kaMap.prototype.zoomToGeo = function(x, y, t)
  */
 kaMap.prototype.zoomToExtents = function(minx, miny, maxx, maxy) {
       var b = new OpenLayers.Bounds(minx, miny, maxx, maxy);
-      b.transform(this.utmProjection, this.getMapProjection());
+      b.transform(this.llProjection, this.getMapProjection());
       this.olMap.zoomToExtent(b, true);
 };
 
@@ -535,7 +537,9 @@ kaMap.prototype.getExtent = function () {
    return this.olMap.getExtent(); 
 }
 
-
+kaMap.prototype.getCenter = function() {
+   return this.olMap.getCenter().transform(this.getMapProjection(), this.llProjection);
+}
 
 /**
  * kaMap.createDrawingCanvas( idx )
@@ -592,7 +596,7 @@ kaMap.prototype.removeDrawingCanvas = function( canvas ) {
  * kaMap.addObjectGeo( canvas, lon, lat, obj )
  *
  * add an object to a drawing layer and position it at the given geographic
- * position.  This is defined as being in the projection of the map.
+ * position.  This is defined as longitude and latitude in degrees. 
  *
  * canvas   - object, the drawing canvas to add this object to
  * lon, lat - position
@@ -602,7 +606,7 @@ kaMap.prototype.removeDrawingCanvas = function( canvas ) {
  */
 kaMap.prototype.addObjectGeo = function( canvas, lon, lat, obj ) {
     obj.lon = lon;
-    obj.lat = lat;
+    obj.lat = lat; 
     obj.style.position = 'absolute';
     obj.canvas = canvas;
     canvas.appendChild( obj );
@@ -732,7 +736,7 @@ kaMap.prototype.updateObjects = function()
  */
 kaMap.prototype.geoToPix = function( gX, gY ) {
     var gp = new OpenLayers.LonLat(gX, gY);
-    gp = gp.transform(this.utmProjection, this.getMapProjection());
+    gp = gp.transform(this.llProjection, this.getMapProjection());
     var p = this.olMap.getViewPortPxFromLonLat(gp);
     
     return [Math.floor(p.x), Math.floor(p.y)];
@@ -760,7 +764,7 @@ kaMap.prototype.pixToGeo = function( pX, pY ) {
         pY = pY + this.yOrigin;
     } 
     var pos = this.olMap.getLonLatFromPixel(new OpenLayers.Pixel(pX, pY)); 
-    pos = pos.transform(this.getMapProjection(), this.utmProjection);
+    pos = pos.transform(this.getMapProjection(), this.llProjection);
     return [pos.lon, pos.lat];
 };
 
@@ -1064,11 +1068,11 @@ kaMap.prototype.getUnits = function() {
  * kaMap.getGeoExtents()
  *
  * returns an array of geographic extents for the current view in the form
- * (inx, miny, maxx, maxy)
+ * (minx, miny, maxx, maxy)
  */
 kaMap.prototype.getGeoExtents = function() {
     var b = this.olMap.getExtent()
-        .transform(this.getMapProjection(), this.utmProjection);
+        .transform(this.getMapProjection(), this.llProjection);
     
     if (b!=null)
        return b.toArray();

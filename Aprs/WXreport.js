@@ -12,8 +12,7 @@ function WXreport(u)
 }
 
 
-WXreport.prototype.doTextReport = function(ref, cb) {
-  var llref = ref.toLatLng();
+WXreport.prototype.doTextReport = function(llref, cb) {
   var rurl = this.url+"/textlocation/1.0/?language=nb;latitude="+llref.lat+";longitude="+llref.lng+";";
   loadXml(rurl, cb);
 

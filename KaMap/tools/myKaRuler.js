@@ -257,13 +257,8 @@ myKaRuler.prototype.onmousemove = function(e) {
     {
        this.endx=x;
        this.endy=y;
-       if(this.kaMap.getCurrentMap().units == 'degrees')    {
-          this.measureSeg.value =
-             this.showDist(this.measureSphericalDistance2Points(this.startx,this.starty,this.endx,this.endy));
-       }else{
-          this.measureSeg.value =
-             this.showDist(this.measure2points(this.startx,this.starty,this.endx,this.endy));
-       }
+       this.measureSeg.value =
+         this.showDist(this.measureSphericalDistance2Points(this.startx,this.starty,this.endx,this.endy));
     }
     if (this.mouseDown)
        this.onmousedown(e);
@@ -306,13 +301,9 @@ myKaRuler.prototype.onmousedown = function(e) {
            this.endy=y;
        }
                
-       if(this.kaMap.getCurrentMap().units == 'degrees')    {
-           this.total += 
-              this.measureSphericalDistance2Points(this.startx,this.starty,this.endx,this.endy);
-       }else{
-           this.total += 
-              this.measure2points(this.startx,this.starty,this.endx,this.endy);
-       }
+       this.total += 
+          this.measureSphericalDistance2Points(this.startx,this.starty,this.endx,this.endy);
+
        this.total = parseInt(this.total*100)/100;
        this.measureTot.value = this.showDist(this.total);
        this.drawLine();
@@ -347,43 +338,25 @@ myKaRuler.prototype.onmouseup = function(e) {
 *
 * This function is used to calculate the distance between two points in decimel degree unit.
 * It assume that the earth is a perfect sphere, so the calculation isn't accurate.
-* In fact the further you are from the equator the least accurate the calulation is.
+* But probably accurate enough (0.5%). 
 */
 myKaRuler.prototype.measureSphericalDistance2Points = 
-function(pix1,piy1,pix2,piy2)
+function(pix1, piy1, pix2, piy2)
 {
     var pt1 = this.kaMap.pixToGeo(pix1, piy1);
     var pt2 = this.kaMap.pixToGeo(pix2, piy2);
     /* Convert all the degrees to radians */
-    var la1 = pt1[0] * Math.PI/180.0;
-    var lo1 = pt1[1] * Math.PI/180.0;
-    var la2 = pt2[0] * Math.PI/180.0;
-    var lo2 = pt2[1] * Math.PI/180.0;
+    var la1 = pt1[1] * Math.PI/180.0;
+    var lo1 = pt1[0] * Math.PI/180.0;
+    var la2 = pt2[1] * Math.PI/180.0;
+    var lo2 = pt2[0] * Math.PI/180.0;
+    
     /* Find the Great Circle distance */
-    var EARTH_RADIUS = 6378;//kilometers //3956;//miles
+    var EARTH_RADIUS = 6371000;
     var distance = 
-    Math.acos(Math.sin(la1)*Math.sin(la2)+Math.cos(la1)*Math.cos(la2)*Math.cos(lo2-lo1)) 
+    Math.acos(Math.sin(la1) * Math.sin(la2) + Math.cos(la1) * Math.cos(la2) * Math.cos(lo2-lo1)) 
      * EARTH_RADIUS ;
-    return distance ;
+    
+     return distance ;
 };
 
-/**
-* myKaRuler.measureSphericalDistance2Points
-*
-* p1X,p1Y - pixel coordinates of the first point
-* p2X,p2Y - pixel coordinates of the second point
-*
-* This function is used to calculate the distance between two points in planar projection.
-* I use the Pythagor algorythm. The result unit is the same as the projection unit and is round
-* at two decimals.
-*/
-myKaRuler.prototype.measure2points = function(p1X,p1Y,p2X,p2Y)
-{
-    var pt1 = this.kaMap.pixToGeo(p1X, p1Y);
-    var pt2 = this.kaMap.pixToGeo(p2X, p2Y);
-    var x_delta = pt1[0] - pt2[0]; 
-    var y_delta = pt1[1] - pt2[1]; 
-    
-    var segLenGEO = Math.sqrt((Math.pow(x_delta, 2)) + (Math.pow(y_delta, 2)));
-    return segLenGEO;
-};

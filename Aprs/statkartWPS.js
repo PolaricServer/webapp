@@ -6,8 +6,7 @@ function statkartWPS(u)
 }
 
 
-statkartWPS.prototype.doElevation = function(ref, cb) {
-  var llref = ref.toLatLng();
+statkartWPS.prototype.doElevation = function(llref, cb) {
   var rurl = this.url+"?request=Execute&service=WPS&version=1.0.0&"+
             "identifier=elevation&datainputs=[lat="+llref.lat+";lon="+llref.lng+";]";
   loadXml(rurl, cb);
