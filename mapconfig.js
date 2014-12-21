@@ -64,32 +64,32 @@ var backgroundColor = '#A1C1C9';
  * use the function add_Gpx_Layer(name, file) to add them to the list like 
  * in the example below. 
  */
-     
+
 
 /*
-LAYERS ( base-layer (boolean), 
-         predicate (function), 
-         [ ... ] );
-*/
+ * LAYERS ( base-layer (boolean), 
+ *         predicate (function), 
+ *         [ ... ] );
+ */
 
 var Danmark = POLYGON( [ 
-        {lat:54.528, lng:12.177}, {lat:54.453, lng:8.178},  {lat:56.948, lng:7.861},  {lat:57.986, lng:10.707}, 
-        {lat:56.171, lng:12.450}, {lat:55.868, lng:12.746}, {lat:54.951, lng:12.703}, {lat:54.432, lng:11.928} ] );
+{lat:54.528, lng:12.177}, {lat:54.453, lng:8.178},  {lat:56.948, lng:7.861},  {lat:57.986, lng:10.707}, 
+{lat:56.171, lng:12.450}, {lat:55.868, lng:12.746}, {lat:54.951, lng:12.703}, {lat:54.432, lng:11.928} ] );
 
 var Norge = POLYGON( [
-        {lat:58.979, lng:11.557}, {lat:58.692, lng:9.725},  {lat:57.819, lng:7.408},  {lat:58.911, lng:4.911}, 
-        {lat:62.343, lng:4.428},  {lat:64.567, lng:9.962},  {lat:67.99,  lng:11.675}, {lat:70.029, lng:16.842}, 
-        {lat:71.528, lng:26.154}, {lat:70.39,  lng:31.944}, {lat:69.19,  lng:29.1},   {lat:70.05,  lng:27.899}, 
-        {lat:68.481, lng:24.854}, {lat:68.979, lng:21.04},  {lat:68.306, lng:20.021}, {lat:68.349, lng:18.581}, 
-        {lat:64.618, lng:13.877}, {lat:64.414, lng:14.363}, {lat:63.957, lng:14.014}, {lat:63.963, lng:12.853},
-        {lat:61.782, lng:12.287}, {lat:61.244, lng:12.971} ] );
+{lat:58.979, lng:11.557}, {lat:58.692, lng:9.725},  {lat:57.819, lng:7.408},  {lat:58.911, lng:4.911}, 
+{lat:62.343, lng:4.428},  {lat:64.567, lng:9.962},  {lat:67.99,  lng:11.675}, {lat:70.029, lng:16.842}, 
+{lat:71.528, lng:26.154}, {lat:70.39,  lng:31.944}, {lat:69.19,  lng:29.1},   {lat:70.05,  lng:27.899}, 
+{lat:68.481, lng:24.854}, {lat:68.979, lng:21.04},  {lat:68.306, lng:20.021}, {lat:68.349, lng:18.581}, 
+{lat:64.618, lng:13.877}, {lat:64.414, lng:14.363}, {lat:63.957, lng:14.014}, {lat:63.963, lng:12.853},
+{lat:61.782, lng:12.287}, {lat:61.244, lng:12.971} ] );
 
 
 
 LAYERS (true, TRUE, [
    new OpenLayers.Layer.TMS(
       "KV Topo2/Europa (cache)", "https://aprs.no/mapcache/tms/",
-      {  layername: 'kv_topo2eu', type: 'jpg' }
+       {  layername: 'kv_topo2eu', type: 'jpg' }
    ),
    new OpenLayers.Layer.OSM("OpenStreetMap", null, {gray: '0.1'})
 ]);
@@ -97,65 +97,67 @@ LAYERS (true, TRUE, [
 
 
 LAYERS (true, function() { return is_visible(Norge); },
-[
-   new OpenLayers.Layer.TMS(
-      "KV Grunnkart (cache)", "/mapcache/tms/",
-      {  layername: 'kv_grunnkart', type: 'jpg', gray: '0'}
-   ),
-   new OpenLayers.Layer.WMS(
-     "Kartverket Raster", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
-     {  layers: 'toporaster2',
-       format: 'image/png' }
-   ),
-   new OpenLayers.Layer.WMS(
-     "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
-     {  layers: 'sjo_hovedkart2',
-       format: 'image/png' }
-   )
-] );
+        [
+        new OpenLayers.Layer.TMS(
+          "KV Grunnkart (cache)", "/mapcache/tms/",
+                                 {  layername: 'kv_grunnkart', type: 'jpg', gray: '0'}
+        ),
+
+        
+        new OpenLayers.Layer.WMS(
+          "Kartverket Raster", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
+          {  layers: 'toporaster2',
+            format: 'image/png' }
+        ),
+        new OpenLayers.Layer.WMS(
+          "Kartverket Sjøkart", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
+          {  layers: 'sjo_hovedkart2',
+            format: 'image/png' }
+        )
+        ] );
 
 
 
 LAYERS (false, TRUE,
-[  
-    new OpenLayers.Layer.WMS(
-      "UTM/MGRS Rutenett", "http://openwms.statkart.no/skwms1/wms.rutenett",
-      {layers:'UTMrutenett',transparent: true},
-      {isBaseLayer: false, singleTile: true, ratio: 1, visibility: false}
-    )
-]);
+        [  
+        new OpenLayers.Layer.WMS(
+          "UTM/MGRS Rutenett", "http://openwms.statkart.no/skwms1/wms.rutenett",
+          {layers:'UTMrutenett',transparent: true},
+          {isBaseLayer: false, singleTile: true, ratio: 1, visibility: false}
+        )
+        ]);
 
 
 
 LAYERS ( false, 
          function() { return is_visible(Norge) && projection() == utm_projection; },
-[  
-   new OpenLayers.Layer.WMS(
-      "Kartblad", "http://wms.geonorge.no/skwms1/wms.kartblad",
-      {layers:'Kartblad_WMS',transparent: true},
-      {isBaseLayer: false,singleTile: true, ratio: 1, visibility: false}
-   ), 
-   new OpenLayers.Layer.WMS(
-     "Naturvernområder (DN)", "http://arcgisproxy.dirnat.no/arcgis/services/vern/MapServer/WmsServer",
-     {layers:'naturvern_klasser_omrade',transparent: true},
-     {isBaseLayer: false, singleTile: true, ratio: 1, visibility: false}
-   )
-]);
-                         
+         [  
+         new OpenLayers.Layer.WMS(
+           "Kartblad", "http://wms.geonorge.no/skwms1/wms.kartblad",
+           {layers:'Kartblad_WMS',transparent: true},
+           {isBaseLayer: false,singleTile: true, ratio: 1, visibility: false}
+         ), 
+         new OpenLayers.Layer.WMS(
+           "Naturvernområder (DN)", "http://arcgisproxy.dirnat.no/arcgis/services/vern/MapServer/WmsServer",
+                                  {layers:'naturvern_klasser_omrade',transparent: true},
+                                  {isBaseLayer: false, singleTile: true, ratio: 1, visibility: false}
+         )
+         ]);
+
 
 
 LAYERS ( true, 
          function()  { return scale() < 1000000 && is_visible(Danmark); }, 
-[
-   new OpenLayers.Layer.TMS(
-      "Danmark (cache)", "https://aprs.no/mapcache/tms/",
-         { layername: 'danmark', type: 'jpg', gray: '0.25'}
-   ),
-   new OpenLayers.Layer.TMS(
-     "Danmark Topo(cache)", "https://aprs.no/mapcache/tms/",
-         { layername: 'danmark_topo', type: 'jpg'}
-   )
-] );
+         [
+         new OpenLayers.Layer.TMS(
+           "Danmark (cache)", "https://aprs.no/mapcache/tms/",
+                                  { layername: 'danmark', type: 'jpg', gray: '0.25'}
+         ),
+         new OpenLayers.Layer.TMS(
+           "Danmark Topo(cache)", "https://aprs.no/mapcache/tms/",
+                                  { layername: 'danmark_topo', type: 'jpg'}
+         )
+         ] );
 
 
 
@@ -167,37 +169,37 @@ LAYERS ( true,
  */
 var defaultView = 'default';
 var mapViews = [
-   { name: 'finnm',     title: 'Finnmark',        extent: [647979, 7649450, 1146928, 7970009] },
-   { name: 'ntroms',    title: 'Nord-Troms',      extent: [554641,7639041,809193,7822170] },
-   { name: 'tromso',    title: 'Tromsø',          extent: [636159, 7722699, 672566, 7746300] },
-   { name: 'mtroms',    title: 'Midt/sør-Troms',  extent: [576304, 7606502, 701041, 7686642] },
-   { name: 'ofoten',    title: 'Ofoten/Lofoten',  extent: [408367, 7505452, 662919, 7688580] },
-   { name: 'salten',    title: 'Salten',          extent: [441921, 7409285, 569197, 7500849] },
-   { name: 'helg',      title: 'Helgeland',       extent: [289088, 7223533, 543640, 7406661] },  
-   { name: 'ntrond',    title: 'Nord-Trøndelag',  extent: [186099, 7040742, 465531, 7223871] },
-   { name: 'strond',    title: 'Sør-Trøndelag',   extent: [124238, 6913382, 373713, 7073662] },
-   { name: 'moreroms',  title: 'Møre og Romsdal', extent: [-2868,  6893749, 246606, 7054029] },
-   { name: 'sognf',     title: 'Sogn og fjordane',extent: [-84277, 6747855, 165196, 6908135] },
-   { name: 'hordal',    title: 'Hordaland',       extent: [-85972, 6631073, 163502, 6791353] },
-   { name: 'rogal',     title: 'Rogaland',        extent: [-113727, 6497704, 135747, 6657983] },
-   { name: 'agder',     title: 'Agder',           extent: [-65492, 6418664, 183981, 6578944] },
-   { name: 'tele',      title: 'Telemark',        extent: [43250, 6520468, 292724, 6680748] },
-   { name: 'hardanger', title: 'Hardangervidda/Buskerud', extent: [-10571, 6614740, 238902, 6775020] },
-   { name: 'oslofj',    title: 'Østfold/Vestfold',extent: [196589,6544205,321326,6624345] },
-   { name: 'osloaker',  title: 'Oslo/Akershus',   extent: [196009, 6607700, 335725, 6699264] },
-   { name: 'hedopp',    title: 'Hedmark/Oppland', extent: [134551, 6731607, 384025, 6891887] },
-   { name: 'default',   title: 'Utgangspunkt',    extent: [-207404, 6520269, 949709, 7188432], hidden: true }
+{ name: 'finnm',     title: 'Finnmark',        extent: [18.3575, 68.26,   32.4980, 71.8444] },
+{ name: 'ntroms',    title: 'Nord-Troms',      extent: [16.7582, 68.8402, 23.4135, 70.4735] },
+{ name: 'tromso',    title: 'Tromsø',          extent: [18.5793, 69.5524, 19.4027, 69.7525] },
+{ name: 'mtroms',    title: 'Midt/sør-Troms',  extent: [15.1248, 68.2508, 21.4869, 69.8232] },
+{ name: 'ofoten',    title: 'Ofoten/Lofoten',  extent: [12.1127, 67.7717, 18.3217, 69.239] },
+{ name: 'salten',    title: 'Salten',          extent: [11.3947, 66.5,    17.2634, 67.9832] },
+{ name: 'helg',      title: 'Helgeland',       extent: [10.0569, 65.1156, 15.5983, 66.6494] },  
+{ name: 'ntrond',    title: 'Nord-Trøndelag',  extent: [186099, 7040742, 465531, 7223871] },
+{ name: 'strond',    title: 'Sør-Trøndelag',   extent: [124238, 6913382, 373713, 7073662] },
+{ name: 'moreroms',  title: 'Møre og Romsdal', extent: [-2868,  6893749, 246606, 7054029] },
+{ name: 'sognf',     title: 'Sogn og fjordane',extent: [-84277, 6747855, 165196, 6908135] },
+{ name: 'hordal',    title: 'Hordaland',       extent: [-85972, 6631073, 163502, 6791353] },
+{ name: 'rogal',     title: 'Rogaland',        extent: [-113727, 6497704, 135747, 6657983] },
+{ name: 'agder',     title: 'Agder',           extent: [-65492, 6418664, 183981, 6578944] },
+{ name: 'tele',      title: 'Telemark',        extent: [43250, 6520468, 292724, 6680748] },
+{ name: 'hardanger', title: 'Hardangervidda/Buskerud', extent: [-10571, 6614740, 238902, 6775020] },
+{ name: 'oslofj',    title: 'Østfold/Vestfold',extent: [196589,6544205,321326,6624345] },
+{ name: 'osloaker',  title: 'Oslo/Akershus',   extent: [196009, 6607700, 335725, 6699264] },
+{ name: 'hedopp',    title: 'Hedmark/Oppland', extent: [134551, 6731607, 384025, 6891887] },
+{ name: 'default',   title: 'Utgangspunkt',    extent: [-207404, 6520269, 949709, 7188432], hidden: true }
 ];
 
 
 /* Filter menyen */
 var filterViews = [
-   { name: 'alle',   title: 'Alle / Alt' },
-   { name: 'track',  title: 'Sporing 1' },
-   { name: 'le',     title: 'Kun LE kall' }, 
-   { name: 'infra',  title: 'Infrastruktur'},
-   { name: 'ainfra', title: 'Aktiv Infrastr'},
-   { name: 'moving', title: 'Bevegelige'}
+{ name: 'alle',   title: 'Alle / Alt' },
+{ name: 'track',  title: 'Sporing 1' },
+{ name: 'le',     title: 'Kun LE kall' }, 
+{ name: 'infra',  title: 'Infrastruktur'},
+{ name: 'ainfra', title: 'Aktiv Infrastr'},
+{ name: 'moving', title: 'Bevegelige'}
 ];
 
 /* View to be selected by default */
@@ -233,5 +235,5 @@ var statkartName_url = "/namesearch";
  * To activate this, you should know what you are doing!
  */
 
-var WXreport_enable = false;
+var WXreport_enable = true;
 var WXreport_url = "/aprs/wxdata";
