@@ -166,10 +166,12 @@ function myMapInitialized() {
 };
 
 
+
 /* Event handler  (KaMap callback) */
 function myMapError(msg) {
     alert(msg);
 }
+
 
 
 /* 
@@ -193,7 +195,7 @@ function myInitialized() {
          var ext2 = storage[uid+'.extents.2'];
          var ext3 = storage[uid+'.extents.3'];
          if (ext0 != null) {
-            myKaMap.zoomToExtents(parseInt(ext0, 10), parseInt(ext1, 10), parseInt(ext2, 10), parseInt(ext3, 10));
+            myKaMap.zoomToExtents(parseFloat(ext0), parseFloat(ext1), parseFloat(ext2), parseFloat(ext3));
             myKaMap.selectMap(view, true); 
          }
          else
@@ -437,17 +439,17 @@ var prev_extents = null;
 function myExtentChanged( eventID, extents ) 
 {
        if ( prev_extents == null ||
-           Math.round(extents[0]) != Math.round(prev_extents[0]) ||
-           Math.round(extents[1]) != Math.round(prev_extents[1]) ||
-           Math.round(extents[2]) != Math.round(prev_extents[2]) ||
-           Math.round(extents[3]) != Math.round(prev_extents[3])) 
+           roundDeg(extents[0]) != roundDeg(prev_extents[0]) ||
+           roundDeg(extents[1]) != roundDeg(prev_extents[1]) ||
+           roundDeg(extents[2]) != roundDeg(prev_extents[2]) ||
+           roundDeg(extents[3]) != roundDeg(prev_extents[3])) 
        {                   
            OpenLayers.Console.info("EXTENTS CHANGED: ", extents);
            if (initialized) {
-               storage[uid+'.extents.0'] = Math.round(extents[0]).toString();
-               storage[uid+'.extents.1'] = Math.round(extents[1]).toString();
-               storage[uid+'.extents.2'] = Math.round(extents[2]).toString();
-               storage[uid+'.extents.3'] = Math.round(extents[3]).toString();
+               storage[uid+'.extents.0'] = roundDeg(extents[0]).toString();
+               storage[uid+'.extents.1'] = roundDeg(extents[1]).toString();
+               storage[uid+'.extents.2'] = roundDeg(extents[2]).toString();
+               storage[uid+'.extents.3'] = roundDeg(extents[3]).toString();
                storage[uid+'.baselayer'] = myKaMap.getBaseLayer().id; 
            }
            setTimeout(function() {myKaMap.evaluateLayers();}, 50);
