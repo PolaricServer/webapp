@@ -150,21 +150,23 @@
  
  /*************************************************************************************
   * Zoom to pos and show marker there 
-  *    x, y - coordinates in default UTM zone (string representation)
+  *    lat, long (string representation)
   *************************************************************************************/
  
- function gotoPos(x, y)
- {
-   doRefSearchUtm(x, y, this.utmnzone, this.utmzone, true)
+ function gotoPos(lng, lat)
+ {    
+    removePopup();
+    doRefSearch(new LatLng(parseFloat(lat), parseFloat(lng)));
  }
  
  
  /**************************************************************************************
-  * doRefSearchLocal - Move map to a specific location
+  * doRefSearchLocal - Move map to a MGRS location
   **************************************************************************************/
  
  function doRefSearchLocal(ax, ay)
- {   removePopup();
+ {   
+    removePopup();
     var x = parseInt(ax, 10);
     var y = parseInt(ay, 10);
     if (isNaN(x) || isNaN(y))

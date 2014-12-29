@@ -83,8 +83,8 @@ polaricApi.prototype.labelDown = function()
 polaricApi.prototype.zoomScale = function(scale)
   { this.invoke("zoomScale", scale);}
   
-polaricApi.prototype.gotoPos = function(easting, northing)
-  { this.invoke("gotoPos", easting+"##"+northing);}
+polaricApi.prototype.gotoPos = function(lng, lat)
+  { this.invoke("gotoPos", lng+"##"+lat);}
   
 polaricApi.prototype.gotoUtm = function(zone, easting, northing)
   { this.invoke("gotoUtm", zone+"##"+easting+"##"+northing);}

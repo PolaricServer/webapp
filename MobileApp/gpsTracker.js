@@ -1,5 +1,4 @@
 
-
 /*
  * Uses global objects: myOverlay, myKaMap
  */ 
@@ -9,13 +8,13 @@
  * the GPS and plots them on the map. 
  */
 
-function GpsTracker ()
+GpsTracker = function ()
 {
    this.gps_on = false; 
    this.my_point = null; 
    this.watchID = null; 
    this.speedDisplay = 0;
-}   
+};   
    
 
 GpsTracker.prototype.activate = function ()   
@@ -38,16 +37,14 @@ GpsTracker.prototype.activate = function ()
         setStatus('&nbsp; GPS upresis posisjon ('+position.coords.accuracy+' m)');
         return;
      }
-
      var ll = new LatLng(position.coords.latitude, position.coords.longitude);
      var uref = ll.toUTMRef();
-     var uref_map = uref.toLatLng().toUTMRef('W', utmzone);
-     myZoomToGeo(uref_map.easting, uref_map.northing, 0.2);
-     
+     myKaMap.zoomToGeo(ll.lng, ll.lat, 0.2);
+
      /* Show speed and heading */
      if (t.speedDisplay > 0) {
        setStatus('<div id="speedDisplay">'
-         +((false && position.coords.speed > 0.3)s ? '<div id="gpsheadd"><img id="gpsheading" src="images/ptr1.png"></div>' : '')  
+         + ((false && position.coords.speed > 0.3) ? '<div id="gpsheadd"><img id="gpsheading" src="images/ptr1.png"></div>' : '')  
          + speedHeading(position.coords) + '</div>');
        
       //   FIXME: Rotated arrow doesn't work. Not important. 
@@ -59,7 +56,7 @@ GpsTracker.prototype.activate = function ()
      
      /* Show position on map */
      if (t.my_point == null) {
-        t.my_point = myOverlay.addNewPoint('my_gps_position', uref_map.easting, uref_map.northing);  
+        t.my_point = myOverlay.addNewPoint('my_gps_position', ll.lng, ll.lat);  
         var icon = new kaXmlIcon();
         icon.setImage(t.my_point, "images/position.png", 60, 60); 
         t.my_point.addGraphic(icon);
@@ -67,7 +64,7 @@ GpsTracker.prototype.activate = function ()
         icon.setClass("gpsposition");
      }
      else
-        t.my_point.setPosition(uref_map.easting, uref_map.northing);
+        t.my_point.setPosition(ll.lng, ll.lat);
      myKaMap.updateObjects();
    }
    
@@ -165,3 +162,5 @@ GpsTracker.prototype.toggleSpeedDisplay = function ()
     else
        setStatus('&nbsp; GPS <u>av</u>slått');
 }
+
+
