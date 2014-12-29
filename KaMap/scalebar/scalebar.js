@@ -23,15 +23,7 @@ v1.3.1 - removed a typo that affected .sbBar with borders (thanks jlivni)
        - added condition to deal with @import styles (thanks dokai)
 
 */
-function getPPI() {
-         var DOM_body = document.getElementsByTagName('body')[0];        
-         var DOM_div = document.createElement('div');
-         DOM_div.style = 'width: 1in; visibility:hidden;';
-         DOM_body.appendChild(DOM_div);
-         var w = document.defaultView.getComputedStyle(DOM_div, null).getPropertyValue('width');
-         DOM_body.removeChild(DOM_div);
-         return parseInt(w);
-  }
+
   
   
 function ScaleBar(scaleDenominator) {
@@ -47,7 +39,7 @@ function ScaleBar(scaleDenominator) {
     this.showMinorMeasures = false;
     this.abbreviateLabel = false;
     this.singleLine = false;
-    this.resolution = getPPI(); // dpi
+    this.resolution = OpenLayers.DOTS_PER_INCH; // dpi
     this.align = 'center'; // left, center, or right supported
     // create scalebar elements
     this.container = document.createElement('div');

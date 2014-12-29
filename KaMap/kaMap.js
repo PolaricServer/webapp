@@ -125,16 +125,18 @@ function kaMap( szID ) {
     this.llProjection = "EPSG:4326";
     
     /*
-     * OpenLayes dont always get right DPI for screen. 
+     * OpenLayers dont always get right DPI for screen. 
      * This is a workaround. 
      */
-    var DOM_body = document.getElementsByTagName('body')[0];        
-    var DOM_div = document.createElement('div');
-    DOM_div.style = 'width: 1in; visibility:hidden;';
-    DOM_body.appendChild(DOM_div);
-    var w = document.defaultView.getComputedStyle(DOM_div, null).getPropertyValue('width');
-    DOM_body.removeChild(DOM_div);
-    OpenLayers.DOTS_PER_INCH = parseInt(w);
+    if (!isMobileApp) {
+      var DOM_body = document.getElementsByTagName('body')[0];        
+      var DOM_div = document.createElement('div');
+      DOM_div.style = 'width: 1in; visibility:hidden;';
+      DOM_body.appendChild(DOM_div);
+      var w = document.defaultView.getComputedStyle(DOM_div, null).getPropertyValue('width');
+      DOM_body.removeChild(DOM_div);
+      OpenLayers.DOTS_PER_INCH = parseInt(w);
+    }
 };
  
  
@@ -259,7 +261,7 @@ kaMap.prototype.initializeOL = function( ) {
   t.olMap = new OpenLayers.Map(
      {
         projection       : utm_projection,
-//        displayProjection: utm_projection,
+ //       displayProjection: utm_projection,
         units            : 'm',
         numZoomLevels    : max_zoomlevels,
         zoomMethod       : null,
@@ -306,12 +308,11 @@ kaMap.prototype.initializeOL = function( ) {
   t.plink.element.innerHTML="link to this view";
   t.olMap.render(t.domObj);
   this.prevScale = this.getCurrentScale();
+  setGray();
+  this.prevProj = this.getMapProjection();
   
   t.triggerEvent( KAMAP_INITIALIZED );
   t.triggerEvent( KAMAP_SCALE_CHANGED, t.getCurrentScale());   
-
-  setGray();
-  this.prevProj = this.getMapProjection();
   this.initializationState = 2; 
 }
 /* End of initializeOL */
@@ -527,6 +528,7 @@ kaMap.prototype.zoomToGeo = function(x, y, t)
  * minx, miny, maxx, maxy - extents in units of current projection.
  */
 kaMap.prototype.zoomToExtents = function(minx, miny, maxx, maxy) {
+
       var b = new OpenLayers.Bounds(minx, miny, maxx, maxy);
       b.transform(this.llProjection, this.getMapProjection());
       this.olMap.zoomToExtent(b, true);
