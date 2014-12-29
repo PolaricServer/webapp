@@ -54,10 +54,12 @@ function parseResult(xml_string) {
 function toHtml(info) // Consider doing this somewhere else
 {
   var h = '<table>';
-  for (var i=0; i<info.length; i++)
-    h += '<tr onclick="gotoPos('+info[i].east+','+info[i].north+')"><td>'
+  for (var i=0; i<info.length; i++) {
+    var uref = new UTMRef(parseInt(info[i].east), parseInt(info[i].north), 'W', 33);
+    var llref = uref.toLatLng();
+    h += '<tr onclick="gotoPos('+llref.lng + ','+llref.lat+')"><td>'
     +info[i].navn+'</td><td>'+info[i].type+'</td><td>'+info[i].fylke+'</td></tr>';
-  
+  }
   h+='</table>';
   return h;
 }
