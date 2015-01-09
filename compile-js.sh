@@ -18,3 +18,6 @@ cd ..
 cd MobileApp
 ccompile --js mobileApp.js --js gpsTracker.js > compiled.js
 cd ..
+cd i18n
+ccompile --js icu.js --js translate.js > compiled.js
+cd ..

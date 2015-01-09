@@ -11,7 +11,7 @@
      '<meta name="viewport" content="target-densitydpi=device-dpi width=device-width, height=device-height">'
  ];
  
- var viewportDescr = ['1.5 X (standard)', '1.0 X (høy oppløsning)'];
+ var viewportDescr = ['1.5 X (standard)', '1.0 X ('+_('high resolution')+')'];
  
  
  function switchViewportRes() {
@@ -20,7 +20,7 @@
       if (isNaN(i))
         i = 0; 
       
-      alert("Forstørrelse: "+viewportDescr[i]);
+      alert(_('Magnification')+': '+viewportDescr[i]);
       storage['polaric.viewportIndex'] = i.toString();
       location.reload();
  }
@@ -47,7 +47,7 @@ function getViewportRes() {
      startUp(); 
      var d = document.getElementById('refToggler');
      toggleReference(d); 
-     setStatus('&nbsp; PolaricDroid app ready');
+     setStatus('&nbsp; '+_('PolaricDroid app ready'));
    }, false);
      
    

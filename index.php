@@ -105,6 +105,7 @@ include_once( 'webappconfig.php' );
   if (!$isMobile) 
      echo('<script type="text/javascript" src="OpenLayers/lib/Firebug/firebug.js"></script>');
 ?>
+<script type="text/javascript" src="i18n/compiled.js"></script>
 <script type="text/javascript" src="jquery/jquery-min.js"></script>
 <script type="text/javascript" src="jquery/jquery-ui-min.js"></script>
 <script type="text/javascript" src="OpenLayers/openlayers-polaric.js"></script>

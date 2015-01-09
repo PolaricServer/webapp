@@ -13,6 +13,16 @@
  */
 
 
+/*
+ * Language for user interface: Supported languages are: 
+ *  'no' = Norwegian
+ *   Default is English (just comment out the next line)
+ * 
+ * It is also possible so set the languate by using the 
+ * URL parameter 'lang'
+ */
+LANGUAGE('no');
+
 
 /*
  * Base URL of server. Leave it empty if the server
@@ -26,13 +36,12 @@ var server_url = '';
  * Please also state which UTM zone this is. 
  */
 var utm_projection = "EPSG:32633";
-var utm_zone       = 33;
+
 
 /*
  * Default map extents. Resolutions and number of zoom levels.
  * Can (probably) be overridden by the individual base layers.  
  */ 
-
 
 var max_extent     = [-2500000.0,3500000.0,3045984.0,9045984.0];
 var max_resolution = 1354.0; 

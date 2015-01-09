@@ -540,7 +540,7 @@ function _BrowserIdent() {
         
         if (_BrowserIdent_isMSIE() && 
              safeParseInt(_BrowserIdent_version) <= 7 && safeParseInt(_BrowserIdent_version) != 1)
-           alert("OBS: Vi støtter ikke lenger Internet Explorer versjon 7 eller eldre. Anbefaler oppgradering av nettleser"); 
+           alert(_("Sorry: We do not support IE version 7 or older. Recommend upgrade of browser.")); 
 }
 
 function _BrowserIdent_isMSIE()

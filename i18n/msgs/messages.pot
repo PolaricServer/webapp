@@ -1,0 +1,243 @@
+#: Aprs/compiled.js:69 Aprs/menu.js:24
+msgid   "Add APRS object"
+msgstr  ""
+
+#: Aprs/compiled.js:69 Aprs/menu.js:29
+msgid   "Center point"
+msgstr  ""
+
+#: Aprs/compiled.js:69 Aprs/menu.js:26
+msgid   "Set own position"
+msgstr  ""
+
+#: Aprs/compiled.js:69 Aprs/menu.js:19
+msgid   "Show map reference"
+msgstr  ""
+
+#: Aprs/compiled.js:69 Aprs/menu.js:21
+msgid   "WX report (Norway)"
+msgstr  ""
+
+#: Aprs/compiled.js:69 Aprs/menu.js:30
+msgid   "Zoom in"
+msgstr  ""
+
+#: Aprs/compiled.js:70 Aprs/menu.js:31
+msgid   "Zoom out"
+msgstr  ""
+
+#: Aprs/compiled.js:71 Aprs/menu.js:50
+msgid   "Add object"
+msgstr  ""
+
+#: Aprs/compiled.js:71 Aprs/compiled.js:83 Aprs/menu.js:43 Aprs/menu.js:303
+msgid   "Find APRS station/object"
+msgstr  ""
+
+#: Aprs/compiled.js:71 Aprs/menu.js:46
+msgid   "Find location name (Norway)"
+msgstr  ""
+
+#: Aprs/compiled.js:71 Aprs/menu.js:44
+msgid   "Find map reference"
+msgstr  ""
+
+#: Aprs/compiled.js:71 Aprs/compiled.js:74 Aprs/menu.js:51 Aprs/menu.js:107
+msgid   "Remove object"
+msgstr  ""
+
+#: Aprs/compiled.js:71 Aprs/compiled.js:81 Aprs/menu.js:55 Aprs/menu.js:273
+msgid   "Set SAR code"
+msgstr  ""
+
+#: Aprs/compiled.js:72 Aprs/menu.js:57
+msgid   "Activate GPS pos."
+msgstr  ""
+
+#: Aprs/compiled.js:72 Aprs/menu.js:63
+msgid   "Change screen resolution"
+msgstr  ""
+
+#: Aprs/compiled.js:72 Aprs/menu.js:62
+msgid   "De-activate GPS pos."
+msgstr  ""
+
+#: Aprs/compiled.js:72 Aprs/menu.js:71
+msgid   "Font size +"
+msgstr  ""
+
+#: Aprs/compiled.js:72 Aprs/menu.js:67
+msgid   "Hide traces"
+msgstr  ""
+
+#: Aprs/compiled.js:72 Aprs/menu.js:69
+msgid   "Show traces"
+msgstr  ""
+
+#: Aprs/compiled.js:73 Aprs/menu.js:72
+msgid   "Font size -"
+msgstr  ""
+
+#: Aprs/compiled.js:73 Aprs/menu.js:77
+msgid   "SAR URL"
+msgstr  ""
+
+#: Aprs/compiled.js:73 Aprs/menu.js:78
+msgid   "SAR mode"
+msgstr  ""
+
+#: Aprs/compiled.js:73 Aprs/compiled.js:74 Aprs/menu.js:88 Aprs/menu.js:99
+msgid   "Show info"
+msgstr  ""
+
+#: Aprs/compiled.js:74 Aprs/menu.js:114
+msgid   "Auto-tracking"
+msgstr  ""
+
+#: Aprs/compiled.js:74 Aprs/menu.js:104
+msgid   "Global settings.."
+msgstr  ""
+
+#: Aprs/compiled.js:74 Aprs/menu.js:101
+msgid   "Last movements"
+msgstr  ""
+
+#: Aprs/compiled.js:74 Aprs/menu.js:109
+msgid   "Reset info"
+msgstr  ""
+
+#: Aprs/compiled.js:75 Aprs/menu.js:116
+msgid   "Hide ident"
+msgstr  ""
+
+#: Aprs/compiled.js:75 Aprs/menu.js:122
+msgid   "Hide trail"
+msgstr  ""
+
+#: Aprs/compiled.js:75 Aprs/menu.js:114
+msgid   "OFF"
+msgstr  ""
+
+#: Aprs/compiled.js:75 Aprs/menu.js:114
+msgid   "ON"
+msgstr  ""
+
+#: Aprs/compiled.js:75 Aprs/menu.js:118
+msgid   "Show ident"
+msgstr  ""
+
+#: Aprs/compiled.js:75 Aprs/menu.js:124
+msgid   "Show trail"
+msgstr  ""
+
+#: Aprs/compiled.js:78 Aprs/menu.js:199
+msgid   "Description"
+msgstr  ""
+
+#: Aprs/compiled.js:79 Aprs/menu.js:224
+msgid   "Station"
+msgstr  ""
+
+#: Aprs/compiled.js:81 Aprs/menu.js:274
+msgid   "Code"
+msgstr  ""
+
+#: Aprs/compiled.js:81 Aprs/menu.js:276
+msgid   "Confirm"
+msgstr  ""
+
+#: Aprs/compiled.js:83 Aprs/compiled.js:91 Aprs/menu.js:306 Aprs/menu.js:481
+msgid   "Search"
+msgstr  ""
+
+#: Aprs/compiled.js:83 Aprs/menu.js:304
+msgid   "Text in ident/comment"
+msgstr  ""
+
+#: Aprs/compiled.js:86 Aprs/menu.js:387
+msgid   "Show reference on map"
+msgstr  ""
+
+#: Aprs/compiled.js:88 Aprs/menu.js:411
+msgid   "Find"
+msgstr  ""
+
+#: Aprs/compiled.js:90 Aprs/menu.js:478
+msgid   "Find Location Name (Kartverket)"
+msgstr  ""
+
+#: Aprs/compiled.js:93 Aprs/menu.js:575
+msgid   "Add APRS object here"
+msgstr  ""
+
+#: Aprs/compiled.js:131 Aprs/startUp.js:364
+msgid   "Access to SAR info denied. Invalid key"
+msgstr  ""
+
+#: Aprs/configSupport.js:110
+msgid   "Couldn't read GPX-file..."
+msgstr  ""
+
+#: MobileApp/gpsTracker.js:37
+msgid   "GPS inaccurate position"
+msgstr  ""
+
+#: MobileApp/gpsTracker.js:55
+msgid   "GPS position ok"
+msgstr  ""
+
+#: MobileApp/gpsTracker.js:77
+msgid   "waiting for GPS..."
+msgstr  ""
+
+#: MobileApp/gpsTracker.js:86
+msgid   "Position not available"
+msgstr  ""
+
+#: MobileApp/gpsTracker.js:87
+msgid   "ERROR: Position is not available"
+msgstr  ""
+
+#: MobileApp/gpsTracker.js:92
+msgid   "GPS not available"
+msgstr  ""
+
+#: MobileApp/gpsTracker.js:93
+msgid   "ERROR: No access to GPS. Check your settings."
+msgstr  ""
+
+#: MobileApp/gpsTracker.js:112
+msgid   "knots"
+msgstr  ""
+
+#: MobileApp/gpsTracker.js:127 MobileApp/gpsTracker.js:161
+msgid   "GPS <u>on</u>"
+msgstr  ""
+
+#: MobileApp/gpsTracker.js:147 MobileApp/gpsTracker.js:163
+msgid   "GPS <u>off</u>"
+msgstr  ""
+
+#: MobileApp/gpsTracker.js:157
+msgid   "Show <u>speed</u> (km/h): please wait..."
+msgstr  ""
+
+#: MobileApp/gpsTracker.js:159
+msgid   "Show <u>speed</u> (knots): please wait..."
+msgstr  ""
+
+#: MobileApp/mobileApp.js:14
+msgid   "high resolution"
+msgstr  ""
+
+#: MobileApp/mobileApp.js:23
+msgid   "Magnification"
+msgstr  ""
+
+#: MobileApp/mobileApp.js:50
+msgid   "PolaricDroid app ready"
+msgstr  ""
+
+#: XMLOverlay/compiled.js:21 XMLOverlay/kaXmlOverlay.js:543
+msgid   "Sorry: We do not support IE version 7 or older. Recommend upgrade of browser."
+msgstr  ""

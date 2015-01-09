@@ -33,7 +33,7 @@ install: Aprs/compiled.js
 	install -m 755 -d $(INSTALL_LOG)
 	install -d $(INSTALL_WEB)/Aprs $(INSTALL_WEB)/images $(INSTALL_WEB)/KaMap $(INSTALL_WEB)/OpenLayers \
 	           $(INSTALL_WEB)/style $(INSTALL_WEB)/www/dicons $(INSTALL_WEB)/XMLOverlay $(INSTALL_WEB)/jquery \
-	           $(INSTALL_WEB)/jquery/smoothness/images
+	           $(INSTALL_WEB)/jquery/smoothness/images $(INSTALL_WEB)/i18n $(INSTALL_WEB)/i18n/msgs
 	install -d $(INSTALL_WEB)/KaMap/images $(INSTALL_WEB)/KaMap/images/icon_set_nomad \
 		   $(INSTALL_WEB)/KaMap/scalebar $(INSTALL_WEB)/KaMap/tools
 	chown www-data.www-data $(INSTALL_DATA)/mapcache
@@ -54,6 +54,8 @@ install: Aprs/compiled.js
 	install -m 644 KaMap/images/icon_set_nomad/*.png KaMap/images/icon_set_nomad/*.gif $(INSTALL_WEB)/KaMap/images/icon_set_nomad
 	install -m 644 KaMap/scalebar/*.js KaMap/scalebar/*.gif KaMap/scalebar/*.css $(INSTALL_WEB)/KaMap/scalebar
 	install -m 644 KaMap/tools/*.js $(INSTALL_WEB)/KaMap/tools
+	install -m 644 i18n/compiled.js $(INSTALL_WEB)/i18n
+	install -m 644 i18n/msgs/*.json $(INSTALL_WEB)/i18n/msgs
 	cp -R OpenLayers/* $(INSTALL_WEB)/OpenLayers
 	
         # Config files are placed in /etc and should be symlinked from the webapp directory 
@@ -69,6 +71,8 @@ install: Aprs/compiled.js
 
 
 compile: 
+        # Repeat p2json for each po file to be used
+	python po2json.py i18n/msgs/no.po
 	sh compile-js.sh
 	
 
