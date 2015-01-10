@@ -11,10 +11,6 @@ var myKaTracker = null;
 var initialized = false;
 var win1 = null;
 var eventz = null; 
-
-// FIXME: Not necessary to duplicate? 
-var utmzone = utm_zone; 
-
 var clientses = 0;
 var geopos;
 var isOpera = _BrowserIdent_isOpera();
@@ -196,7 +192,6 @@ function myInitialized() {
          var ext3 = storage[uid+'.extents.3'];
          if (ext0 != null) {
             myKaMap.zoomToExtents(parseFloat(ext0), parseFloat(ext1), parseFloat(ext2), parseFloat(ext3));
-            myKaMap.selectMap(view, true); 
          }
          else
             myKaMap.selectMap(view, false);
@@ -242,6 +237,10 @@ function myInitialized() {
       if (!isNaN(scale))
          myKaMap.zoomToScale(scale); 
     }
+    
+    if (args['lang'] != null)
+      LANGUAGE(args['lang']); 
+    
     
     switchMode('toolPan');    
     
@@ -333,7 +332,7 @@ function getXmlData(wait, metaonly)
    
    var i = myOverlay.loadXml(url+extentQuery() + "&scale="+currentScale+
                   (wait?"&wait=true":"") + (clientses!=null? "&clientses="+clientses : "") + 
-                  (metaonly? "&metaonly=true" : "") + "&utmz="+utmzone );
+                  (metaonly? "&metaonly=true" : "") );
    lastXmlCall = i; 
    
    var _xmlSeq = xmlSeqno;
@@ -362,7 +361,7 @@ function postLoadXml_Fail()
 {
   OpenLayers.Console.warn("XML Call: Not found");
   if (sar_key != null) {
-     alert("Ikke tilgang til SAR info. Ugyldig nøkkel");
+     alert(_('Access to SAR info denied. Invalid key'));
      removeSarKey(); 
      show_SAR_access(false);
   }

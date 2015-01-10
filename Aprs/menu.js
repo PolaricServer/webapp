@@ -16,19 +16,19 @@ var ctxtMenu = new ContextMenu();
 ctxtMenu.addCallback('MAP', function(m) 
 {
   
-  m.add('Vis kartreferanse',  function () { setTimeout('popup_posInfoPix('+m.x+', '+m.y+');',100); });
+  m.add(_('Show map reference'), function () { setTimeout('popup_posInfoPix('+m.x+', '+m.y+');',100); });
   if (WXreport_enable)
-    m.add('Værmelding', function() { setTimeout('popup_wxInfoPix('+m.x+', '+m.y+');',100); });
+    m.add(_('WX report (Norway)'), function() { setTimeout('popup_wxInfoPix('+m.x+', '+m.y+');',100); });
   
   if (canUpdate()) 
-    m.add('Legg på APRS objekt',function () { popup_editObject(m.x, m.y);});
+    m.add(_('Add APRS object'), function () { popup_editObject(m.x, m.y);});
   if (isAdmin())
-    m.add('Sett egen posisjon', function () { popup_setOwnPos(m.x, m.y);});
+    m.add(_('Set own position'), function () { popup_setOwnPos(m.x, m.y);});
   
   m.add(null);
-  m.add('Sentrer punkt', function()  { myKaMap.zoomToPix(m.x, m.y); });
-  m.add('Zoom inn', function() {myKaMap.zoomIn(); } );
-  m.add('Zoom ut',  function() {myKaMap.zoomOut(); } );
+  m.add(_('Center point'), function()  { myKaMap.zoomToPix(m.x, m.y); });
+  m.add(_('Zoom in'), function() {myKaMap.zoomIn(); } );
+  m.add(_('Zoom out'),  function() {myKaMap.zoomOut(); } );
 });
 
 
@@ -40,42 +40,42 @@ ctxtMenu.addCallback('MAP', function(m)
 ctxtMenu.addCallback('MAIN', function(m)
 {
   m.d = toolbar;
-  m.add('Finn APRS stasjon', function()  { setTimeout('popup_searchItems();',100);}); 
-  m.add('Finn kartreferanse', function() { setTimeout('popup_refSearch();',100); });
+  m.add(_('Find APRS station/object'), function()  { setTimeout('popup_searchItems();',100);}); 
+  m.add(_('Find map reference'), function() { setTimeout('popup_refSearch();',100); });
   if (statkartName_enable)
-    m.add('Finn stedsnavn', function()  { setTimeout('popup_searchNames();',100);}); 
+    m.add(_('Find location name (Norway)'), function()  { setTimeout('popup_searchNames();',100);}); 
   
   
   if (canUpdate()) {                 
-    m.add('Legg inn objekt', function() { popup_editObject(null, null); });
-    m.add('Slett objekt', function() { popup_deleteObject(null); });
+    m.add(_('Add object'), function() { popup_editObject(null, null); });
+    m.add(_('Remove object'), function() { popup_deleteObject(null); });
   }
   m.add(null);
   if (isMobileApp) {   
-    m.add('Sett SAR kode', popup_setSarKey);
+    m.add(_('Set SAR code'), popup_setSarKey);
     if (gpsTracker==null || !gpsTracker.isActive())
-      m.add('Aktiver GPS pos.', function() {  
+      m.add(_('Activate GPS pos.'), function() {  
         if (gpsTracker==null) gpsTracker = new GpsTracker(); 
             gpsTracker.activate(); 
       } );
     else
-      m.add('De-aktiver GPS pos.', function() { gpsTracker.deactivate(); });
-    m.add('Endre skjermoppløsning', switchViewportRes); 
+      m.add(_('De-activate GPS pos.'), function() { gpsTracker.deactivate(); });
+    m.add(_('Change screen resolution'), switchViewportRes); 
   }
   
   if (!traceIsHidden('ALL'))
-    m.add('Skjul sporlogger', function() { myOverlay.hidePointTrace('ALL'); });
+    m.add(_('Hide traces'), function() { myOverlay.hidePointTrace('ALL'); });
   else
-    m.add('Vis sporlogger', function() { myOverlay.showPointTrace('ALL'); });
+    m.add(_('Show traces'), function() { myOverlay.showPointTrace('ALL'); });
   m.add(null);
-  m.add('Skriftstørrelse +', function() { labelStyle.next(); });
-  m.add('Skriftstørrelse -', function() { labelStyle.previous(); });
+  m.add(_('Font size +'), function() { labelStyle.next(); });
+  m.add(_('Font size -'), function() { labelStyle.previous(); });
   
   if (isAdmin() || canUpdate()) {
     m.add(null);
     if (sarUrl) 
-      m.add('SAR URL', popup_sarUrl);
-    m.add('SAR modus', popup_sarMode);
+      m.add(_('SAR URL'), popup_sarUrl);
+    m.add(_('SAR mode'), popup_sarMode);
   }
 }); 
 
@@ -85,7 +85,7 @@ ctxtMenu.addCallback('MAIN', function(m)
  ************************************************/
 
 ctxtMenu.addCallback('SIGN', function(m) {
-  m.add('Vis info', function() { setTimeout( function() {popup_signInfo(m.p, m.x, m.y); });});  
+  m.add(_(_('Show info')), function() { setTimeout( function() {popup_signInfo(m.p, m.x, m.y); });});  
 });
 
 
@@ -96,32 +96,32 @@ ctxtMenu.addCallback('SIGN', function(m) {
 
 ctxtMenu.addCallback('ITEM', function(m)
 {
-  m.add('Vis info', function() { popup_stationInfo(m.ident, false, m.x, m.y);});
+  m.add(_('Show info'), function() { popup_stationInfo(m.ident, false, m.x, m.y);});
   if (m.p != null && m.p.hasTrace)
-    m.add('Siste bevegelser', function() { popup_stationHistory(m.ident, m.x, m.y);});
+    m.add(_('Last movements'), function() { popup_stationHistory(m.ident, m.x, m.y);});
   
   if (canUpdate()) { 
-    m.add('Globale innstillinger', function() { popup_stationInfo(m.ident, true);});
+    m.add(_('Global settings..'), function() { popup_stationInfo(m.ident, true);});
     if (m.p != null) { 
       if ( m.p.own )
-        m.add('Slett objekt', function() { popup_deleteObject(m.ident); });
+        m.add(_('Remove object'), function() { popup_deleteObject(m.ident); });
       else
-        m.add('Nullstill info', function() { popup_resetInfo(m.ident); });
+        m.add(_('Reset info'), function() { popup_resetInfo(m.ident); });
     }   
   }
   
   m.add(null);
-  m.add('Auto-sporing '+(isTracked(m.ident) ? 'AV' : 'PÅ'), function() { toggleTracked(m.ident); });
+  m.add(_('Auto-tracking') + ' '+ (isTracked(m.ident) ? _('OFF') : _('ON')), function() { toggleTracked(m.ident); });
   if (!labelIsHidden(m.ident))
-    m.add('Skjul ident', function() { hidePointLabel(m.ident); } );
+    m.add(_('Hide ident'), function() { hidePointLabel(m.ident); } );
   else
-    m.add('Vis ident', function() { showPointLabel(m.ident); } );
+    m.add(_('Show ident'), function() { showPointLabel(m.ident); } );
   
   if (hasTrace(ident)) {
     if (!traceIsHidden(m.ident))
-      m.add('Skjul spor', function() { myOverlay.hidePointTrace(m.ident); });
+      m.add(_('Hide trail'), function() { myOverlay.hidePointTrace(m.ident); });
     else
-      m.add('Vis spor', function() { myOverlay.showPointTrace(m.ident); });
+      m.add(_('Show trail'), function() { myOverlay.showPointTrace(m.ident); });
   }
 });
 
@@ -136,7 +136,7 @@ ctxtMenu.addCallback('ITEM', function(m)
 function popup_editObject(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
-    fullPopupWindow('Objekt', server_url + 'srv/addobject' +
+    fullPopupWindow('Object', server_url + 'srv/addobject' +
           (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]), 550, 280);
 }
 
@@ -148,7 +148,7 @@ function popup_editObject(x, y)
 function popup_setOwnPos(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
-    fullPopupWindow('Posisjon', server_url + 'srv/setownpos' +
+    fullPopupWindow('Position', server_url + 'srv/setownpos' +
            (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]), 500, 200);
 }
 
@@ -159,7 +159,7 @@ function popup_setOwnPos(x, y)
  ***********************************************************/
 
 function popup_deleteObject(ident) {
-    fullPopupWindow('Objekt', server_url + 'srv/deleteobject'+ (ident==null ? "" : '?objid='+ident), 350, 200);
+    fullPopupWindow('Object', server_url + 'srv/deleteobject'+ (ident==null ? "" : '?objid='+ident), 350, 200);
 }
 
 
@@ -169,7 +169,7 @@ function popup_deleteObject(ident) {
  ***************************************************************/
 
 function popup_resetInfo(ident) {
-    fullPopupWindow('Stasjon', server_url + 'srv/resetinfo'+ (ident==null ? "" : '?objid='+ident), 350, 200);
+    fullPopupWindow('Station', server_url + 'srv/resetinfo'+ (ident==null ? "" : '?objid='+ident), 350, 200);
 }
 
 
@@ -196,7 +196,7 @@ function popup_signInfo(p, x, y)
   var sref = "" + llref.toUTMRef();
   var ustring = showUTMstring(sref);
   var w = popupwindow(myKaMap.domObj,
-       ' <span class="sleftlab">Beskrivelse:</span>' + p.title  +
+       ' <span class="sleftlab">'+_('Description')+':</span>' + p.title  +
        ' <br/><span class="sleftlab">UTM:</span>' + showUTMstring(sref) +
        ' <br/><nobr><span class="sleftlab">Latlong:</span>' + showDMstring(llref.lat)+"N, "+showDMstring(llref.lng)+"E"+
        ' <div></div>'
@@ -221,7 +221,7 @@ function popup_stationInfo(ident, edit, x, y)
       
   else {
       var url = server_url + (getLogin() ? 'srv/station_sec?id=' : 'srv/station?id=');
-      fullPopupWindow('Stasjon', url + ident + (edit ? '&edit=true':''), 730, 520);
+      fullPopupWindow(_('Station'), url + ident + (edit ? '&edit=true':''), 730, 520);
   } 
 }
 
@@ -270,10 +270,10 @@ function popup_setSarKey()
   var xpos = 50; 
   var ypos = 70;
   var pdiv = popupwindow(document.getElementById("anchor"), 
-         ' <div><h1>Sett SAR kode</h1><div id="sarcodeform"><form> '+
-         ' Kode: <input type="text" style="width: 6em" width="6" id="sarcode" value="'+ (sar_key==null ? '' : sar_key) + '"/>&nbsp; '+
+         ' <div><h1>'+_('Set SAR code')+'</h1><div id="sarcodeform"><form> '+
+         ' '+_('Code')+': <input type="text" style="width: 6em" width="6" id="sarcode" value="'+ (sar_key==null ? '' : sar_key) + '"/>&nbsp; '+
          ' <input id="sarcodebutton" type="button"' +
-         ' value="Bekreft" /></div><br></div>', 
+         ' value="'+_('Confirm')+'" /></div><br></div>', 
          xpos, ypos, null); 
   
   
@@ -300,10 +300,10 @@ function popup_searchItems()
      var xpos = 50; 
      var ypos = 70;
      var pdiv = popupwindow(document.getElementById("anchor"), 
-        ' <div><h1>Finn APRS stasjon/objekt</h1><div id="searchform"><form> '+
-        ' Tekst i ident/komment: <input type="text"  width="10" id="findcall"/> '+
+        ' <div><h1>'+_('Find APRS station/object')+'</h1><div id="searchform"><form> '+
+        ' ' + _('Text in ident/comment') + ': <input type="text"  width="10" id="findcall"/> '+
         ' <input id="searchbutton" type="button"' +
-            ' value="Søk" />' +
+            ' value="'+_('Search')+'" />' +
         '</form><br><div id="searchresult"></div></div></div>', xpos, ypos, null); 
      
      $('#searchbutton').click( function(e) {
@@ -384,7 +384,7 @@ function popup_refSearch()
 
 
    popupwindow(myKaMap.domObj, 
-     '<h1>Vis kartreferanse på kartet</h1>' +
+     '<h1>'+_('Show reference on map')+'</h1>' +
      '<form class="mapref">'+
           
      '<hr><span class="sleftlab">MGRS ref: </span>' +
@@ -408,7 +408,7 @@ function popup_refSearch()
      '<input id="ll_Ed" type="text" size="2" maxlength="2">°&nbsp;' +
      '<input id="ll_Em" type="text" size="6" maxlength="6">\'E&nbsp;' +
      '<input type="button" id="butt_ll"'+
-     '   value="Finn">&nbsp;</div></nobr><hr>'+
+     '   value="'+_('Find')+'">&nbsp;</div></nobr><hr>'+
      '</form>' 
      
    , (isMobile? 20:50), (isMobile?53:70), false);
@@ -475,10 +475,10 @@ function popup_searchNames()
   var xpos = 50; 
   var ypos = 70;
   var pdiv = popupwindow(document.getElementById("anchor"), 
-          ' <div><h1>Finn Stedsnavn (Kartverket)</h1><div id="searchform"><form> '+
+          ' <div><h1>'+_('Find Location Name (Kartverket)')+'</h1><div id="searchform"><form> '+
           ' Navn: <input type="text"  width="10" id="findname"/> '+
           ' <input id="searchbutton" type="button"' +
-          ' value="Søk" />' +
+          ' value="'+_('Search')+'" />' +
           '</form><br><div id="searchresult"></div></div></div>', xpos, ypos, null); 
   
   $('#searchbutton').click( function(e) {
@@ -486,7 +486,6 @@ function popup_searchNames()
      e.cancelBubble = true; 
      if (e.stopPropagation) e.stopPropagation();
      skNames.doSearch($('#findname').val(), searchCallback);  
-    
   });
   
   
@@ -573,7 +572,7 @@ function popup_posInfo(llref, iconOnly)
        var hr = w.appendChild(document.createElement("hr"));
        hr.style.marginBottom = "0";
        hr.style.marginTop = "0.2em";
-       var m = w.appendChild(createItem("Opprett APRS objekt her", 
+       var m = w.appendChild(createItem(_('Add APRS object here'), 
             function () { popup_editObject(nPixPos[0], nPixPos[1]); menuMouseSelect();}));
        m.style.width = "12em";
     }

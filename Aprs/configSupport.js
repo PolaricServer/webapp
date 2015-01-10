@@ -2,8 +2,20 @@
 
 var baseLayers = [];  
 var mapLayers = []; 
+var language = 'en';
+
 
 var TRUE = function() { return true; }
+
+
+function LANGUAGE(lang) {
+   language = lang;
+   if (lang=='en')
+      return;
+   $.getJSON('i18n/msgs/'+lang+'.json', function(data) {
+     _.setTranslation(data); 
+   }); 
+}
 
 
 function LAYERS (base, pred, layers) {
@@ -95,6 +107,6 @@ function add_Gpx_Layer(name, url, color)
     }
     
     function loadFailure(request) {
-       alert("Kunne ikke lese GPX-fil...");
+       alert(_("Couldn't read GPX-file..."));
     }
 }
