@@ -11,11 +11,11 @@ div#wxresult{max-width: 30em; min-width: 20em; margin-bottom: 0.5em}
 
 
 #measureSeg, #measureTot { 
-  width: 6em; 
-  background-color:transparent; 
-  border: none; 
-  overflow: hidden; 
-  margin-bottom: 0.1em
+width: 6em; 
+background-color:transparent; 
+border: none; 
+overflow: hidden; 
+margin-bottom: 0.1em
 }
 
 .sarurl {color: #900; font-family: monospace}
@@ -24,64 +24,67 @@ a.sarurl {font-size: 100%;}
 
 div.POPUP, div.POPUPMENU, #measureResult 
 {
-   font-family: Helvetica, sans-serif; 
-   font-size: 95%;
-   border: 1px solid #777;
-   -moz-box-shadow: 3px 3px 5px #242;
-   -webkit-box-shadow: 3px 3px 5px #242;
-   box-shadow: 3px 3px 5px #242;
+  font-family: Helvetica, sans-serif; 
+  font-size: 95%;
+  border: 1px solid #777;
+  -moz-box-shadow: 3px 3px 5px #242;
+  -webkit-box-shadow: 3px 3px 5px #242;
+  box-shadow: 3px 3px 5px #242;
 }
 div.POPUP input {font-size: 100%}
 
 div.POPUP, #measureResult {
-   line-height: 1.2em;
-   background: #f8f8d5;
-   z-index: 1301 !important; 
-   padding: 0.3em !important;
-   min-width: 15em;
+  line-height: 1.2em;
+  background: #f0f5ec;
+  z-index: 1301 !important; 
+  padding: 0.3em !important;
+  min-width: 15em;
 }
 
 form.mapref { min-width: 27em }
 
 
 #measureResult {
-  min-width: 10em;
+min-width: 10em;
 }
 
 #infopopup {
-  min-width: 23em;
+min-width: 23em;
 }
 
 
 div.POPUPMENU {
-   padding-bottom: 0.3em;
-   margin-bottom: 0.7em;
-   line-height: 1.2em;
-   background: #fefeee; 
-   z-index: 1301 !important;
+  padding-bottom: 0.3em;
+  margin-bottom: 0.7em;
+  line-height: 1.2em;
+  background: #fefeee; 
+  z-index: 1301 !important;
 }
 
 .leftlab, .sleftlab, label.lleftlab {
-    float: left;
-    width: 8.5em;
-    text-align: right;
-    padding-right: 7px;
-    color: gray;
+  float: left;
+  width: 8.5em;
+  text-align: right;
+  padding-right: 7px;
+  color: gray;
 }
 
 .sleftlab, label.lleftlab {
-    width: 5.5em;
+  width: 5.5em;
 } 
+
+form>.sleftlab {padding-top: 5px;}
+
 
 div.POPUP img { max-width: 500px; }
 div.POPUP #cancel {visibility: hidden; width: 0; height: 0; margin: 0; padding: 0}
 
 div.POPUPMENU > div > div
 {
-   font-family: Arial, Helvetica, sans-serif;
-   font-size: 80%;
-   padding-left: 0.6em;
-   padding-right: 0.5em; 
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 80%;
+  padding-left: 0.6em;
+  padding-right: 0.5em; 
 }
 
 div.ITEM_sep {
@@ -92,8 +95,8 @@ div.ITEM_sep {
 
 div.ITEM_hover, .link_id:hover
 {
-   background:#944;
-   color: white;
+  background:#944;
+  color: white;
 }
 
 div.ITEM_selected
@@ -103,12 +106,12 @@ div.ITEM_selected
 }
 
 th, td {font-size: 90%;}
-  
+
 th { 
-   text-align: left;  
-   background: #fb9; 
-   border: #d86 1px solid; 
-   padding: 0 0 0 0.5em
+  text-align: left;  
+  background: #fb9; 
+  border: #d86 1px solid; 
+  padding: 0 0 0 0.5em
 }
 
 
@@ -116,12 +119,12 @@ a {text-decoration: none}
 
 table {border-collapse: collapse}
 td {
-    padding-left: 0.5em; 
-    padding-right: 0.5em;
-    padding-bottom: 0.2em;
-    padding-top: 0.2em;
-    line-height: 1em;
-    border: 1px #d86 dotted
+  padding-left: 0.5em; 
+  padding-right: 0.5em;
+  padding-bottom: 0.2em;
+  padding-top: 0.2em;
+  line-height: 1em;
+  border: 1px #d86 dotted
 }
 
 tr {height: 12px;}
@@ -129,24 +132,26 @@ tr {height: 12px;}
 tr:hover {background: #ff8}
 
 
-h1 { font-family: helvetica, sans-serif; 
-     font-size: 1em; 
-     margin-bottom: 0.5em; 
-   }
-
-
-span.kartref {
-   padding: 0px 0px 0px 0px;
-   color: #880000;
+h1 { font-family: arial, helvetica, sans-serif; 
+  font-size: 1.2em; 
+  margin-bottom: 0.5em; 
+  background: #cfd5cc;
+  padding: 0.8em  0.8em 0.5em 0.5em;
+  border-bottom: dotted 1px #777;
+  margin: -4px;
+  margin-bottom: 0.8em;
 }
 
+span.kartref {
+  padding: 0px 0px 0px 0px;
+  color: #880000;
+}
 
 
 span.kartref:hover {
-   font-weight: bold; 
-   border: solid 2px #eeaaaa;
+  font-weight: bold; 
+  border: solid 2px #eeaaaa;
 }
 
-
-
-
+input {padding: 2px; margin: 2px}
+input#butt_ll { margin-right: 7em}
