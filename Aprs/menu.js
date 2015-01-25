@@ -85,7 +85,7 @@ ctxtMenu.addCallback('MAIN', function(m)
  ************************************************/
 
 ctxtMenu.addCallback('SIGN', function(m) {
-  m.add(_(_('Show info')), function() { setTimeout( function() {popup_signInfo(m.p, m.x, m.y); });});  
+  m.add(_('Show info'), function() { setTimeout( function() {popup_signInfo(m.p, m.x, m.y); });});  
 });
 
 
@@ -136,8 +136,8 @@ ctxtMenu.addCallback('ITEM', function(m)
 function popup_editObject(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
-    fullPopupWindow('Object', server_url + 'srv/addobject' +
-          (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]), 550, 280);
+    fullPopupWindow('editObject', server_url + 'srv/addobject' + '?lang='+language +
+          (x==null ? "" : '&x=' + coord[0] + '&y='+ coord[1] ), 560, 300);
 }
 
 
@@ -148,8 +148,8 @@ function popup_editObject(x, y)
 function popup_setOwnPos(x, y)
 {
     var coord = myKaMap.pixToGeo(x, y);
-    fullPopupWindow('Position', server_url + 'srv/setownpos' +
-           (x==null ? "" : '?x=' + coord[0] + '&y='+ coord[1]), 500, 200);
+    fullPopupWindow('Position', server_url + 'srv/setownpos' + '?lang='+language +
+           (x==null ? "" : '&x=' + coord[0] + '&y='+ coord[1]), 500, 200);
 }
 
 
@@ -159,7 +159,8 @@ function popup_setOwnPos(x, y)
  ***********************************************************/
 
 function popup_deleteObject(ident) {
-    fullPopupWindow('Object', server_url + 'srv/deleteobject'+ (ident==null ? "" : '?objid='+ident), 350, 200);
+     fullPopupWindow('delObject', server_url + 'srv/deleteobject'+ '?lang='+language +
+            (ident==null ? "" : '&objid='+ident), 350, 180);
 }
 
 
@@ -169,7 +170,8 @@ function popup_deleteObject(ident) {
  ***************************************************************/
 
 function popup_resetInfo(ident) {
-    fullPopupWindow('Station', server_url + 'srv/resetinfo'+ (ident==null ? "" : '?objid='+ident), 350, 200);
+     fullPopupWindow('Station', server_url + 'srv/resetinfo'+ '?lang='+language +
+            (ident==null ? "" : '&objid='+ident), 360, 180);
 }
 
 
@@ -180,7 +182,7 @@ function popup_resetInfo(ident) {
  ***********************************************************/ 
 
 function popup_sarMode() {
-    fullPopupWindow('SarMode', server_url + 'srv/sarmode', 480, 310);
+     fullPopupWindow('SarMode', server_url + 'srv/sarmode' + '?lang='+language , 500, 320);
 }
 
 
@@ -217,11 +219,12 @@ function popup_stationInfo(ident, edit, x, y)
 {
   if (!edit)
       remotepopupwindow(myKaMap.domObj, 
-           server_url + 'srv/station?ajax=true&simple=true&id='+ident+ (edit ? '&edit=true':''), x, y, 'infopopup');
+           server_url + 'srv/station?lang=' + language +'&ajax=true&simple=true&id=' + ident + 
+           (edit ? '&edit=true':''), x, y, 'infopopup');
       
   else {
       var url = server_url + (getLogin() ? 'srv/station_sec?id=' : 'srv/station?id=');
-      fullPopupWindow(_('Station'), url + ident + (edit ? '&edit=true':''), 730, 520);
+      fullPopupWindow(_('Station'), url + ident + (edit ? '&edit=true':'') + '&lang='+language, 780, 600);
   } 
 }
 
@@ -242,7 +245,7 @@ function popup_stationInfoGeo(ident, edit, x, y)
 function popup_sarUrl(x, y)
 {
     var pl = document.getElementById("permolink").children[0].children[0].href;
-    remotepopupwindow(myKaMap.domObj, server_url + 'srv/sarurl?url='+escape(pl),  50, 80); 
+    remotepopupwindow(myKaMap.domObj, server_url + 'srv/sarurl?url='+escape(pl) + '&lang='+language,  50, 80); 
 }
 
 
@@ -255,7 +258,7 @@ function popup_sarUrl(x, y)
 function popup_stationHistory(ident, x, y)
 {
   remotepopupwindow( myKaMap.domObj,  
-     server_url + 'srv/history?ajax=true&simple=true&id='+ident, x, y);
+     server_url + 'srv/history?ajax=true&lang='+language+'&simple=true&id='+ident, x, y);
 }
 
 
@@ -387,11 +390,11 @@ function popup_refSearch()
      '<h1>'+_('Show reference on map')+'</h1>' +
      '<form class="mapref">'+
           
-     '<hr><span class="sleftlab">MGRS ref: </span>' +
+     '<span class="sleftlab">MGRS ref: </span>' +
      '<div><input id="locx" type="text" size="3" maxlength="3">'+
      '<input id="locy" type="text" size="3" maxlength="3">&nbsp;'+
      '<input type="button" id="butt_mgrs"'+
-     '   value="Finn">&nbsp;</div>'+
+     '   value="'+_('Find')+'">&nbsp;</div>'+
      
      '<hr><span class="sleftlab">UTM: </span>'+
      '<nobr><div><input id="utmz" type="text" size="2" maxlength="2" value="' +uref.lngZone+ '">' +
@@ -400,13 +403,13 @@ function popup_refSearch()
      '<input id="utmy" type="text" size="7" maxlength="7">&nbsp;'+
      
      '<input type="button" id="butt_utm"'+
-     '   value="Finn" style="margin-right:3.5em">&nbsp;</div></nobr>' +
+     '   value="'+_('Find')+'" style="margin-right:3.5em">&nbsp;</div></nobr>' +
      
      '<hr><span class="sleftlab">LatLong: </span>' +
      '<nobr><div><input id="ll_Nd" type="text" size="2" maxlength="2">°&nbsp;'+
-     '<input id="ll_Nm" type="text" size="6" maxlength="6">\'N&nbsp;&nbsp;'+
+     '<input id="ll_Nm" type="text" size="6" maxlength="6">\'&nbsp;N&nbsp;&nbsp;'+
      '<input id="ll_Ed" type="text" size="2" maxlength="2">°&nbsp;' +
-     '<input id="ll_Em" type="text" size="6" maxlength="6">\'E&nbsp;' +
+     '<input id="ll_Em" type="text" size="6" maxlength="6">\'&nbsp;E&nbsp;' +
      '<input type="button" id="butt_ll"'+
      '   value="'+_('Find')+'">&nbsp;</div></nobr><hr>'+
      '</form>' 

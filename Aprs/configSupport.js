@@ -11,10 +11,11 @@ var TRUE = function() { return true; }
 function LANGUAGE(lang) {
    language = lang;
    if (lang=='en')
-      return;
-   $.getJSON('i18n/msgs/'+lang+'.json', function(data) {
-     _.setTranslation(data); 
-   }); 
+      _.setTranslation(null);
+   else
+      $.getJSON('i18n/msgs/'+lang+'.json', function(data) {
+        _.setTranslation(data); 
+      }); 
 }
 
 

@@ -113,7 +113,7 @@
  function findItem(ident, showInfo)
  {   
    /* AJA(X) call to find station */ 
-   call(server_url + "srv/finditem?ajax=true&id="+ident, null, findItemCallback, false); 
+   call(server_url + "srv/finditem?ajax=true&lang="+language+"&id="+ident, null, findItemCallback, false); 
    if (!showInfo)
       showInfo = false;
    
@@ -158,6 +158,7 @@
     removePopup();
     doRefSearch(new LatLng(parseFloat(lat), parseFloat(lng)));
  }
+ 
  
  
  /**************************************************************************************
@@ -246,7 +247,7 @@
  
  function searchItems(filt, cb)
  {
-   call(server_url + "srv/search?ajax=true&filter="+
+   call(server_url + "srv/search?ajax=true&lang="+language+"&filter="+
    filt+(isMobile==true?"&mobile=true":""), null, cb, false );
  }
  
