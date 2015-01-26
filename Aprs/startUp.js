@@ -225,12 +225,20 @@ function myInitialized() {
     
     if (args['findcall'] != null)
       findItem( args['findcall'], false); 
-    
+      
     if (args['track'] != null) {
       findItem( args['track'], false)
       toggleTracked(args['track']);
     }
     
+    if (args['gotopos'] != null) {
+       var coords = args['gotopos'].split(",");
+       var lng = parseFloat(coords[0]);
+       var lat = parseFloat(coords[1]);
+       gotoPos(lng, lat, true);
+    }
+      
+      
     if (args['scale'] != null)
     {
       var scale = parseInt(args['scale'], 10); 

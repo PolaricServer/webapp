@@ -153,10 +153,10 @@
   *    lat, long (string representation)
   *************************************************************************************/
  
- function gotoPos(lng, lat)
+ function gotoPos(lng, lat, hide)
  {    
     removePopup();
-    doRefSearch(new LatLng(parseFloat(lat), parseFloat(lng)));
+    doRefSearch(new LatLng(parseFloat(lat), parseFloat(lng)), hide);
  }
  
  
