@@ -7,7 +7,7 @@ var language = 'en';
 
 var TRUE = function() { return true; }
 
-
+/* Set translation */
 function LANGUAGE(lang) {
    language = lang;
    if (lang=='en')
@@ -16,6 +16,14 @@ function LANGUAGE(lang) {
       $.getJSON('i18n/msgs/'+lang+'.json', function(data) {
         _.setTranslation(data); 
       }); 
+}
+
+/* For plugins. Translation will be merged with existing translation. */
+function LANGUAGE_EXTEND(prefix) {
+  if (language != 'en') 
+    $.getJSON(prefix+'/'+language+'.json', function(data) {
+      _.extendTranslation(data); 
+    }); 
 }
 
 

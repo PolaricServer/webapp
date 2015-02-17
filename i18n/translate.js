@@ -55,7 +55,14 @@
 	{
 		translation = newTranslation;
 	};
+        
+        // Added by LA7ECA, Øyvind Hanssen
+        translate.extendTranslation = function(newTranslation)
+        {
+                translation = $.extend(translation, newTranslation);
+        };
 	
+        
 	function translateLookup(target)
 	{
 		if (translation == null || target == null)
