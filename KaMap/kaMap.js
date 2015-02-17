@@ -244,6 +244,7 @@ kaMap.prototype.initializeOL = function( ) {
   }
   
   
+  
   function setGray() {    
     if (t.getBaseLayer().gray)
        $('#canvasBG').css('opacity', t.getBaseLayer().gray); 
@@ -307,15 +308,16 @@ kaMap.prototype.initializeOL = function( ) {
   document.getElementById('permolink').appendChild(this.plink.draw());
   t.plink.element.innerHTML="link to this view";
   t.olMap.render(t.domObj);
-  this.prevScale = this.getCurrentScale();
-  setGray();
-  this.prevProj = this.getMapProjection();
+  t.prevScale = t.getCurrentScale();
+  t.prevProj = t.getMapProjection();
+  setTimeout(setGray, 100);
   
   t.triggerEvent( KAMAP_INITIALIZED );
   t.triggerEvent( KAMAP_SCALE_CHANGED, t.getCurrentScale());   
-  this.initializationState = 2; 
+  t.initializationState = 2; 
 }
 /* End of initializeOL */
+
 
 
 kaMap.prototype.addLayers = function() {
