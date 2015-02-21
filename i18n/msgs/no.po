@@ -316,11 +316,11 @@ msgstr ""
 "Beklager. Vi støtter ikke IE versjon 7 eller eldre. Anbefaller å oppgradere "
 "nettleser."
 
-#~ msgid "Sar Mode"
-#~ msgstr "Sar Modus"
+#~ msgid "Object"
+#~ msgstr "Objekt"
 
 #~ msgid "Position"
 #~ msgstr "Posisjon"
 
-#~ msgid "Object"
-#~ msgstr "Objekt"
+#~ msgid "Sar Mode"
+#~ msgstr "Sar Modus"
