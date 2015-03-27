@@ -55,6 +55,8 @@ function createItem(text, actn, arg)
  
   var elem = document.createElement('div');
   elem.origCls = '';
+  if (isMobile)
+    elem.addEventListener('tap', function() { _executeItem(elem, actn, arg);  e.cancelBubble=true; }, false); 
   elem.onmouseup   = function(e) { _executeItem(elem, actn, arg);  e.cancelBubble=true;}
   elem.onmousedown = function(e) { _executeItem(elem, actn, arg);  e.cancelBubble=true;}
   elem.onmouseover = function(e) { elem.origCls = elem.className; 
@@ -242,7 +244,10 @@ function popup(onDiv, menudiv, x, y, img)
          /* Activate scroller */
          if (isMobile) 
             setTimeout(function () {
-              myScroll = new iScroll(activepopup);
+              myScroll = new IScroll(activepopup, {
+                    scrollbars : true, 
+                    tap : true
+                 });
             }, 1000);
          else
            activepopup.style.overflowY  = 'scroll';
