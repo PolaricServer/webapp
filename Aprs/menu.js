@@ -60,7 +60,7 @@ ctxtMenu.addCallback('MAIN', function(m)
       } );
     else
       m.add(_('De-activate GPS pos.'), function() { gpsTracker.deactivate(); });
-    m.add(_('Change screen resolution'), switchViewportRes); 
+    m.add(_('Change language'), function() { popup_setLanguage(); } ); 
   }
   
   if (!traceIsHidden('ALL'))
@@ -581,6 +581,23 @@ function popup_posInfo(llref, iconOnly)
     }
 }
 
+
+function popup_setLanguage()
+{
+   var xpos = 50; 
+   var ypos = 70;
+   var w = new PopupMenu('language');
+   w.clear();
+   w.add('Norsk', function() 
+       { storage[uid+'.language'] = 'no'; 
+         LANGUAGE('no');
+         menuMouseSelect(); } );
+   w.add('English', function() 
+       { storage[uid+'.language'] = 'en'; 
+         LANGUAGE('en');
+         menuMouseSelect(); } );
+   w.activate(document.getElementById("anchor"), xpos, ypos);
+}
 
 
 /**************************************************************

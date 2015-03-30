@@ -9,6 +9,9 @@ var TRUE = function() { return true; }
 
 /* Set translation */
 function LANGUAGE(lang) {
+   if (( /no|((nb|nn)\-NO)/g ).test(lang)) lang = "no";
+   else lang = "en";
+  
    language = lang;
    if (lang=='en')
       _.setTranslation(null);

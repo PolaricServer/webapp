@@ -246,8 +246,23 @@ function myInitialized() {
          myKaMap.zoomToScale(scale); 
     }
     
-    if (args['lang'] != null)
-      LANGUAGE(args['lang']); 
+    
+    /* LANGUAGE setting */
+    if (isMobileApp) {
+      if (storage[uid+'.language'] == null)
+        navigator.globalization.getPreferredLanguage(
+          function (language) 
+             { alert('language: ' + language.value + '\n'); storage[uid+'.language'] = language.value; },
+          function () 
+             { popup_setLanguage(); }
+        );
+    }
+    else if (args['lang'] != null)
+       storage[uid+'.language'] = args['lang'];
+    var lang = storage[uid+'.language'];     
+
+    if (lang != null)
+       LANGUAGE(lang); 
     
     
     switchMode('toolPan');    
@@ -471,6 +486,7 @@ function myExtentChanged( eventID, extents )
        myKaRuler.reset();
        myScaleChanged(null, myKaMap.getCurrentScale());
 }
+
 
 
 /* Event handler  (KaMap callback)

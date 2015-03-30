@@ -72,11 +72,13 @@ function createItem(text, actn, arg)
  * PopupMenu class 
  ************************************************************************/
 
-function PopupMenu(title)
+function PopupMenu(title, heading)
 {
     this.lastItem = null;
     this.menudiv = null;
+    this.heading = null;
 }
+
 
 PopupMenu.prototype.clear = function()
 {  
@@ -86,6 +88,11 @@ PopupMenu.prototype.clear = function()
 //   this.menudiv.className = 'POPUPMENU';
 }
 
+
+PopupMenu.prototype.setHeading = function(hd)
+{
+  this.heading = hd; 
+}
 
 
 PopupMenu.prototype.add = function(txt, func, arg)
@@ -108,6 +115,13 @@ PopupMenu.prototype.activate = function(onDiv, x, y)
     isMenu = true;
    
     wrapper = document.createElement('div');
+    
+    if (this.heading != null) {
+       var h = document.createElement("H1");
+       var t = document.createTextNode(this.heading); 
+       h.appendChild(t);  
+       wrapper.appendChild(h);
+    }
     wrapper.appendChild(this.menudiv);
     wrapper.style.display = 'none';
     wrapper.className = 'POPUPMENU';
