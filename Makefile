@@ -33,7 +33,7 @@ install: Aprs/compiled.js
 	install -m 755 -d $(INSTALL_LOG)
 	install -d $(INSTALL_WEB)/Aprs $(INSTALL_WEB)/images $(INSTALL_WEB)/KaMap $(INSTALL_WEB)/OpenLayers \
 	           $(INSTALL_WEB)/style $(INSTALL_WEB)/www/dicons $(INSTALL_WEB)/XMLOverlay $(INSTALL_WEB)/jquery \
-	           $(INSTALL_WEB)/jquery/smoothness/images $(INSTALL_WEB)/i18n $(INSTALL_WEB)/i18n/msgs
+	           $(INSTALL_WEB)/jquery/images $(INSTALL_WEB)/i18n $(INSTALL_WEB)/i18n/msgs
 	install -d $(INSTALL_WEB)/KaMap/images $(INSTALL_WEB)/KaMap/images/icon_set_nomad \
 		   $(INSTALL_WEB)/KaMap/scalebar $(INSTALL_WEB)/KaMap/tools
 	chown www-data.www-data $(INSTALL_DATA)/mapcache
@@ -44,8 +44,8 @@ install: Aprs/compiled.js
 	install -m 644 images/* $(INSTALL_WEB)/images
 	install -m 644 style/*.css $(INSTALL_WEB)/style
 	install -m 644 jquery/jquery-min.js jquery/jquery-ui-min.js $(INSTALL_WEB)/jquery
-	install -m 644 jquery/smoothness/*.css $(INSTALL_WEB)/jquery/smoothness
-	install -m 644 jquery/smoothness/images/*.png $(INSTALL_WEB)/jquery/smoothness/images
+	install -m 644 jquery/*.css $(INSTALL_WEB)/jquery
+	install -m 644 jquery/images/*.png $(INSTALL_WEB)/jquery/images
 	install -m 644 Aprs/compiled.js Aprs/configSupport.js Aprs/iframeApi.js $(INSTALL_WEB)/Aprs
 	install -m 644 XMLOverlay/compiled.js $(INSTALL_WEB)/XMLOverlay
 	install -m 644 KaMap/kamap-core.js $(INSTALL_WEB)/KaMap
