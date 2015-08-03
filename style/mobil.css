@@ -25,7 +25,6 @@ td {
   line-height: 1.3em;
 }
 
-
 .maximizeDiv {width: 25px  !important}
 .maximizeDiv img {width: 25px}
 .minimizeDiv img {width: 25px}
@@ -64,7 +63,7 @@ input[type=checkbox]:checked {
   -webkit-background-size: 20px 20px; /* shrink high resolution background */
 }
 input[type=radio]:checked {
-  background: url("../images/gpoint.gif") no-repeat center center;
+  background: url("../images/gpoint.png") no-repeat center center;
   -webkit-background-size: 28px 28px; /* shrink high resolution background */
 }
 
@@ -73,17 +72,21 @@ cursor: pointer;
 margin-right:3px
 }
 
+#layerSwitcher {line-height: 1.9em; font-family: arial; margin-bottom: 0.3em}
+#layerSwitcher h2:last-of-type {margin-top: 0.5em}
+
 #toolQuery     { visibility: hidden; width: 0px; }
 #toolPan       { visibility: hidden; width: 0px; }
 #toolZoomRubber{ visibility: hidden; width: 0px; }
-#toolZoomIn    { width: 28px; height: 28px; }
-#toolZoomOut   { width: 28px; height: 28px; }
-#areaSelect    { width: 29px; height: 29px;  padding-left: 13px;}
-#filterMenu    { width: 29px; height: 29px; }
+#toolZoomIn    { width: 28px; height: 28px; margin-left: -3px }
+#toolZoomOut   { width: 28px; height: 28px; margin-left: -12px }
+#layerSelect   { width: 28px; height: 28px; margin-left: 13px; }
+#areaSelect    { width: 29px; height: 29px; margin-left: -3px !important}
+#filterMenu    { width: 29px; height: 29px; margin-left: -3px !important}
 
 #sarmode       { width: 4px; }
 
-#toolbar { left: 10px; height: 39px; width: 16.5em;  min-width: 299px; }
+#toolbar { left: 8px; height: 39px; width: 16.5em;  min-width: 342px; }
 #tools { height: 33px; border: solid #999 1px; }
 #toolbarBackground { height: 39px;}
 #toolbarToggler { left: 18px; top: 45px;}
@@ -94,6 +97,11 @@ margin-right:3px
 canvas.direction img, canvas.direction {height: 30px; width: 30px }
 
 
+
+/*****************************************************************************
+ * Screen width/height > 1100px and resolution > 110dpi
+ *****************************************************************************/
+
 @media screen and (min-device-width: 1100px) and (min-resolution: 110dpi),
 screen and (min-device-width: 1100px) and (-webkit-max-device-pixel-ratio: 2.0), 
 screen and (min-device-height: 1100px) and (min-resolution: 110dpi),
@@ -101,21 +109,22 @@ screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 2.0)
 {
   #toolZoomIn    { width: 34px; height: 34px; }
   #toolZoomOut   { width: 34px; height: 34px; }
-  #areaSelect    { width: 36px; height: 36px; padding-left: 17px;}
+  #areaSelect    { width: 36px; height: 36px; }
+  #layerSelect   { width: 36px; height: 36px; padding-left: 17px;}
   #filterMenu    { width: 36px; height: 36px; }
   #filterChoice  { font-size: 100% !important; bottom: -2px; position: relative }
   
   #toolbar { height: 45px; min-width: 350px;}
   #tools { height: 39px; }
-  #toolbarBackground {height: 45px; }
+  #toolbarBackground {height: 45px;}
   
   #toolbarToggler { top: 50px; }
   #refToggler, #toolbarToggler {     
-     width:  25px; 
-     height: 22px; 
-     background-size: 18px 18px; 
+  width:  25px; 
+  height: 22px; 
+  background-size: 18px 18px; 
   }
-   
+  
   div.POPUP {font-size: 100% }
   div.layersDiv {font-size: 120% }
   div.POPUPMENU > div { line-height: 1.7em; }
@@ -128,15 +137,15 @@ screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 2.0)
   }
   .olControlLayerSwitcher img { top: 4px}
   #reference {
-    width: 282px; height: 128px;
+  width: 282px; height: 128px;
   }
   
   #scaleReference {height: 75px }
   
   #geoPosition {
-    width: 280px;
-    height: 46px; 
-    font-size: 16px;
+  width: 280px;
+  height: 46px; 
+  font-size: 16px;
   }
   #scale { font-size: 14px;  }
   .sbNumbersBox {font-size: 0.80em }
@@ -147,20 +156,28 @@ screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 2.0)
 }
 
 
+
+/*****************************************************************************
+ * Screen width/height > 1100px and width/height > 1000px
+ *****************************************************************************/
+
 @media screen and (min-device-width: 1100px) and (min-width: 1000px),
 screen and (min-device-height: 1100px) and (min-height: 1000px)
 {
-  #toolZoomIn    { width: 44px; height: 44px; }
-  #toolZoomOut   { width: 44px; height: 44px; }
-  #areaSelect    { width: 47px; height: 47px; margin-left: 19px !important }
+  #toolZoomIn    { width: 44px; height: 44px; margin-left: 5px !important; margin-right: 10px}
+  #toolZoomOut   { width: 44px; height: 44px; margin-left: 5px !important}
+  #areaSelect    { width: 47px; height: 47px; margin-left: 5px !important}
+  #layerSelect   { width: 47px; height: 47px; }
   #filterMenu    { width: 47px; height: 47px; } 
   #filterChoice  { font-size: 130% !important; bottom: -5px; position: relative }
   
-  #toolbar { height: 58px; min-width: 450px; }
+  #toolbar { height: 58px; min-width: 550px; }
+
   #tools { height: 51px; }
   #toolbarBackground {height: 57px;}
   #toolbarToggler { top: 65px; }
   #refToggler {width: 26px; height: 21px}
+  
   div.POPUP {font-size: 130%; }
   div.layersDiv {font-size: 156% }
   div.olControlLayerSwitcher, .layersDiv {width: 25em !important}
@@ -174,40 +191,40 @@ screen and (min-device-height: 1100px) and (min-height: 1000px)
   
   input[type=checkbox],
   input[type=radio] {
-     font-size: 19px;
-     line-height: 1em;
-     width: 1.62em;
-     height: 1.62em;
+    font-size: 19px;
+    line-height: 1em;
+    width: 1.62em;
+    height: 1.62em;
   }
   .olControlLayerSwitcher img {width: 140%; right: 8px; top: 2px}
   
   input[type=checkbox]:checked {
-     -webkit-background-size: 25px 25px; /* shrink high resolution background */
+    -webkit-background-size: 25px 25px; /* shrink high resolution background */
   }
   input[type=radio]:checked {
-     -webkit-background-size: 36px 36px; /* shrink high resolution background */
+    -webkit-background-size: 36px 36px; /* shrink high resolution background */
   }
   
   #reference {
-     width: 360px; height: 166px;
+  width: 360px; height: 166px;
   }
   
   #geoPosition {
-     width: 358px;
-     height: 67px; 
-     font-size: 19px;
+  width: 358px;
+  height: 67px; 
+  font-size: 19px;
   }
   #scale { 
-     height: 29px; 
-     font-size: 17px; 
-     width: 351px;
-     margin-top: 59px;
+  height: 29px; 
+  font-size: 17px; 
+  width: 351px;
+  margin-top: 59px;
   }
   .sbNumbersBox {top: -22px; font-size: 0.98em }
   .sbLabelBox {font-size: 1.2em }
   
   #scaleReference {
-     height: 91px;
+  height: 91px;
   }
   #speedDisplay {font-size: 31px}
   #speedDisplay span.speed {font-size: 38px}
@@ -215,13 +232,19 @@ screen and (min-device-height: 1100px) and (min-height: 1000px)
   
   
   #refToggler, #toolbarToggler {
-     width: 33px; 
-     height: 30px; 
-     background-size: 25px 25px; 
+  width: 33px; 
+  height: 30px; 
+  background-size: 25px 25px; 
   }
 }
 
 
+
+
+/*****************************************************************************
+ * Small screens:
+ * Screen width/height < 500px and device-width < 20em
+ *****************************************************************************/
 
 @media screen and (max-device-width: 500px),
 screen and (max-device-width: 20em) 
@@ -236,4 +259,3 @@ screen and (max-device-width: 20em)
   div.POPUP img {max-height: 290px}
   div.POPUP h1 {margin: 0em}
 }
-  

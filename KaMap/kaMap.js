@@ -214,7 +214,6 @@ kaMap.prototype.initializeOL = function( ) {
   
   /* This function is called each time the user changes base layer */
   function layerChange() { 
-    
     /* First, get the center point of the map, transform the coordinates
      * and re-center the map of the layer. This is necessary if switching
      * from a UTM to a spherical mercator projection. 
@@ -302,7 +301,7 @@ kaMap.prototype.initializeOL = function( ) {
 
   if (!isMobile) 
     t.olMap.addControl( new OpenLayers.Control.PanZoomBar() );
-  t.olMap.addControl( new OpenLayers.Control.LayerSwitcher() );
+//  t.olMap.addControl( new OpenLayers.Control.LayerSwitcher() );
   t.plink = new OpenLayers.Control.Permalink();
   t.plink.setMap(t.olMap);  
   document.getElementById('permolink').appendChild(this.plink.draw());
@@ -420,7 +419,7 @@ kaMap.prototype.createLayers = function() {
             { t.thandler.handle(e); t.onmouseup(e);}       
     this.theInsideLayer.ontouchcancel = function (e) 
             { t.thandler.handle(e); } 
-    
+      
     if (window.addEventListener)
         this.domObj.addEventListener( "DOMMouseScroll", 
              function(e) {t.onmousewheel(e);} , false );

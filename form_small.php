@@ -12,7 +12,8 @@
        <img id="toolZoomRubber" onclick="switchMode(this.id)" title="rubber zoom" alt="rubber zoom" src="KaMap/images/a_pixel.gif" >
        <img id="toolZoomOut" onclick="myKaMap.zoomOut()" title="zoom Out" alt="zoom Out" src="KaMap/images/a_pixel.gif">
        <img id="toolZoomIn"  onclick="myKaMap.zoomIn()"  title="zoom in"  alt="zoom in"  src="KaMap/images/a_pixel.gif" >
-        
+       
+       <img id="layerSelect" title="Map layers" src="images/layers.png">
        <img id="areaSelect" title="Velg område/kartutsnitt" src="images/areaselect.png">
        <img id="filterMenu" title="Velg filter profil" src="images/filter.png">
        <div id="filterChoice">..</div>

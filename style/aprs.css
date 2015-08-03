@@ -145,9 +145,11 @@ div#filterChoice {
    font-family: arial, sans-serif; 
 }
 
-img#filterMenu {margin-left: 2px}
-img#areaSelect {margin-left: -2px;}
-#buttonMenu {margin-left: 25px}
+
+img#layerSelect{margin-left: 10px}
+img#filterMenu {margin-left: 3px}
+img#areaSelect {margin-left: 3px;}
+#buttonMenu    {margin-left: 25px}
 
 #clogo {
   position: absolute;

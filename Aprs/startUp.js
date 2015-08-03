@@ -23,7 +23,7 @@ var uid = null;
 
 var myCoordinates = myOverlay = myInterval = null;
 var filterProfiles = null; 
-
+var layers = null;
 
 
 function myOnLoad_iframe() {
@@ -56,6 +56,7 @@ function startUp() {
     initDHTMLAPI()
     
     myKaMap = new kaMap( 'PolaricVP' );
+    layers = new layerSwitcher( myKaMap );
     myKaRuler = new myKaRuler(myKaMap);       
     myKaQuery = new kaQuery( myKaMap, KAMAP_POINT_QUERY ); 
     myKaRubberZoom = new kaRubberZoom( myKaMap );
@@ -196,6 +197,14 @@ function myInitialized() {
          else
             myKaMap.selectMap(view, false);
     }
+    
+    
+    /* Set up handler for layer switcher on toolbar */
+    $("#layerSelect").on("click contextmenu", function(e) 
+    {   e = (e)?e:((event)?event:null); 
+      var x = (e.pageX) ? e.pageX : e.clientX; 
+      layers.displayLayers(x, 32);  } );
+    
     
 
     /* Set up a callback for map-area context-menu */

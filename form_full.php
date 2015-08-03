@@ -12,8 +12,9 @@
                   <img src="images/password.png"></a></div>&nbsp;
        
        <img id="buttonMenu" src="images/exec.gif" alt="Meny...">&nbsp;
-       <img id="areaSelect" title="Velg område/kartutsnitt" src="images/areaselect.png">
-       <img id="filterMenu" title="Filter profil" src="images/filter.png">
+       <img id="layerSelect" title="Map layers" src="images/layers.png">
+       <img id="areaSelect" title="Choose area of map" src="images/areaselect.png">
+       <img id="filterMenu" title="Filter profile" src="images/filter.png">
        <div id="filterChoice">..</div>
        
        &nbsp;

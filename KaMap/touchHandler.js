@@ -1,5 +1,9 @@
  
- 
+ function cancelBubble(e) {
+   var evt = e ? e:window.event;
+   if (evt.stopPropagation)    evt.stopPropagation();
+   if (evt.cancelBubble!=null) evt.cancelBubble = true;
+ }
  
  /**
   *  Try to map touch events to mouse events
@@ -9,6 +13,8 @@
    this.tstate = null;
    this.cMenu = false;
    this.moving = false; 
+   this.startx = 0;
+   this.starty = 0;
  };
  
  
@@ -25,31 +31,40 @@
    {
        case "touchstart": 
          t.tstate = first;
+         t.startx = event.clientX;
+         t.starty = event.clientY;
+
          setTimeout( function() {
-           if (t.tstate != null  && !t.moving && !t.multi) {
-             t.cMenu = true;
-             sendEvent("contextmenu", t.tstate);
-             t.tstate = null;
+           if (t.tstate != null  && !t.moving) {
+                t.cMenu = true;
+                sendEvent("contextmenu", t.tstate);
+                t.tstate = null;
            }
          }, 800);   
          break;
            
        case "touchmove":  
-         if (!t.moving) 
-            t.moving = true; 
-         t.tstate = null; 
+         if (!t.moving) { 
+           if( event.clientX - t.startx > 10 || event.clientX - t.startx < -10 || 
+               event.clientY - t.starty > 10 || event.clientY - t.starty < -10 ) {
+              t.moving = true;        
+              t.tstate = null; 
+           }
+           else
+              cancelBubble();
+         } 
          break;        
        
        case "touchend":
-    //     if (t.tstate != null && !t.cMenu )  
-    //       sendEvent("click",first);
-	 if (!t.cMenu) 
-           sendEvent("mouseup",first); 
+         if (!t.cMenu && !t.moving) {
+            sendEvent("mouseup",first);
+            sendEvent("click", first);
+         }
          t.cMenu = false;
          t.tstate = null;
          t.moving = false;  
          break;
-       
+
        default: return;
    }
 
