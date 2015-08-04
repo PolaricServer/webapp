@@ -85,6 +85,9 @@ function projection()
   { return myKaMap.getMapProjection(); }
 
   
+function selectedBase(x)
+  { return myKaMap.getBaseLayer().id == x || myKaMap.getBaseLayer().name == x; }
+  
   
 function add_Gpx_Layer(name, url, color)
 {
