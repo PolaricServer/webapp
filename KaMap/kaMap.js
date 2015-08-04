@@ -336,6 +336,9 @@ kaMap.prototype.evaluateLayers = function() {
         var pred = mapLayers[i].predicate(); 
         mapLayers[i].layer.displayInLayerSwitcher = pred;
         
+        if (!mapLayers[i].layer.isBaseLayer && !pred) 
+            mapLayers[i].layer.setVisibility(false);
+        
         if (mapLayers[i].layer.isBaseLayer && mapLayers[i].layer.getVisibility()) {
             mapLayers[i].layer.setVisibility(false);
             if (pred) 
