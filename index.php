@@ -29,7 +29,7 @@ include_once( 'webappconfig.php' );
 <title><?php echo($siteTitle); ?></title>
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> 
-<link rel="stylesheet" href="jquery/smoothness/jquery-ui.css" type="text/css">
+<link rel="stylesheet" href="jquery/jquery-ui.min.css" type="text/css">
 <link rel="stylesheet" href="OpenLayers/theme/default/style.css" type="text/css">
 <link rel="stylesheet" href="KaMap/scalebar/scalebar-fat.css" type="text/css"  >
 <link rel="stylesheet" href="style/screen.css" type="text/css">
