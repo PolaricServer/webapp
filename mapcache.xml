@@ -1,0 +1,165 @@
+ 
+ <?xml version="1.0" encoding="UTF-8"?>
+ 
+ 
+ <mapcache>
+   <!--
+   *******************************************************
+   Set up caches here. Files, sqlite, mbtiles, etc..
+   *******************************************************
+   -->
+   <cache name="topo2_sqlite" type="sqlite3">
+     <dbfile>/var/lib/polaric/mapcache/maps_topo2.db</dbfile>
+   </cache>
+   
+   <cache name="grunnkart_sqlite" type="sqlite3">
+     <dbfile>/var/lib/polaric/mapcache/maps_grunnkart.db</dbfile>
+   </cache>
+   
+   
+   <!--
+   **********************************************************************
+   Set up sources here.
+   It is typically an external WMS service. Mapcache supports some
+   other source types like mapserver mapfiles.
+   **********************************************************************
+   -->
+   
+   <!-- This uses a tiled cache service. Use with metatile 1x1. -->
+   <source name="kv_topo2cache" type="wms">
+     <getmap>
+       <params>
+         <FORMAT>image/png</FORMAT>
+         <LAYERS>topo2</LAYERS>
+       </params>
+     </getmap>
+     
+     <http>
+       <!-- Opencache.statkart.no -->
+       <url>http://opencache.statkart.no/gatekeeper/gk/gk.open?</url>
+     </http>
+   </source>
+   
+   <!-- This uses a tiled cache service. Use with metatile 1x1. -->
+   <source name="kv_grunnkart" type="wms">
+     <getmap>
+       <params>
+         <FORMAT>image/png</FORMAT>
+         <LAYERS>norges_grunnkart</LAYERS>
+       </params>
+     </getmap>
+     
+     <http>
+       <url>http://opencache.statkart.no/gatekeeper/gk/gk.open?</url>
+     </http>
+   </source>
+   
+   
+   <!-- This uses a WMS service. Use it with metatile 5x5 (for example) -->
+   <source name="kv_topo2" type="wms">
+     <getmap>
+       <params>
+         <FORMAT>image/png</FORMAT>
+         <LAYERS>topo2_WMS</LAYERS>
+       </params>
+     </getmap>
+     
+     <http>
+       <!-- openwms.statkart.no -->
+       <url>http://openwms.statkart.no/skwms1/wms.topo2</url>
+     </http>
+   </source>
+   
+   
+   
+   <!--
+   **********************************************************************
+   Set up grids here.
+   A grid defines map projection, tile size, extent and resolutions.
+   
+   Resolutions must match the resolutions for the OpenLayers client.
+   If using tiled cache services (e.g. Kartverket) as sources, we
+   must match their resolutions excactly as well
+   (see also mapconfig.js).
+   **********************************************************************
+   -->
+   <grid name="utm32">
+     <metadata>
+       <title>UTM zone 32 for Norway. Matches Kartverket cache-service.</title>
+     </metadata>
+     
+     <srs>EPSG:32632</srs>
+     <size>256 256</size>
+     <extent> -2000000,3500000,3545984,9045984 </extent>
+     <resolutions>1354.0 677.0 338.5 169.25 84.625 42.3125 21.15625 10.5781248 5.2890624 2.6445312 1.3222656 0.6611328</resolutions>
+   </grid>
+   
+   
+   
+   <grid name="utm33">
+     <metadata>
+       <title>UTM zone 33 for Norway.  Matches Kartverket cache-service.</title>
+     </metadata>
+     
+     <srs>EPSG:32633</srs>
+     <size>256 256</size>
+     <extent> -2500000.0,3500000.0,3045984.0,9045984.0 </extent>
+     <resolutions>1354.0 677.0 338.5 169.25 84.625 42.3125 21.15625 10.5781248 5.2890624 2.6445312 1.3222656 0.6611328</resolutions>
+   </grid>
+   
+   
+   <!--
+   ********************************************************************
+    Set up tilesets here.
+    A tileset defines a source, a cache, a grid and a format as well
+    as a metatile size, and expire time. auto_expire is the numbers
+    of seconds before the server cache expire and will try to reload. 
+    0 means - never expire. 
+   ********************************************************************
+   -->
+   <tileset name="kv_topo2cache">
+     <source>kv_topo2cache</source>
+     <cache>topo2_sqlite</cache>
+     <grid>utm33</grid>
+     <format>mixed</format>
+     
+     <metatile>1 1</metatile>
+     <metabuffer>0</metabuffer>
+     <expires>604800</expires>
+     <auto_expire>5184000</auto_expire>
+   </tileset>
+   
+   
+   <tileset name="kv_grunnkart">
+     <source>kv_grunnkart</source>
+     <cache>grunnkart_sqlite</cache>
+     <grid>utm33</grid>
+     <format>mixed</format>
+     
+     <metatile>1 1</metatile>
+     <metabuffer>0</metabuffer>
+     <expires>604800</expires>
+     <auto_expire>5184000</auto_expire>
+   </tileset>
+   
+   
+   
+   <default_format>JPEG</default_format>
+   
+   <service type="wms" enabled="true">
+     <full_wms>assemble</full_wms>
+     <resample_mode>bilinear</resample_mode>
+     <format>JPEG</format>
+     <maxsize>4096</maxsize>
+   </service>
+   
+   <service type="wmts" enabled="true"/>
+   <service type="tms" enabled="true"/>
+   
+   <errors>report</errors>
+   <lock_dir>/tmp</lock_dir>
+   
+ </mapcache>
+ 
+ 
+   

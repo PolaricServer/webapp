@@ -105,7 +105,7 @@ LAYERS (true, function() { return is_visible(Norge); }, [
       /* Kartverket Topo 2. Cached on localhost */
       new OpenLayers.Layer.TMS(
          "KV Topo2 (cache)", "/mapcache/tms/",
-         { layername: 'kv_topo2', type: 'jpg' }
+         { layername: 'kv_topo2cache', type: 'jpg' }
       ),
       /* Kartverket Grunnkart. Cached on localhost */
       new OpenLayers.Layer.TMS(
@@ -182,7 +182,11 @@ var mapViews = [
 ];
 
 
-/* Filter menu */
+/* Filter menu. The actual filters are defined by aprsd in
+ * /etc/polaric-aprsd/view.profiles. The name attribute refers to a profile-name. 
+ * For non-public profiles, add attribute: restricted: 'true' 
+ */
+
 var filterViews = [
    { name: 'alle',   title: 'Alle / Alt' },
    { name: 'track',  title: 'Sporing 1' },
