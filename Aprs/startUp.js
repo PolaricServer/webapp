@@ -23,8 +23,8 @@ var uid = null;
 
 var myCoordinates = myOverlay = myInterval = null;
 var filterProfiles = null; 
-var layers = null;
 
+var layers; layers = new layerSwitcher( myKaMap );
 
 function myOnLoad_iframe() {
     isIframe = true; 
@@ -155,11 +155,8 @@ function myMapInitialized() {
     OpenLayers.Console.info("UID=", uid);
     
     permalink = (qstring.length >= 2 && qstring.match(/.*zoom\=.*/) && qstring.match(/.*lat\=.*/));
-    if (!permalink) {
-         var blayer = storage[uid+'.baselayer'];
-         if (blayer != null)
-            myKaMap.setBaseLayerId(blayer);
-    }
+    if (!permalink) 
+        layers.getSettings();
 };
 
 
@@ -198,15 +195,13 @@ function myInitialized() {
             myKaMap.selectMap(view, false);
     }
     
-    
     /* Set up handler for layer switcher on toolbar */
     $("#layerSelect").on("click contextmenu", function(e) 
     {   e = (e)?e:((event)?event:null); 
-      var x = (e.pageX) ? e.pageX : e.clientX; 
-      layers.displayLayers(x, 32);  } );
+        var x = (e.pageX) ? e.pageX : e.clientX; 
+        layers.displayLayers(x, 32);  } );
     
     
-
     /* Set up a callback for map-area context-menu */
     var aMaps = myKaMap.getMaps();
     ctxtMenu.addCallback('AREASELECT', function (m) {
@@ -257,6 +252,7 @@ function myInitialized() {
     
     
     /* LANGUAGE setting */
+    popup_setLanguage();
     if (isMobileApp) {
       if (storage[uid+'.language'] == null)
         navigator.globalization.getPreferredLanguage(
@@ -481,9 +477,9 @@ function myExtentChanged( eventID, extents )
                storage[uid+'.extents.1'] = roundDeg(extents[1]).toString();
                storage[uid+'.extents.2'] = roundDeg(extents[2]).toString();
                storage[uid+'.extents.3'] = roundDeg(extents[3]).toString();
-               storage[uid+'.baselayer'] = myKaMap.getBaseLayer().id; 
+ //              storage[uid+'.baselayer'] = myKaMap.getBaseLayer().id; 
            }
-           setTimeout(function() {myKaMap.evaluateLayers();}, 50);
+           setTimeout(function() {layers.evaluateLayers();}, 50);
            if (initialized) {
                setTimeout( function() { getXmlData(false);}, 500);
                myKaMap.updateObjects();

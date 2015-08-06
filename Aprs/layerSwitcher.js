@@ -1,23 +1,81 @@
- 
+ /* Layer manager */
  
  
  function layerSwitcher(ka) {
    this.kaMap = ka;
+   this.storage = null;
  };
+ 
+ 
+ /* Get settings from persistent storage */
+ layerSwitcher.prototype.getSettings = function()
+ {
+   var blayer = storage[uid+'.baselayer'];
+   if (blayer != null)
+     this.kaMap.setBaseLayerId(blayer); 
+   for (var i=0; i < mapLayers.length; i++) { 
+     var layer = mapLayers[i].layer;
+     if (!layer.isBaseLayer && layer.displayInLayerSwitcher) { 
+         var setting = storage[uid+'.layer.' + layer.name];
+         layer.setVisibility( 
+           (setting != null && setting == 'on') ); 
+     }
+   }         
+ }
  
  
  layerSwitcher.prototype.setBaseLayer = function(i)
  {
     this.kaMap.olMap.setBaseLayer(mapLayers[i].layer);
+    storage[uid+'.baselayer'] = mapLayers[i].layer.id
  }
  
  
  layerSwitcher.prototype.toggleOverlay = function(i)
  {
-    mapLayers[i].layer.setVisibility(
-     !mapLayers[i].layer.getVisibility()
-    );
+     var prev = mapLayers[i].layer.getVisibility(); 
+     mapLayers[i].layer.setVisibility(!prev);
+     storage[uid+'.layer.' + mapLayers[i].layer.name] = 
+         (prev ? 'off' : 'on'); 
  }
+ 
+ 
+ /*
+  * Re-evaluate what layers to be shown in layer switcher list. 
+  */
+ layerSwitcher.prototype.evaluateLayers = function() {
+   var vlayer = -1; 
+   if (mapLayers != null && mapLayers.length > 0) {
+     for (var i=0; i < mapLayers.length; i++) { 
+       var pred = mapLayers[i].predicate(); 
+       var layer =  mapLayers[i].layer; 
+       
+       layer.displayInLayerSwitcher = pred;
+       
+       if (!layer.isBaseLayer) 
+         layer.setVisibility(pred ? (storage[uid+'.layer.' + layer.name] == 'on') : false);
+       
+       if (layer.isBaseLayer && layer.getVisibility()) {
+         layer.setVisibility(false);
+         if (pred) 
+           vlayer = i; 
+       }
+     }
+     if (vlayer == -1) {
+       for (var i=0; i < mapLayers.length; i++)  
+         if (mapLayers[i].layer.isBaseLayer && mapLayers[i].layer.displayInLayerSwitcher) {
+           this.kaMap.olMap.baseLayer = mapLayers[i].layer;
+           this.kaMap.olMap.events.triggerEvent("changebaselayer");
+           mapLayers[i].layer.setVisibility(true);  
+           return; 
+         }
+     }  
+     else
+       mapLayers[vlayer].layer.setVisibility(true);
+   }
+ };
+ 
+ 
  
  /* Display layers in a popup window */
  layerSwitcher.prototype.displayLayers = function(x, y) 
@@ -31,7 +89,7 @@
        return function() {
           t.setBaseLayer(arg); 
           setTimeout(function() {
-             myKaMap.evaluateLayers();
+             t.evaluateLayers();
              w.innerHTML = generateForm();
              addHandlers();
           }, 100);

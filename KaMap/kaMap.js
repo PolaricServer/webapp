@@ -261,7 +261,6 @@ kaMap.prototype.initializeOL = function( ) {
   t.olMap = new OpenLayers.Map(
      {
         projection       : utm_projection,
- //       displayProjection: utm_projection,
         units            : 'm',
         numZoomLevels    : max_zoomlevels,
         zoomMethod       : null,
@@ -324,41 +323,6 @@ kaMap.prototype.addLayers = function() {
     for (var i=0; i < mapLayers.length; i++) 
         this.olMap.addLayer(mapLayers[i].layer);
 };
-
-
-/*
- * Re-evaluate what layers to be shown in layer switcher list. 
- */
-kaMap.prototype.evaluateLayers = function() {
-  var vlayer = -1; 
-  if (mapLayers != null && mapLayers.length > 0) {
-     for (var i=0; i < mapLayers.length; i++) { 
-        var pred = mapLayers[i].predicate(); 
-        mapLayers[i].layer.displayInLayerSwitcher = pred;
-        
-        if (!mapLayers[i].layer.isBaseLayer && !pred) 
-            mapLayers[i].layer.setVisibility(false);
-        
-        if (mapLayers[i].layer.isBaseLayer && mapLayers[i].layer.getVisibility()) {
-            mapLayers[i].layer.setVisibility(false);
-            if (pred) 
-                vlayer = i; 
-        }
-     }
-     if (vlayer == -1) {
-       for (var i=0; i < mapLayers.length; i++)  
-         if (mapLayers[i].layer.isBaseLayer && mapLayers[i].layer.displayInLayerSwitcher) {
-              this.olMap.baseLayer = mapLayers[i].layer;
-              this.olMap.events.triggerEvent("changebaselayer");
-              mapLayers[i].layer.setVisibility(true);  
-              return; 
-          }
-     }  
-     else
-        mapLayers[vlayer].layer.setVisibility(true);
-  }
-};
-
 
 
 
