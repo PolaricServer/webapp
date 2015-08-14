@@ -252,7 +252,6 @@ function myInitialized() {
     
     
     /* LANGUAGE setting */
-    popup_setLanguage();
     if (isMobileApp) {
       if (storage[uid+'.language'] == null)
         navigator.globalization.getPreferredLanguage(
