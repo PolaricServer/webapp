@@ -507,7 +507,7 @@ kaXmlGraphicElement.prototype.remove = function(point) {}
 
 
 /**************************************************************/
-
+/* FIXME: Most of this can go away */
 
 var _BrowserIdent_browser = null;
 var _BrowserIdent_version = null;
@@ -525,11 +525,10 @@ function _BrowserIdent() {
         } else if (_BrowserIdent_checkIt('safari')) _BrowserIdent_browser = "Safari";
         else if (_BrowserIdent_checkIt('omniweb')) _BrowserIdent_browser = "OmniWeb";
         else if (_BrowserIdent_checkIt('opera')) _BrowserIdent_browser = "Opera"
-        else if (_BrowserIdent_checkIt('webtv')) _BrowserIdent_browser = "WebTV";
-        else if (_BrowserIdent_checkIt('icab')) _BrowserIdent_browser = "iCab";
         else if (_BrowserIdent_checkIt('msie')) _BrowserIdent_browser = "Internet Explorer";
         else if (_BrowserIdent_checkIt('firefox')) _BrowserIdent_browser = "Firefox";
         else if (_BrowserIdent_checkIt('iceweasel')) _BrowserIdent_browser = "Firefox";
+        else if (_BrowserIdent_checkIt('trident')) _BrowserIdent_browser = "Newer IE";
         else if (!_BrowserIdent_checkIt('compatible')) {
                 _BrowserIdent_browser = "Netscape Navigator"
                 _BrowserIdent_version = _BrowserIdent_detect.charAt(8);
@@ -539,8 +538,8 @@ function _BrowserIdent() {
            _BrowserIdent_version = _BrowserIdent_detect.charAt(_BrowserIdent_place + _BrowserIdent_thestring.length);
         
         if (_BrowserIdent_isMSIE() && 
-             safeParseInt(_BrowserIdent_version) <= 7 && safeParseInt(_BrowserIdent_version) != 1)
-           alert(_("Sorry: We do not support IE version 7 or older. Recommend upgrade of browser.")); 
+             safeParseInt(_BrowserIdent_version) <= 8 && safeParseInt(_BrowserIdent_version) != 1)
+           alert(_("Sorry: We do not support IE version 8 or older. Recommend upgrade of browser.")); 
 }
 
 function _BrowserIdent_isMSIE()
@@ -574,35 +573,21 @@ function _BrowserIdent_setOpacity(imageobject, opacity) {
 }
 
 function _BrowserIdent_getPreferredImageType() {
-        if (_BrowserIdent_browser == "Netscape Navigator") return "P";
-        else if (_BrowserIdent_browser == "Opera") return "P";
-        else if (_BrowserIdent_browser == "Firefox") return "P";
-        else if (_BrowserIdent_browser == "Safari") return "P";
-        else if (_BrowserIdent_browser == "Konqueror") return "P";
-        else return "G"
+        if (_BrowserIdent_browser == "Internet Explorer") return "G";
+        else return "P"
 }
 
 function _BrowserIdent_getPreferredOpacity() {
-        if (_BrowserIdent_browser == "Netscape Navigator") return "server";
-        else if (_BrowserIdent_browser == "Firefox") return "server";
-        else if (_BrowserIdent_browser == "Opera") return "server";
-        else if (_BrowserIdent_browser == "Konqueror") return "server";
-        else return "client"
+         return "client"
 }
 
 var xmlOverlayUseCanvas = true;
 
+
 function _BrowserIdent_hasCanvasSupport() {
 
         if (! xmlOverlayUseCanvas) return false;
-        
-        if (_BrowserIdent_browser == "Internet Explorer") return true; 
-        if (_BrowserIdent_browser == "Firefox") return true;
-        if (_BrowserIdent_browser == "Safari") return true;
-        //if (_BrowserIdent_browser == "Konqueror") return true;
-        if (_BrowserIdent_browser == "Opera") return true;
-        
-        return false;
+        return true;
 }
 
 function _BrowserIdent_newCanvas(parentNode) {
