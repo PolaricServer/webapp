@@ -129,17 +129,17 @@ function kaMap( szID ) {
      * This is a workaround. 
      */
     if (!isMobileApp) {
-      var DOM_body = document.getElementsByTagName('body')[0];        
-      var DOM_div = document.createElement('div');
-      DOM_div.style = 'width: 1in; visibility:hidden;';
-      DOM_body.appendChild(DOM_div);
-      var w = document.defaultView.getComputedStyle(DOM_div, null).getPropertyValue('width');
-      DOM_body.removeChild(DOM_div);
-      OpenLayers.DOTS_PER_INCH = parseInt(w);
+      var div = document.createElement("div");
+      div.style.width="1in";
+      var body = document.getElementsByTagName("body")[0];
+      body.appendChild(div);
+      var ppi = document.defaultView.getComputedStyle(div, null).getPropertyValue('width');
+      body.removeChild(div);
+      OpenLayers.DOTS_PER_INCH = parseFloat(ppi);
     }
 };
- 
- 
+
+
 
 kaMap.prototype.getMapProjection = function()
 {
