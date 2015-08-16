@@ -3,7 +3,7 @@ Section: hamradio
 Priority: optional
 Maintainer: Øyvind Hanssen <ohanssen@acm.org>
 Build-Depends:  debhelper (>=8)
-Standards-Version: 3.9.4
+Standards-Version: 3.9.6
 Homepage: http://aprs.no/dokuwiki
 
 Package: polaric-webapp
