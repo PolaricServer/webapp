@@ -26,7 +26,6 @@ install: Aprs/compiled.js
 	install -d $(INSTALL_CONFIG)
 	install -d $(INSTALL_CONFIG)/www
 	install -d $(INSTALL_CONFIG)/www/auto
-	install -d $(INSTALL_CONFIG)/mapserv
 	install -d $(INSTALL_BIN)
 	install -d $(INSTALL_DATA)
 	install -d $(INSTALL_DATA)/mapcache
@@ -58,10 +57,9 @@ install: Aprs/compiled.js
 	install -m 644 i18n/msgs/*.json $(INSTALL_WEB)/i18n/msgs
 	cp -R OpenLayers/* $(INSTALL_WEB)/OpenLayers
 	
-        # Config files are placed in /etc and should be symlinked from the webapp directory 
-	install -m 644 mapcache/mapserv/*.map $(INSTALL_CONFIG)/mapserv       
+        # Config files are placed in /etc and should be symlinked from the webapp directory     
 	install -m 644 mapconfig.js  $(INSTALL_CONFIG)/mapconfig.js
-	install -m 644 mapcache/mapcache.xml $(INSTALL_CONFIG)/mapcache.xml
+	install -m 644 mapcache.xml $(INSTALL_CONFIG)/mapcache.xml
 	install -m 644 webappconfig.php $(INSTALL_CONFIG)
 	install -m 644 users $(INSTALL_CONFIG)
 	

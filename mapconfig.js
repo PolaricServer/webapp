@@ -115,7 +115,7 @@ LAYERS (true, function() { return is_visible(Norge); }, [
       /* Raster. Directly from Kartverket */
       new OpenLayers.Layer.WMS(
          "Kartverket Raster", "http://opencache.statkart.no/gatekeeper/gk/gk.open?",
-         { layers: 'toporaster2',
+         { layers: 'toporaster3',
            format: 'image/png' }
       ),
       /* Sea maps. Directly from Kartverket */
