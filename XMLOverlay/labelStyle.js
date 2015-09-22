@@ -9,8 +9,8 @@ function init_labelStyle(storage, uid)
 function LabelStyle (storage, uid)
 {
    this.currentIndex = 0; 
-   this.start = 4;
-   this.styles = [ "60%", "70%", "80%", "90%", "100%", "110%", "120%", "130%", "140%"];
+   this.start = 5;
+   this.styles = ["40%", "50%", "60%", "70%", "80%", "90%", "100%", "110%", "120%", "130%", "140%", "150%"];
    this.uid = uid;
    this.storage = storage;
    var x = parseInt(storage[uid+".labelStyle"]);

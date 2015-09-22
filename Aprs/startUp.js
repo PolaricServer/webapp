@@ -499,6 +499,7 @@ function myExtentChanged( eventID, extents )
 function myLayersChanged(eventID, map) {   
     if (initialized) 
        getXmlData(false);
+    layers.refreshOverlay();
 }
 
 
