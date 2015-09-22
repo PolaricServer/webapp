@@ -14,244 +14,252 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: Aprs/compiled.js:91 Aprs/menu.js:24
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:90
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:91
 msgid "Add APRS object"
 msgstr "Legg til APRS objekt"
 
 #: Aprs/compiled.js:91 Aprs/menu.js:29
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:90
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:91
 msgid "Center point"
 msgstr "Sentrer punkt"
 
 #: Aprs/compiled.js:91 Aprs/menu.js:26
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:90
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:91
 msgid "Set own position"
 msgstr "Sett egen posisjon"
 
 #: Aprs/compiled.js:91 Aprs/menu.js:19
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:90
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:91
 msgid "Show map reference"
 msgstr "Vis kartreferanse"
 
 #: Aprs/compiled.js:91 Aprs/menu.js:21
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:90
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:91
 msgid "WX report (Norway)"
 msgstr "Værmelding (Norge)"
 
 #: Aprs/compiled.js:91 Aprs/menu.js:30
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:90
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:91
 msgid "Zoom in"
 msgstr "Zoom inn"
 
 #: Aprs/compiled.js:92 Aprs/menu.js:31
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:91
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:92
 msgid "Zoom out"
 msgstr "Zoom ut"
 
-#: Aprs/compiled.js:93 Aprs/menu.js:51
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:92
+#: Aprs/compiled.js:93 Aprs/menu.js:50
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:93
 msgid "Add object"
 msgstr "Legg til APRS objekt"
 
-#: Aprs/compiled.js:93 Aprs/compiled.js:105 Aprs/menu.js:44 Aprs/menu.js:312
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:92
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:104
+#: Aprs/compiled.js:93 Aprs/compiled.js:105 Aprs/menu.js:43 Aprs/menu.js:316
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:93
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:105
 msgid "Find APRS station/object"
 msgstr "Finn APRS objekt"
 
-#: Aprs/compiled.js:93 Aprs/menu.js:47
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:92
+#: Aprs/compiled.js:93 Aprs/menu.js:46
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:93
 msgid "Find location name (Norway)"
 msgstr "Finn stedsnavn (Norge)"
 
-#: Aprs/compiled.js:93 Aprs/menu.js:45
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:92
+#: Aprs/compiled.js:93 Aprs/menu.js:44
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:93
 msgid "Find map reference"
 msgstr "Finn kartreferanse"
 
-#: Aprs/compiled.js:93 Aprs/compiled.js:96 Aprs/menu.js:52 Aprs/menu.js:108
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:92
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:95
+#: Aprs/compiled.js:93 Aprs/compiled.js:96 Aprs/menu.js:51 Aprs/menu.js:109
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:93
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:96
 msgid "Remove object"
 msgstr "Slett objekt"
 
-#: Aprs/compiled.js:94 Aprs/menu.js:58
+#: Aprs/compiled.js:93 Aprs/compiled.js:103 Aprs/menu.js:55 Aprs/menu.js:286
 #: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:93
-msgid "Activate GPS pos."
-msgstr "Aktiver GPS pos."
-
-#: Aprs/compiled.js:94 Aprs/menu.js:64
-msgid "Change language"
-msgstr "Endre språk"
-
-#: Aprs/compiled.js:94 Aprs/menu.js:63
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:93
-msgid "De-activate GPS pos."
-msgstr "Deaktiver GPS pos."
-
-#: Aprs/compiled.js:94 Aprs/menu.js:68
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:93
-msgid "Hide traces"
-msgstr "Skjul sporlogger"
-
-#: Aprs/compiled.js:94 Aprs/compiled.js:103 Aprs/menu.js:56 Aprs/menu.js:282
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:92
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:102
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:103
 msgid "Set SAR code"
 msgstr "Sett SAR kode"
 
-#: Aprs/compiled.js:94 Aprs/menu.js:70
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:93
+#: Aprs/compiled.js:94 Aprs/menu.js:57
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:94
+msgid "Activate GPS pos."
+msgstr "Aktiver GPS pos."
+
+#: Aprs/compiled.js:94 Aprs/menu.js:63
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:94
+msgid "Change language"
+msgstr "Endre språk"
+
+#: Aprs/compiled.js:94 Aprs/menu.js:62
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:94
+msgid "De-activate GPS pos."
+msgstr "Deaktiver GPS pos."
+
+#: Aprs/compiled.js:94 Aprs/menu.js:71
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:94
+msgid "Font size +"
+msgstr "Skriftstørrelse +"
+
+#: Aprs/compiled.js:94 Aprs/menu.js:67
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:94
+msgid "Hide traces"
+msgstr "Skjul sporlogger"
+
+#: Aprs/compiled.js:94 Aprs/menu.js:69
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:94
 msgid "Show traces"
 msgstr "Vis sporlogger"
 
 #: Aprs/compiled.js:95 Aprs/menu.js:72
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:93
-msgid "Font size +"
-msgstr "Skriftstørrelse +"
-
-#: Aprs/compiled.js:95 Aprs/menu.js:73
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:94
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:95
 msgid "Font size -"
 msgstr "Skriftstørrelse -"
 
-#: Aprs/compiled.js:95 Aprs/menu.js:78
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:94
+#: Aprs/compiled.js:95 Aprs/menu.js:77
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:95
 msgid "SAR URL"
 msgstr "SAR URL"
 
-#: Aprs/compiled.js:95 Aprs/menu.js:79
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:94
+#: Aprs/compiled.js:95 Aprs/menu.js:78
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:95
 msgid "SAR mode"
 msgstr "SAR modus"
 
-#: Aprs/compiled.js:95 Aprs/compiled.js:96 Aprs/menu.js:89 Aprs/menu.js:100
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:94
+#: Aprs/compiled.js:95 Aprs/compiled.js:96 Aprs/menu.js:88 Aprs/menu.js:99
 #: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:95
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:96
 msgid "Show info"
 msgstr "Vis info"
 
-#: Aprs/compiled.js:96 Aprs/menu.js:115
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:95
-msgid "Auto-tracking"
-msgstr "Auto-sporing"
-
-#: Aprs/compiled.js:96 Aprs/menu.js:105
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:95
+#: Aprs/compiled.js:96 Aprs/menu.js:104
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:96
 msgid "Global settings.."
 msgstr "Globale innstillinger.."
 
-#: Aprs/compiled.js:96 Aprs/menu.js:102
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:95
+#: Aprs/compiled.js:96 Aprs/menu.js:101
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:96
 msgid "Last movements"
 msgstr "Siste bevegelser"
 
-#: Aprs/compiled.js:96 Aprs/menu.js:110
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:95
+#: Aprs/compiled.js:96 Aprs/menu.js:105
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:96
+msgid "Manage tags.."
+msgstr "Tags (nøkkelord).."
+
+#: Aprs/compiled.js:96 Aprs/menu.js:111
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:96
 msgid "Reset info"
 msgstr "Nullstill info"
 
-#: Aprs/compiled.js:97 Aprs/menu.js:117
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:96
+#: Aprs/compiled.js:97 Aprs/menu.js:116
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:97
+msgid "Auto-tracking"
+msgstr "Auto-sporing"
+
+#: Aprs/compiled.js:97 Aprs/menu.js:118
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:97
 msgid "Hide ident"
 msgstr "Skjul ident"
 
-#: Aprs/compiled.js:97 Aprs/menu.js:123
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:96
+#: Aprs/compiled.js:97 Aprs/menu.js:124
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:97
 msgid "Hide trail"
 msgstr "Skjul spor"
 
-#: Aprs/compiled.js:97 Aprs/menu.js:115
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:96
+#: Aprs/compiled.js:97 Aprs/menu.js:116
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:97
 msgid "OFF"
 msgstr "AV"
 
-#: Aprs/compiled.js:97 Aprs/menu.js:115
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:96
+#: Aprs/compiled.js:97 Aprs/menu.js:116
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:97
 msgid "ON"
 msgstr "PÅ"
 
-#: Aprs/compiled.js:97 Aprs/menu.js:119
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:96
+#: Aprs/compiled.js:97 Aprs/menu.js:120
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:97
 msgid "Show ident"
 msgstr "Vis ident"
 
-#: Aprs/compiled.js:97 Aprs/menu.js:125
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:96
+#: Aprs/compiled.js:97 Aprs/menu.js:126
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:97
 msgid "Show trail"
 msgstr "Vis spor"
 
-#: Aprs/compiled.js:100 Aprs/menu.js:207
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:99
+#: Aprs/compiled.js:100 Aprs/menu.js:211
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:100
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: Aprs/compiled.js:101 Aprs/menu.js:233
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:100
+#: Aprs/compiled.js:101 Aprs/menu.js:237
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:101
 msgid "Station"
 msgstr "Stasjon"
 
-#: Aprs/compiled.js:103 Aprs/menu.js:283
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:102
+#: Aprs/compiled.js:103 Aprs/menu.js:287
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:103
 msgid "Code"
 msgstr "Kode"
 
-#: Aprs/compiled.js:103 Aprs/menu.js:285
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:102
+#: Aprs/compiled.js:103 Aprs/menu.js:289
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:103
 msgid "Confirm"
 msgstr "Bekreft"
 
-#: Aprs/compiled.js:105 Aprs/compiled.js:113 Aprs/menu.js:315 Aprs/menu.js:490
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:104
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:112
+#: Aprs/compiled.js:105 Aprs/compiled.js:113 Aprs/menu.js:319 Aprs/menu.js:494
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:105
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:113
 msgid "Search"
 msgstr "Søk"
 
-#: Aprs/compiled.js:105 Aprs/menu.js:313
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:104
+#: Aprs/compiled.js:105 Aprs/menu.js:317
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:105
 msgid "Text in ident/comment"
 msgstr "Tekst i ident/kommentar"
 
 #: Aprs/compiled.js:108 Aprs/compiled.js:109 Aprs/compiled.js:110
-#: Aprs/menu.js:403 Aprs/menu.js:412 Aprs/menu.js:420
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:107
+#: Aprs/menu.js:407 Aprs/menu.js:416 Aprs/menu.js:424
 #: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:108
 #: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:109
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:110
 msgid "Find"
 msgstr "Finn"
 
-#: Aprs/compiled.js:108 Aprs/menu.js:396
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:107
+#: Aprs/compiled.js:108 Aprs/menu.js:400
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:108
 msgid "Show reference on map"
 msgstr "Vis kartreferanse på kart"
 
-#: Aprs/compiled.js:112 Aprs/menu.js:487
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:111
+#: Aprs/compiled.js:112 Aprs/menu.js:491
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:112
 msgid "Find Location Name (Kartverket)"
 msgstr "Finn stedsnavn (Kartverket)"
 
-#: Aprs/compiled.js:115 Aprs/menu.js:584
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:114
+#: Aprs/compiled.js:115 Aprs/menu.js:588
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:115
 msgid "Add APRS object here"
 msgstr "Legg til APRS objekt her"
 
-#: Aprs/compiled.js:155 Aprs/startUp.js:396
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:154
-msgid "Access to SAR info denied. Invalid key"
-msgstr "Ingen adgang til SAR info. Ugyldig nøkkel"
-
-#: Aprs/configSupport.js:122
-#: debian/polaric-webapp/var/www/aprs/Aprs/configSupport.js:119
-msgid "Couldn't read GPX-file..."
-msgstr "Kunne ikke lese GPX-fil..."
-
-#: Aprs/layerSwitcher.js:27
+#: Aprs/compiled.js:123 Aprs/layerSwitcher.js:108
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:123
 msgid "Base layer"
 msgstr "Grunnkartlag"
 
-#: Aprs/layerSwitcher.js:37
+#: Aprs/compiled.js:124 Aprs/layerSwitcher.js:118
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:124
 msgid "Overlays"
-msgstr ""
+msgstr "Overlays"
+
+#: Aprs/compiled.js:161 Aprs/startUp.js:391
+#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:161
+msgid "Access to SAR info denied. Invalid key"
+msgstr "Ingen adgang til SAR info. Ugyldig nøkkel"
+
+#: Aprs/configSupport.js:128
+#: debian/polaric-webapp/var/www/aprs/Aprs/configSupport.js:128
+msgid "Couldn't read GPX-file..."
+msgstr "Kunne ikke lese GPX-fil..."
 
 #: MobileApp/compiled.js:1 MobileApp/mobileApp.js:14
 msgid "high resolution"
@@ -315,25 +323,24 @@ msgstr "Vise <u>fart</u> (km/h): vent litt..."
 msgid "Show <u>speed</u> (knots): please wait..."
 msgstr "Vise <u>fart</u> (knop): vent litt..."
 
-#: XMLOverlay/compiled.js:21 XMLOverlay/kaXmlOverlay.js:543
+#: XMLOverlay/compiled.js:21 XMLOverlay/kaXmlOverlay.js:542
 #: debian/polaric-webapp/var/www/aprs/XMLOverlay/compiled.js:21
 msgid ""
-"Sorry: We do not support IE version 7 or older. Recommend upgrade of browser."
+"Sorry: We do not support IE version 8 or older. Recommend upgrade of browser."
 msgstr ""
 "Beklager. Vi støtter ikke IE versjon 7 eller eldre. Anbefaller å oppgradere "
 "nettleser."
 
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:93
-msgid "Change screen resolution"
-msgstr "Endre skjermoppløsning"
-
-#: debian/polaric-webapp/var/www/aprs/Aprs/compiled.js:115
-msgid "Select language"
-msgstr "Velg språk"
-
+#: debian/polaric-webapp/var/www/aprs/jquery/jquery-ui-min.js:10
 #: jquery/jquery-ui-min.js:10
 msgid "'"
-msgstr ""
+msgstr "'"
+
+#~ msgid "Change screen resolution"
+#~ msgstr "Endre skjermoppløsning"
+
+#~ msgid "Select language"
+#~ msgstr "Velg språk"
 
 #~ msgid "Object"
 #~ msgstr "Objekt"
