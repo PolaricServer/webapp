@@ -102,6 +102,8 @@ ctxtMenu.addCallback('ITEM', function(m)
   
   if (canUpdate()) { 
     m.add(_('Global settings..'), function() { popup_stationInfo(m.ident, true);});
+    m.add(_('Manage tags..'), function() { popup_setTag(m.ident, m.x, m.y);});
+
     if (m.p != null) { 
       if ( m.p.own )
         m.add(_('Remove object'), function() { popup_deleteObject(m.ident); });
@@ -126,6 +128,14 @@ ctxtMenu.addCallback('ITEM', function(m)
 });
 
 
+
+
+function popup_setTag(ident, x, y)
+{
+     var coord = myKaMap.pixToGeo(x, y);
+     fullPopupWindow('editTags', server_url + 'srv/addtag?objid='+ident + '&lang='+language +
+        (x==null ? "" : '&x=' + coord[0] + '&y='+ coord[1] ), 560, 300);
+}
 
 
 /*************************************************************
