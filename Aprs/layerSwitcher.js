@@ -40,6 +40,16 @@
  }
  
  
+ layerSwitcher.prototype.refreshOverlay = function()
+ {
+   for (var i=0;i<mapLayers.length; i++) {      
+     var layer =  mapLayers[i].layer; 
+     if (!layer.isBaseLayer && "refresh" in layer && layer.getVisibility())
+       layer.refresh();
+   }
+ }
+ 
+ 
  /*
   * Re-evaluate what layers to be shown in layer switcher list. 
   */
@@ -52,8 +62,10 @@
        
        layer.displayInLayerSwitcher = pred;
        
-       if (!layer.isBaseLayer) 
-         layer.setVisibility(pred ? (storage[uid+'.layer.' + layer.name] == 'on') : false);
+       if (!layer.isBaseLayer) {
+         var v = pred ? (storage[uid+'.layer.' + layer.name] == 'on') : false;
+         layer.setVisibility(v);
+      }
        
        if (layer.isBaseLayer && layer.getVisibility()) {
          layer.setVisibility(false);
@@ -66,8 +78,8 @@
          if (mapLayers[i].layer.isBaseLayer && mapLayers[i].layer.displayInLayerSwitcher) {
            this.kaMap.olMap.baseLayer = mapLayers[i].layer;
            this.kaMap.olMap.events.triggerEvent("changebaselayer");
-           mapLayers[i].layer.setVisibility(true);  
-           return; 
+           mapLayers[i].layer.setVisibility(true); 
+           return;
          }
      }  
      else

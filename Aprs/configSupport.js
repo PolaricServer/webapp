@@ -21,6 +21,7 @@ function LANGUAGE(lang) {
       }); 
 }
 
+
 /* For plugins. Translation will be merged with existing translation. */
 function LANGUAGE_EXTEND(prefix) {
   if (language != 'en') 
@@ -89,15 +90,16 @@ function selectedBase(x)
   { return myKaMap.getBaseLayer().id == x || myKaMap.getBaseLayer().name == x; }
   
   
-function add_Gpx_Layer(name, url, color)
+function add_Gpx_Layer(name, url, color, width)
 {
     var gpx_format = new OpenLayers.Format.GPX();
     if (!color)
       color = "blue"; 
-
+    if (!width)
+      width = 2; 
     var styleMap = new OpenLayers.StyleMap(OpenLayers.Util.applyDefaults({
          	  strokeColor: color,
-         	  strokeWidth: 2,
+         	  strokeWidth: width,
          	  strokeOpacity: 0.8, 
          	  externalGraphic: "images/point.gif",
          	  graphicOpacity: 0.9,
@@ -109,17 +111,26 @@ function add_Gpx_Layer(name, url, color)
     var layer = new OpenLayers.Layer.Vector(name, {styleMap: styleMap});
     OpenLayers.loadURL(url, null, null, loadSuccess, loadFailure);
     layer.setVisibility(false);
+    layer.refresh = function () {reload();}
     return layer; 
+    
+    
+    function reload() {
+      OpenLayers.loadURL(url, null, null, loadSuccess, loadFailure);
+    }
+    
     
     /* A closure function to transform data */
     function loadSuccess(request) {
        var features = gpx_format.read(request.responseText);
        for(var i = 0; i<features.length;i++){
   	  features[i].geometry.transform(new OpenLayers.Projection('EPSG:4326'), 
-	                                 utm_projection );
+	             myKaMap == null ? utm_projection : projection() );
        }
        layer.addFeatures(features);
     }
+
+    
     
     function loadFailure(request) {
        alert(_("Couldn't read GPX-file..."));
