@@ -155,6 +155,17 @@ span.kartref {
 }
 
 
+div#tags { 
+  -moz-columns: 3; 
+  -moz-column-width: 1em; 
+  border:1px dotted #555; 
+  background: #ddc; 
+  width: 32em; 
+  padding: 3px
+}
+input#findcall {margin-top: 0.7em; width: 18em}
+
+
 span.kartref:hover {
   font-weight: bold; 
   border: solid 2px #eeaaaa;

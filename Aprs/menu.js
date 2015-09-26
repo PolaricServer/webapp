@@ -40,7 +40,7 @@ ctxtMenu.addCallback('MAP', function(m)
 ctxtMenu.addCallback('MAIN', function(m)
 {
   m.d = toolbar;
-  m.add(_('Find APRS station/object'), function()  { setTimeout('popup_searchItems();',100);}); 
+  m.add(_('Search station/object'), function()  { setTimeout('popup_searchItems();',100);}); 
   m.add(_('Find map reference'), function() { setTimeout('popup_refSearch();',100); });
   if (statkartName_enable)
     m.add(_('Find location name (Norway)'), function()  { setTimeout('popup_searchNames();',100);}); 
@@ -314,20 +314,45 @@ function popup_searchItems()
      var ypos = 70;
      var pdiv = popupwindow(document.getElementById("anchor"), 
         ' <div><h1>'+_('Find APRS station/object')+'</h1><div id="searchform"><form> '+
-        ' ' + _('Text in ident/comment') + ': <input type="text"  width="10" id="findcall"/> '+
+        _('Keywords (tags)')+ ': <br><div id="tags"></div> ' +
+        _('Free text search') + ': <input type="text"  width="10" id="findcall" value="*"/> '+
         ' <input id="searchbutton" type="button"' +
-            ' value="'+_('Search')+'" />' +
+            ' value="'+_('Search')+'" /> ' +
         '</form><br><div id="searchresult"></div></div></div>', xpos, ypos, null); 
      
+     getTags(null, null, tagListCallback);
      $('#searchbutton').click( function(e) {
          e = (e)?e:((event)?event:null);
          e.cancelBubble = true; 
          if (e.stopPropagation) e.stopPropagation();
-         searchItems( $('#findcall').val(), searchStationCallback)                  
+         searchItems( $('#findcall').val(), getTagArgs(), searchItemsCallback)                  
      });
 
 
-    function searchStationCallback(info)
+    function getTagArgs()
+    {
+      var tags = "";
+      $('div.taglist>input').each( function(i) {
+        if ($(this).prop("checked")==true)
+          tags = tags + (tags=="" ? "" : ",") + $(this).prop('id').substring(4);
+      });
+      return tags;
+    }
+    
+    
+    function tagListCallback(info)
+    {
+        if (info == null)
+          return;
+        $('#tags').html(info);
+        
+        $('div.taglist>input').change( function(e) {
+           getTags(null, getTagArgs(), tagListCallback);
+        });
+    }
+    
+    
+    function searchItemsCallback(info)
     {  
         if (info == null) 
            return; 
@@ -380,6 +405,15 @@ function autojump_keyUp()
 }
 
 /* End of autojump stuff */
+
+
+
+function popup_searchTags()
+{
+  fullPopupWindow('Search', server_url + 'srv/searchtag'+ '?lang='+language +
+     (ident==null ? "" : '&objid='+ident), 360, 180);
+}
+
 
 
 

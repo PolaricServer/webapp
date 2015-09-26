@@ -245,13 +245,22 @@
   *  The result will be text representation of a HTML table
   **************************************************************************************/
  
- function searchItems(filt, cb)
+ function searchItems(filt, tags, cb)
  {
-   call(server_url + "srv/search?ajax=true&lang="+language+"&filter="+
-   filt+(isMobile==true?"&mobile=true":""), null, cb, false );
+   call(server_url + "srv/search?ajax=true&lang="+language+
+     (filt!=null && filt != '' ? '&srch='+filt : '') + 
+     (tags!=null && filt != '' ? '&tags='+tags : '') +
+     (isMobile==true?"&mobile=true":""), null, cb, false );
  }
  
 
+ function getTags(item, tags, cb)
+ {
+   call(server_url + "srv/tags?ajax=true&lang="+language +
+    (item!=null?'&item='+item : '') +
+    (tags!=null?'&tags='+tags : '') +
+    (isMobile==true?'&mobile=true':''), null, cb, false );
+ }
  
  
  
