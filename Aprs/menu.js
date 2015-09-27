@@ -313,7 +313,7 @@ function popup_searchItems()
      var xpos = 50; 
      var ypos = 70;
      var pdiv = popupwindow(document.getElementById("anchor"), 
-        ' <div><h1>'+_('Find APRS station/object')+'</h1><div id="searchform"><form> '+
+        ' <div><h1>'+_('Search station/object')+'</h1><div id="searchform"><form> '+
         _('Keywords (tags)')+ ': <br><div id="tags"></div> ' +
         _('Free text search') + ': <input type="text"  width="10" id="findcall" value="*"/> '+
         ' <input id="searchbutton" type="button"' +
@@ -361,6 +361,7 @@ function popup_searchItems()
                             document.getElementById('searchresult'));
         if (x != null) {            
             x.innerHTML = info;
+            /* Remove and popup again to get it to add scrollbar correctly */
             removePopup();
             setTimeout(function() { popup(document.getElementById("anchor"), pdiv, xpos, ypos, null);}, 500);          
         }    

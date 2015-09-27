@@ -134,18 +134,18 @@
       if (isNaN(x) || isNaN(y))
          return;
       myKaMap.zoomTo(x, y);
-      removePopup();
       if (showInfo) 
-         setTimeout(function() { showStationInfoGeo(args[0], false, x,  y );}, 1400);
+         setTimeout(function() { popup_stationInfoGeo(args[0], false, x, y);}, 1400);
       setTimeout(function() { 
          var x = myOverlay.getPointObject(args[0]);
          if (x!=null) x.moveToFront();     
-      }, 3500);   
+         if (x!=null) x.flash();
+      }, 1100);   
    }
  }
  
  
- 
+
  
  
  /*************************************************************************************

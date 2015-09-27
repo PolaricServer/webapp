@@ -43,6 +43,12 @@
  }
  
  
+ kaXmlPoint.prototype.flash = function( ) {
+   var pdiv = this.div;
+   pdiv.classList.add("_FLASH_");
+   setTimeout(function() { pdiv.classList.remove("_FLASH_");}, 15000);
+ }
+ 
  
  /**
   * Show the point in the specified geo-position.
@@ -54,6 +60,9 @@
      this.showOnMap();
    }
  }
+ 
+ 
+ 
  kaXmlPoint.prototype.showOnMap = function( ) {
    if (!this.shown) {
      this.xml_overlay.kaMap.addObjectGeo( this.xml_overlay.overlayCanvas, this.geox, this.geoy, this.div );
