@@ -88,12 +88,12 @@ polaricApi.prototype.gotoPos = function(lng, lat)
   
 polaricApi.prototype.gotoUtm = function(zone, easting, northing)
   { this.invoke("gotoUtm", zone+"##"+easting+"##"+northing);}
-
+top
 polaricApi.prototype.findItem = function(ident, show)
   { this.invoke("findItem", ident, (show ? "T" : "F")); }
 
-polaricApi.prototype.searchItems = function(filter, divid)
-  { this.invoke("searchItems", filter, function(x) {document.getElementById(divid).innerHTML=x;} ); }
+polaricApi.prototype.searchItems = function(filter, tags, divid)
+  { this.invoke("searchItems", filter+"##"+tags, function(x) {document.getElementById(divid).innerHTML=x;} ); }
 
 polaricApi.prototype.searchNames = function(filter, divid)
   { this.invoke("searchNames", filter, function(x) {document.getElementById(divid).innerHTML=x;} ); }

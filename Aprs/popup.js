@@ -178,7 +178,9 @@ function popupwindow(onDiv, ihtml, x, y, img, id, delay)
 
 function remotepopupwindow(onDiv, url, x, y, id)
 {
-    call(url, null, function(txt) { popupwindow(onDiv, txt, x, y, false, id, false); } );
+    var d =  popupwindow(onDiv, "", x, y, false, id, false);
+    call(url, null, function(txt) { d.innerHTML = txt; } );
+    return d;
 }
 
 

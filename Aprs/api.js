@@ -37,7 +37,7 @@
    else if (op[0] == "findItem")
      findItem(args[1], parseBool(args[2]));
    else if (op[0] == "searchItems")
-     searchItems(args[1], function(result) {
+     searchItems(args[1], (args[2]== '' ? null : args[2]), function(result) {
        e.source.postMessage(args[0]+"##"+result, e.origin);
      });
    else if (op[0] == "searchNames")
@@ -238,8 +238,9 @@
  
  
  /**************************************************************************************
-  * searchStationsCall - Search items based on identifier or comment fields
+  * searchStationsCall - Search items based on identifier, comment fields or tags
   *    filt - Some text to match. Wildcards at beginning or end are allowed
+  *    tags - comma separated list of keywords (tags).
   *    cb - callback function to receive the result. 
   * 
   *  The result will be text representation of a HTML table
@@ -247,7 +248,8 @@
  
  function searchItems(filt, tags, cb)
  {
-   call(server_url + "srv/search?ajax=true&lang="+language+
+   var url = sarUrl() + (getLogin() ? 'srv/search_sec?' : 'srv/search?');  
+   call( url + "ajax=true&lang="+language+
      (filt!=null && filt != '' ? '&srch='+filt : '') + 
      (tags!=null && filt != '' ? '&tags='+tags : '') +
      (isMobile==true?"&mobile=true":""), null, cb, false );

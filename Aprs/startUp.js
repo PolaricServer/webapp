@@ -350,12 +350,14 @@ var retry = 0;
 var lastXmlCall = 0;
 
 
+function sarUrl()
+  { return server_url + (sar_key == null ? '' : 'sar_'+sar_key+'/'); }
+
 
 function getXmlData(wait, metaonly)
 {
    xmlSeqno++;
-   var sar_string = (sar_key == null ? '' : 'sar_'+sar_key+'/');
-   var url = server_url + sar_string + (getLogin() ? 'srv/mapdata_sec?' : 'srv/mapdata?');
+   var url = sarUrl() + (getLogin() ? 'srv/mapdata_sec?' : 'srv/mapdata?');
    
    var i = myOverlay.loadXml(url+extentQuery() + "&scale="+currentScale+
                   (wait?"&wait=true":"") + (clientses!=null? "&clientses="+clientses : "") + 
@@ -562,7 +564,7 @@ function displayLink(href, title, x, y)
 {
   if ( /^(p|P):.*/.test(href) )
     popupwindow( myKaMap.domObj, 
-                 '<h1>'+title+'</h1>' +
+                 '<h1 class="popupimg">'+title+'</h1>' +
                  '<img class=\"popupimg\" src=\"'+href.substring(2)+'\">'
                  , x, y, null, 'obj_click', true);    
     else

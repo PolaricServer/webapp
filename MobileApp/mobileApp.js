@@ -43,7 +43,6 @@ function getViewportRes() {
      }, false);
      
      
-//     ajax_setBasicAuth('xxxx', 'xxxxx');
      startUp(); 
      var d = document.getElementById('refToggler');
      toggleReference(d); 
@@ -62,9 +61,11 @@ function getViewportRes() {
      
      onPopup(
        function() { 
-         document.addEventListener("backbutton", backButt, false); }, 
+         document.addEventListener("backbutton", backButt, false); 
+       }, 
              function() {
-               document.removeEventListener("backbutton", backButt , false); }  );              
+                document.removeEventListener("backbutton", backButt , false); 
+             }  );              
  }
  
  

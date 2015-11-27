@@ -97,6 +97,8 @@ ctxtMenu.addCallback('SIGN', function(m) {
 ctxtMenu.addCallback('ITEM', function(m)
 {
   m.add(_('Show info'), function() { popup_stationInfo(m.ident, false, m.x, m.y);});
+  m.add(_('Telemetry'), function() { popup_telemetry(m.ident, m.x, m.y);});
+  
   if (m.p != null && m.p.hasTrace)
     m.add(_('Last movements'), function() { popup_stationHistory(m.ident, m.x, m.y);});
   
@@ -246,6 +248,37 @@ function popup_stationInfoGeo(ident, edit, x, y)
 }
 
 
+/*******************************************
+ * Telemetry 
+ *******************************************/
+
+function popup_telemetry(ident, x, y)
+{
+  var pdiv = remotepopupwindow(myKaMap.domObj, server_url + 'srv/telemetry?lang=' + language + '&id=' + ident, x, y, 'infopopup');
+  setTimeout(function() { 
+     $('#listbutton').click( function(e) {
+        var url = server_url + 'srv/telhist?lang=' + language + '&id=' + ident;
+        call( url, null, tlmhist_callback, false );
+      }); }, 2000);
+  
+
+
+  function tlmhist_callback(info)
+  {  
+    if (info == null) 
+      return; 
+    
+    var x = document.getElementById('tlmhist');
+    if (x != null) {            
+      x.innerHTML = info;
+      $('#listbutton').hide();
+      /* Remove and popup again to get it to add scrollbar correctly */
+      removePopup();
+      setTimeout(function() { popup(myKaMap.domObj, pdiv, x, y, null);}, 500);          
+    }    
+  }
+}
+
 
 /***********************************************************
  * Popup window to get SAR URL (with SAR key) from server 
@@ -315,7 +348,7 @@ function popup_searchItems()
      var pdiv = popupwindow(document.getElementById("anchor"), 
         ' <div><h1>'+_('Search station/object')+'</h1><div id="searchform"><form> '+
         _('Keywords (tags)')+ ': <br><div id="tags"></div> ' +
-        _('Free text search') + ': <input type="text"  width="10" id="findcall" value="*"/> '+
+        _('Free text search') + ': <input type="text"  width="10" id="search" value="*"/> '+
         ' <input id="searchbutton" type="button"' +
             ' value="'+_('Search')+'" /> ' +
         '</form><br><div id="searchresult"></div></div></div>', xpos, ypos, null); 
@@ -325,7 +358,7 @@ function popup_searchItems()
          e = (e)?e:((event)?event:null);
          e.cancelBubble = true; 
          if (e.stopPropagation) e.stopPropagation();
-         searchItems( $('#findcall').val(), getTagArgs(), searchItemsCallback)                  
+         searchItems( $('#search').val(), getTagArgs(), searchItemsCallback)                  
      });
 
 
@@ -412,7 +445,7 @@ function autojump_keyUp()
 function popup_searchTags()
 {
   fullPopupWindow('Search', server_url + 'srv/searchtag'+ '?lang='+language +
-     (ident==null ? "" : '&objid='+ident), 360, 180);
+     (ident==null ? "" : '&objid='+ident), 360, 210);
 }
 
 
