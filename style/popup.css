@@ -185,11 +185,11 @@ span.kartref:hover {
 
 input {padding: 2px; margin: 2px}
 input#butt_ll { margin-right: 7em}
-
+button {background: #cdc; font-size: smaller; margin-left: 5px;}
 
 
 div#bintlm div {display: inline; border: 1px solid #444; padding: 0 4px 0 4px; border-radius: 5px; margin-right: 5px; background: #ddd}
 div#bintlm .on {color: #300; font-weight: bold; border: 1px solid #500; background: #dfd}
-div#bintlm {margin: 1em 1em 0.5em 2em}
+div#bintlm {margin: 1em 1em 0.7em 2em}
 span.dunit {margin-left: 0.6em; color: #527; font-size:smaller; font-style: italic}
-
+button#listbutton {margin-left: 2em}
