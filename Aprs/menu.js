@@ -97,7 +97,9 @@ ctxtMenu.addCallback('SIGN', function(m) {
 ctxtMenu.addCallback('ITEM', function(m)
 {
   m.add(_('Show info'), function() { popup_stationInfo(m.ident, false, m.x, m.y);});
-  m.add(_('Telemetry'), function() { popup_telemetry(m.ident, m.x, m.y);});
+  
+  if (m.p.flags.match("t"))
+    m.add(_('Telemetry'), function() { popup_telemetry(m.ident, m.x, m.y);});
   
   if (m.p != null && m.p.hasTrace)
     m.add(_('Last movements'), function() { popup_stationHistory(m.ident, m.x, m.y);});
