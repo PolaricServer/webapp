@@ -199,7 +199,8 @@ function myInitialized() {
     $("#layerSelect").on("click contextmenu", function(e) 
     {   e = (e)?e:((event)?event:null); 
         var x = (e.pageX) ? e.pageX : e.clientX; 
-        layers.displayLayers(x, 32);  } );
+        layers.displayLayers(x, 32);    
+        e.cancelBubble = true;  return false;  } );
     
     
     /* Set up a callback for map-area context-menu */

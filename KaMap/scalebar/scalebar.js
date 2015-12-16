@@ -158,7 +158,8 @@ ScaleBar.prototype.update = function(scaleDenominator) {
                     else {
                         allRules = aSheet.cssRules;
                     }
-                    for(var ruleIndex = 0; ruleIndex < allRules.length; ++ruleIndex) {
+                    if (allRules) 
+                      for(var ruleIndex = 0; ruleIndex < allRules.length; ++ruleIndex) {
                         var aRule = allRules[ruleIndex];
                         if(aRule.selectorText && (aRule.selectorText.toLowerCase() == aSelector.toLowerCase())) {
                             if(aRule.style[styleKey] != '') {
