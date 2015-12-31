@@ -7,10 +7,10 @@ case "$1" in
         ;;
 
     upgrade)
-        if [ -e "/var/www/aprs/KaMap/mapserv" ]; then
-           rm -R /var/www/aprs/KaMap/mapserv
+        if [ -d "/etc/polaric-webapp/mapserv" ]; then
+           rm -R /etc/polaric-webapp/mapserv
         fi
-        if [ -e "/var/www/aprs/kacache2" ]; then
+        if [ -d "/var/www/aprs/kacache2" ]; then
            echo "Removing old kamap cache..."
            rm -R /var/www/aprs/kacache2
         fi

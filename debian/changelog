@@ -1,3 +1,9 @@
+polaric-webapp (1.9) unstable; urgency=medium
+
+  * Some fixes (see changelog of aprsd). 
+
+ -- Øyvind Hanssen <ohanssen@acm.org>  Wed, 30 Dec 2015 00:05:40 +0100
+
 polaric-webapp (1.8) unstable; urgency=medium
 
   * Fixes and modifications (see changelog of aprsd). 
