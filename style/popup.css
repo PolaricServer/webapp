@@ -73,8 +73,6 @@ div.POPUPMENU {
   width: 5.5em;
 } 
 
-form>.sleftlab {padding-top: 5px;}
-
 
 div.POPUP img { max-width: 500px; }
 div.POPUP #cancel {visibility: hidden; width: 0; height: 0; margin: 0; padding: 0}

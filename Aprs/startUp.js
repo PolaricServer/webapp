@@ -311,6 +311,7 @@ function myInitialized() {
      
      initialized = true;
      getXmlData(false, true); 
+     message_init();
      
      /* Welcome info page */
      if (!isIframe && !isMobile && !ses_storage['polaric.welcomed']) {
@@ -318,6 +319,7 @@ function myInitialized() {
         setTimeout( function() { welcome(); }, 2000);
      }
 }
+
 
 
 
