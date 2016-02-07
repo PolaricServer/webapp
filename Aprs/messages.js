@@ -82,6 +82,14 @@ function message_send(msg) {
 
 
 
+
+Date.prototype.toLocaleFormat = Date.prototype.toLocaleFormat || function(pattern) {
+  return pattern.replace(/%Y/g, this.getFullYear()).replace(/%m/g, (this.getMonth() + 1)).replace(/%d/g, this.getDate())
+        .replace(/%H/g, this.getHours()).replace(/%M/g, this.getMinutes());
+};
+
+
+
 /************* UI: Popups ****************************/
 
 
@@ -92,12 +100,13 @@ function popup_showMessage(i)
    removePopup();
    var m = msgbuf.getMessage(i);
    var pdiv = popupwindow(document.getElementById("anchor"), 
-           '<div><h1>' +_('Message from ') + m.from + '</h1>' +
+           '<div><h1>' +_('Incoming message')+'</h1>' +
              '<div id="messageform"><form> ' +
-               '<span class="sleftlab">From:</span>' + m.from + ' ('+m.senderId+') <br/>' +
+               '<span class="sleftlab">From:</span>' + m.from + '<br/>' +
                '<span class="sleftlab">To:</span>'   + m.to+ '<br/>' +
                '<span class="sleftlab">MsgId:</span>'  + m.msgId + '<br/>' + 
-               '<hr/>' + m.text + '<br/>' +
+               '<span class="sleftlab">Time:</span>'  + new Date(m.time).toLocaleFormat('%H:%M') + '<br/>' + 
+               '<div id="msgtext">' + m.text + '</div>' +
                   buttns() + 
              '</form></div>'+
            '</div>', xpos, ypos, null); 
@@ -118,8 +127,8 @@ function popup_showMessage(i)
    
    
    function buttns() {
-     var older = (msgbuf.hasOlder() ? '<input id="obutton" type="button" value="older"/>&nbsp;' : '');
-     var newer = (msgbuf.hasNewer() ? '<input id="nbutton" type="button" value="newer"/>&nbsp;' : '');
+     var older = (msgbuf.hasOlder() ? '<button id="obutton"><img src="images/back.png"></img></button>' : '');
+     var newer = (msgbuf.hasNewer() ? '<button id="nbutton"><img src="images/fwd.png"></img></button>' : '');
      return older+newer; 
    }
   
@@ -129,30 +138,7 @@ function popup_showMessage(i)
 
 
 function popup_sendMessage()
-{  
-  var xpos = 50; 
-  var ypos = 70;
-  var pdiv = popupwindow(document.getElementById("anchor"), 
-          '<div><h1>'+_('Send message')+'</h1>' +
-            '<div id="messageform"><form> ' +
-              '<span class="sleftlab">To:</span><input type="text"  width="10" id="msgto"/><br> ' +
-              '<span class="sleftlab">Message:</span>' +
-              '<textarea type="text" height="4" width="15" id="msgcontent"></textarea><br>' +         
-              '<input id="sendbutton" type="button"' +
-                 'value="'+_('Send')+'" />' +
-             '</form></div>'+
-          '</div>', xpos, ypos, null); 
-  
-  $('#sendbutton').click( function(e) {
-     e = (e)?e:((event)?event:null);
-     e.cancelBubble = true; 
-     if (e.stopPropagation) e.stopPropagation();
-     var m = {'senderId': -1, 
-              'msgId': -1, 
-              'from': '', 
-              'to': $('#msgto').val(), 
-              'text': $('#msgcontent').val() }; 
-     message_send(m);
-     removePopup();
-  });
-}  
+{
+  fullPopupWindow('Message', server_url + 'srv/sendmsg'+ '?lang='+language , 380, 210);
+}
+
