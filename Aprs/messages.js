@@ -57,7 +57,11 @@ MessageBuffer.prototype.decrementIndex = function() {
 var msgbuf = new MessageBuffer(10);
 
 function message_init() {
-  websocket = new WebSocket("ws://localhost/aprs/ws/messages_sec");
+   var loc = window.location, uri;
+   uri =  (loc.protocol === "https:") ? "wss" : "ws";
+   uri += "://" + loc.host + loc.pathname;
+   uri += "ws/messages_sec";
+   websocket = new WebSocket(uri);
   
   websocket.onopen = function() { 
      alert("Websocket open ok");
