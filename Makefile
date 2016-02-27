@@ -45,6 +45,7 @@ install: Aprs/compiled.js
 	install -m 644 jquery/jquery-min.js jquery/jquery-ui-min.js $(INSTALL_WEB)/jquery
 	install -m 644 jquery/*.css $(INSTALL_WEB)/jquery
 	install -m 644 jquery/images/*.png $(INSTALL_WEB)/jquery/images
+	install -m 644 Aprs/*.js $(INSTALL_WEB)/Aprs
 	install -m 644 Aprs/compiled.js Aprs/configSupport.js Aprs/iframeApi.js $(INSTALL_WEB)/Aprs
 	install -m 644 XMLOverlay/compiled.js $(INSTALL_WEB)/XMLOverlay
 	install -m 644 KaMap/kamap-core.js $(INSTALL_WEB)/KaMap
