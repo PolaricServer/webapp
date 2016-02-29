@@ -308,11 +308,11 @@ function myInitialized() {
      }
      
      
-     
      initialized = true;
-     getXmlData(false, true); 
-     message_init();
-     
+ //    getXmlData(false, true); 
+//     message_init();
+     mapupdate_init();
+       
      /* Welcome info page */
      if (!isIframe && !isMobile && !ses_storage['polaric.welcomed']) {
         ses_storage['polaric.welcomed'] = true;
@@ -357,7 +357,13 @@ function sarUrl()
   { return server_url + (sar_key == null ? '' : 'sar_'+sar_key+'/'); }
 
 
-function getXmlData(wait, metaonly)
+  
+function getXmlData(wait, metaonly) { 
+   if (!wait) mapupdate_subscribe(); 
+}
+  
+  
+function _getXmlData(wait, metaonly)
 {
    xmlSeqno++;
    var url = sarUrl() + (getLogin() ? 'srv/mapdata_sec?' : 'srv/mapdata?');
@@ -422,8 +428,6 @@ function postLoadXml()
         ldiv.innerHTML = getLogin(); 
         ldiv.className = 'login';
      }
-     if (myOverlay.meta.metaonly == null || myOverlay.meta.metaonly != "true") 
-        getXmlData(true);
 }
 
  

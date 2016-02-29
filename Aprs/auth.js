@@ -1,6 +1,24 @@
  
  
- var sar_key = null;
+var sar_key = null;
+var _tryAuth = true; 
+ 
+ 
+/* Return true if we know we are logged in, or failAuth hasn't been called */ 
+function tryAuth() {
+   return _tryAuth || getLogin(); 
+}
+
+/* Next time tryAuth is called it will return false if we don't know we are logged in */
+function failAuth() {
+   _tryAuth = false; 
+}
+
+/* Return true if we have have called failAuth */
+function failedAuth() {
+  return !_tryAuth; 
+}
+
  
  /* Permissions */
  
