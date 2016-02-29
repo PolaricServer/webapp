@@ -309,8 +309,7 @@ function myInitialized() {
      
      
      initialized = true;
- //    getXmlData(false, true); 
-//     message_init();
+     message_init();
      mapupdate_init();
        
      /* Welcome info page */
@@ -329,18 +328,6 @@ function welcome()
 }
 
 
-/*
- * Construct a query string (for server) representing the current map extent 
- */
-function extentQuery()
-{
-    var ext = myKaMap.getGeoExtents();
-    var flt = "";
-    if (filterProfiles.selectedProf() != null)
-        flt = "&filter="+filterProfiles.selectedProf();
-    return "x1="  + roundDeg(ext[0]) + "&x2="+ roundDeg(ext[1]) +
-           "&x3=" + roundDeg(ext[2]) + "&x4="+ roundDeg(ext[3]) + flt ;
-}
 
 function roundDeg(x)
    { return Math.round(x*1000)/1000; } 
@@ -362,34 +349,6 @@ function getXmlData(wait, metaonly) {
    if (!wait) mapupdate_subscribe(); 
 }
   
-  
-function _getXmlData(wait, metaonly)
-{
-   xmlSeqno++;
-   var url = sarUrl() + (getLogin() ? 'srv/mapdata_sec?' : 'srv/mapdata?');
-   
-   var i = myOverlay.loadXml(url+extentQuery() + "&scale="+currentScale+
-                  (wait?"&wait=true":"") + (clientses!=null? "&clientses="+clientses : "") + 
-                  (metaonly? "&metaonly=true" : "") );
-   lastXmlCall = i; 
-   
-   var _xmlSeq = xmlSeqno;
-   if (wait) setTimeout( function() 
-     { 
-         if (xmlSeqno == _xmlSeq)
-            { retry++;
-              if (retry >= 2) {
-                 OpenLayers.Console.warn("XML Call Timeout. Max retry cnt reached. RELOAD");
-                 window.location.reload();
-              }
-              else {
-                 OpenLayers.Console.warn("XML Call Timeout. Abort and retry"); 
-                 abortCall(i); 
-                 getXmlData(false); 
-              }
-            }             
-     }, 150000 );  
-}
 
 
 /*
@@ -485,15 +444,14 @@ function myExtentChanged( eventID, extents )
                storage[uid+'.extents.1'] = roundDeg(extents[1]).toString();
                storage[uid+'.extents.2'] = roundDeg(extents[2]).toString();
                storage[uid+'.extents.3'] = roundDeg(extents[3]).toString();
- //              storage[uid+'.baselayer'] = myKaMap.getBaseLayer().id; 
            }
            setTimeout(function() {layers.evaluateLayers();}, 50);
            if (initialized) {
-               setTimeout( function() { getXmlData(false);}, 500);
+               mapupdate_subscribe();
                myKaMap.updateObjects();
            } 
            else
-               setTimeout( function() { getXmlData(false);}, 2000);
+               setTimeout( function() { mapupdate_subscribe(); }, 1000);
            prev_extents = extents;
        } 
        myKaRuler.reset();
@@ -507,7 +465,7 @@ function myExtentChanged( eventID, extents )
  */
 function myLayersChanged(eventID, map) {   
     if (initialized) 
-       getXmlData(false);
+       mapupdate_subscribe();
     layers.refreshOverlay();
 }
 

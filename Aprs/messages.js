@@ -64,7 +64,7 @@ function message_init() {
    websocket = new WebSocket(uri);
   
   websocket.onopen = function() { 
-     alert("Websocket open ok");
+    OpenLayers.Console.info("Websocket for messaging opened.");
   };
   
   websocket.onmessage = function(evt) { 
@@ -74,7 +74,7 @@ function message_init() {
   };
   
   websocket.onerror = function(evt) { 
-     alert("Websocket ERROR");
+     alert(_("ERROR: Failed to connect to server using websocket")); 
   };
 }
 

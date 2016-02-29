@@ -11,6 +11,7 @@ function mapupdate_init() {
   
    
   websocket.onopen = function() { 
+     OpenLayers.Console.info("Websocket for XML overlay opened.");
   };
   
   websocket.onmessage = function(evt) { 
@@ -19,7 +20,7 @@ function mapupdate_init() {
   
   websocket.onerror = function(evt) { 
      if (failedAuth()) 
-        alert("ERROR: Failed to connect to server");
+        alert(_("ERROR: Failed to connect to server using websocket"));
      else {
         failAuth();
         mapupdate_init();
