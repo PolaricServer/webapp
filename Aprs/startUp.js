@@ -146,7 +146,7 @@ function myMapInitialized() {
         var value = pairs[i].substring(pos+1);
         args[argname] = unescape(value); 
     }
-    
+
     uid = args['uid']; 
     if (uid==null)
       uid = "polaric"; 
@@ -343,13 +343,7 @@ var lastXmlCall = 0;
 function sarUrl()
   { return server_url + (sar_key == null ? '' : 'sar_'+sar_key+'/'); }
 
-
   
-function getXmlData(wait, metaonly) { 
-   if (!wait) mapupdate_subscribe(); 
-}
-  
-
 
 /*
  * Called if Ajax call to server fails. 

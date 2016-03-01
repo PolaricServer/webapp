@@ -57,6 +57,8 @@ MessageBuffer.prototype.decrementIndex = function() {
 var msgbuf = new MessageBuffer(10);
 
 function message_init() {
+   if (!tryAuth())
+      return;
    var loc = window.location, uri;
    uri =  (loc.protocol === "https:") ? "wss" : "ws";
    uri += "://" + loc.host + loc.pathname;

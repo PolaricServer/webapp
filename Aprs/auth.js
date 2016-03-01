@@ -1,17 +1,23 @@
  
  
 var sar_key = null;
-var _tryAuth = true; 
+var _tryAuth = false; 
  
  
+function setTryAuth() {
+   _tryAuth = true;
+}
+
 /* Return true if we know we are logged in, or failAuth hasn't been called */ 
 function tryAuth() {
+   _tryAuth = (Cookies.get("polaric.tryLogin") == 'true'); 
    return _tryAuth || getLogin(); 
 }
 
 /* Next time tryAuth is called it will return false if we don't know we are logged in */
 function failAuth() {
    _tryAuth = false; 
+   Cookies.get("polaric.tryLogin")
 }
 
 /* Return true if we have have called failAuth */
