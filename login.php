@@ -8,7 +8,7 @@
 <html>
   <head>
     <title>aprs.no login</title> 
-    <meta http-equiv="REFRESH" content="1; URL=.?debug=true">
+    <meta http-equiv="REFRESH" content="1; URL=.">
   </head>
   <body style="background: #A1C1C9">
   <img src="images/nrrl.gif" style="float:left; padding-right:10px;">

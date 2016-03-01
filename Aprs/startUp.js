@@ -47,6 +47,13 @@ function myOnLoad_mobile() {
 }
 
 
+window.onbeforeunload = function() {
+    message_close();
+    mapupdate_close();
+}
+
+
+
 function startUp() {
     var szMap = getQueryParam('map');   
     var szExtents = getQueryParam('extents');
