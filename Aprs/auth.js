@@ -88,3 +88,33 @@ function failedAuth() {
  }
  
  
+ 
+ function logout() {
+   // "Dirty hack" from http://tuhrig.de/basic-auth-log-out-with-javascript/
+   
+   jQuery.ajax({
+     type: "GET",
+     url: "/login.php",
+     async: false,
+     username: "logmeout",
+     password: "---",
+     headers: { "Authorization": "Basic xxx" }
+   })
+   .done(function(){
+     // If we don't get an error, we actually got an error as we expect an 401!
+   })
+   .fail(function(){
+     // We expect to get an 401 Unauthorized error! In this case we are successfully 
+     // logged out and we redirect the user.
+     window.location = "";
+   });
+   
+   return false;
+ }
+ 
+ 
+ 
+ 
+ 
+ 
+ 

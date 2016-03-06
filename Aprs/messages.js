@@ -110,7 +110,6 @@ function popup_showMessage(i)
              '<div id="messageform"><form> ' +
                '<span class="sleftlab">From:</span>' + m.from + '<br/>' +
                '<span class="sleftlab">To:</span>'   + m.to+ '<br/>' +
-               '<span class="sleftlab">MsgId:</span>'  + m.msgId + '<br/>' + 
                '<span class="sleftlab">Time:</span>'  + new Date(m.time).toLocaleFormat('%H:%M') + '<br/>' + 
                '<div id="msgtext">' + m.text + '</div>' +
                   buttns() + 
@@ -145,6 +144,6 @@ function popup_showMessage(i)
 
 function popup_sendMessage()
 {
-  fullPopupWindow('Message', server_url + 'srv/sendmsg'+ '?lang='+language , 380, 210);
+  fullPopupWindow('Message', server_url + 'srv/sendmsg'+ '?lang='+language , 390, 220);
 }
 
