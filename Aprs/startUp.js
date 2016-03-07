@@ -417,7 +417,7 @@ function myScaleChanged( eventID, scale )
         }
         else if (scale >= 10000)
             scale = (Math.round(scale/1000) + " 000");
-    
+
         var outString = 'current scale  1 : '+ scale;
         getRawObject('scale').innerHTML = outString;
     }
@@ -446,9 +446,9 @@ function myExtentChanged( eventID, extents )
                storage[uid+'.extents.2'] = roundDeg(extents[2]).toString();
                storage[uid+'.extents.3'] = roundDeg(extents[3]).toString();
            }
-           setTimeout(function() {layers.evaluateLayers();}, 50);
+           setTimeout(function() {layers.evaluateLayers();}, 10);
            if (initialized) {
-               mapupdate_subscribe();
+               setTimeout( function() { mapupdate_subscribe(); }, 10);
                myKaMap.updateObjects();
            } 
            else
