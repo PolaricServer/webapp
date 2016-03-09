@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 
 <?php 
+
+// If browser has been restarted or somehow the auth info has gone, 
+// we nee to delete the tryLogin cookie (see also login.php). 
+ if (!isset($_SERVER['PHP_AUTH_USER']))
+       setcookie("polaric.tryLogin", "", time()-3600);
+
 $isMobile = false; 
 $isIframe = false; 
 $isDebug = false;
@@ -138,6 +144,7 @@ include_once( 'webappconfig.php' );
      echo('<script type="text/javascript" src="XMLOverlay/kaXmlPoint.js"></script>');
      echo('<script type="text/javascript" src="XMLOverlay/kaXmlSymbol.js"></script>');
      echo('<script type="text/javascript" src="XMLOverlay/labelStyle.js"></script>');
+     echo('<script type="text/javascript" src="Aprs/js.cookie.js"></script>');
      echo('<script type="text/javascript" src="Aprs/statkartWPS.js"></script>');
      echo('<script type="text/javascript" src="Aprs/statkartName.js"></script>');
      echo('<script type="text/javascript" src="Aprs/WXreport.js"></script>');
@@ -146,6 +153,8 @@ include_once( 'webappconfig.php' );
      echo('<script type="text/javascript" src="Aprs/popup.js"></script>');  
      echo('<script type="text/javascript" src="Aprs/contextmenu.js"></script>');  
      echo('<script type="text/javascript" src="Aprs/layerSwitcher.js"></script>'); 
+     echo('<script type="text/javascript" src="Aprs/mapupdate.js"></script>');      
+     echo('<script type="text/javascript" src="Aprs/messages.js"></script>');    
      echo('<script type="text/javascript" src="Aprs/menu.js"></script>');
      echo('<script type="text/javascript" src="Aprs/jscoord.js"></script>');
      echo('<script type="text/javascript" src="Aprs/filterProfile.js"></script>');

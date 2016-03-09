@@ -30,7 +30,7 @@ FilterProfile.prototype.selectProfile = function(pname) {
       if (t.done) {
          storage[uid+'.filter'] = pname;
          myOverlay.removePoint();
-         getXmlData(false);
+         mapupdate_subscribe();
       }
       t.updateMenu(); 
    }

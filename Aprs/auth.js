@@ -1,6 +1,30 @@
  
  
- var sar_key = null;
+var sar_key = null;
+var _tryAuth = false; 
+ 
+ 
+function setTryAuth() {
+   _tryAuth = true;
+}
+
+/* Return true if we know we are logged in, or failAuth hasn't been called */ 
+function tryAuth() {
+   _tryAuth = (Cookies.get("polaric.tryLogin") == 'true'); 
+   return _tryAuth || getLogin(); 
+}
+
+/* Next time tryAuth is called it will return false if we don't know we are logged in */
+function failAuth() {
+   _tryAuth = false; 
+   Cookies.get("polaric.tryLogin")
+}
+
+/* Return true if we have have called failAuth */
+function failedAuth() {
+  return !_tryAuth; 
+}
+
  
  /* Permissions */
  
@@ -62,5 +86,35 @@
     sar_key = null;
     storage.removeItem('polaric.sarkey');
  }
+ 
+ 
+ 
+ function logout() {
+   // "Dirty hack" from http://tuhrig.de/basic-auth-log-out-with-javascript/
+   
+   jQuery.ajax({
+     type: "GET",
+     url: "/login.php",
+     async: false,
+     username: "logmeout",
+     password: "---",
+     headers: { "Authorization": "Basic xxx" }
+   })
+   .done(function(){
+     // If we don't get an error, we actually got an error as we expect an 401!
+   })
+   .fail(function(){
+     // We expect to get an 401 Unauthorized error! In this case we are successfully 
+     // logged out and we redirect the user.
+     window.location = "";
+   });
+   
+   return false;
+ }
+ 
+ 
+ 
+ 
+ 
  
  

@@ -213,20 +213,11 @@ kaXmlOverlay.prototype.remove = function() {
 
 
 
-/**
- * Load XML from the server and update the overlay.
- *
- * xml_url      URL of th XML with points to plot
- */
-kaXmlOverlay.prototype.loadXml = function(xml_url) {
-      return call(xml_url, this, _loadXmlCallback, true); 
-      
-      function _loadXmlCallback(xml_string) {
-         if (xml_string == null)
-            this.triggerEvent(XMLOVERLAY_ERROR);
-         else if (this.loadXmlDoc(xml_string))
-            this.triggerEvent(XMLOVERLAY_LOAD); 
-      }
+kaXmlOverlay.prototype.applyXml = function(xml_string) {
+    if (xml_string == null)
+       this.triggerEvent(XMLOVERLAY_ERROR);
+    else if (this.loadXmlDoc(xml_string))
+       this.triggerEvent(XMLOVERLAY_LOAD); 
 }
 
 

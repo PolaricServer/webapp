@@ -13,7 +13,7 @@ cd XMLOverlay
 ccompile --js labelStyle.js --js kaXmlOverlay.js --js kaXmlSymbol.js --js kaXmlFeature.js --js kaXmlIcon.js --js kaXmlLabel.js --js kaXmlPoint.js --js imgRotate.js > compiled.js
 cd ..
 cd Aprs
-ccompile --js iscroll.js --js popup.js --js WXreport.js --js statkartWPS.js --js statkartName.js --js auth.js --js api.js --js contextmenu.js --js menu.js --js layerSwitcher.js --js jscoord.js --js filterProfile.js --js startUp.js > compiled.js
+ccompile --js iscroll.js --js popup.js --js js.cookie.js --js WXreport.js --js statkartWPS.js --js statkartName.js --js auth.js --js api.js --js contextmenu.js --js mapupdate.js --js messages.js --js menu.js --js layerSwitcher.js --js jscoord.js --js filterProfile.js --js startUp.js > compiled.js
 cd ..
 cd MobileApp
 ccompile --js mobileApp.js --js gpsTracker.js > compiled.js

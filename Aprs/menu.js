@@ -40,6 +40,8 @@ ctxtMenu.addCallback('MAP', function(m)
 ctxtMenu.addCallback('MAIN', function(m)
 {
   m.d = toolbar;
+  if (canUpdate())
+    m.add(_('Send message'), function()  { setTimeout('popup_sendMessage();',100);});
   m.add(_('Search station/object'), function()  { setTimeout('popup_searchItems();',100);}); 
   m.add(_('Find map reference'), function() { setTimeout('popup_refSearch();',100); });
   if (statkartName_enable)
@@ -76,7 +78,13 @@ ctxtMenu.addCallback('MAIN', function(m)
     if (sarUrl) 
       m.add(_('SAR URL'), popup_sarUrl);
     m.add(_('SAR mode'), popup_sarMode);
+    m.add(null);
+    m.add(_('Log out'), logout);
   }
+  else {
+     m.add(null); 
+     m.add(_('Log in'), function() { window.location = 'login.php'; });
+  }    
 }); 
 
 
@@ -97,9 +105,7 @@ ctxtMenu.addCallback('SIGN', function(m) {
 ctxtMenu.addCallback('ITEM', function(m)
 {
   m.add(_('Show info'), function() { popup_stationInfo(m.ident, false, m.x, m.y);});
-  
-  if (m.p.flags.match("t"))
-    m.add(_('Telemetry'), function() { popup_telemetry(m.ident, m.x, m.y);});
+  m.add(_('Telemetry'), function() { popup_telemetry(m.ident, m.x, m.y);});
   
   if (m.p != null && m.p.hasTrace)
     m.add(_('Last movements'), function() { popup_stationHistory(m.ident, m.x, m.y);});
