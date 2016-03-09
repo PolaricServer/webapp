@@ -279,7 +279,7 @@ function myInitialized() {
       };
     
     /* Main menu on toolbar */
-    if (!isIframe && !isMobile) 
+   // if (!isIframe && !isMobile) 
        addContextMenu('buttonMenu', 'MAIN');
     
     /* Context menus */
