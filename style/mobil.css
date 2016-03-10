@@ -75,14 +75,15 @@ margin-right:3px
 #layerSwitcher {line-height: 1.9em; font-family: arial; margin-bottom: 0.3em}
 #layerSwitcher h2:last-of-type {margin-top: 0.5em}
 
+#buttonMenu    { margin-left: 12px; width: 28px; height: 28px;  }
 #toolQuery     { visibility: hidden; width: 0px; }
 #toolPan       { visibility: hidden; width: 0px; }
 #toolZoomRubber{ visibility: hidden; width: 0px; }
-#toolZoomIn    { width: 28px; height: 28px; margin-left: -3px }
-#toolZoomOut   { width: 28px; height: 28px; margin-left: -12px }
-#layerSelect   { width: 28px; height: 28px; margin-left: 13px; }
-#areaSelect    { width: 29px; height: 29px; margin-left: -3px !important}
-#filterMenu    { width: 29px; height: 29px; margin-left: -3px !important}
+#toolZoomIn    { visibility: hidden; width: 0px;  }
+#toolZoomOut   { visibility: hidden; width: 0px; }
+#layerSelect   { width: 28px; height: 28px; margin-left: -10px !important; }
+#areaSelect    { width: 29px; height: 29px; margin-left: 1px !important}
+#filterMenu    { width: 29px; height: 29px; margin-left: 1px !important}
 
 #sarmode       { width: 4px; }
 
@@ -96,6 +97,26 @@ margin-right:3px
 #gpsheadd {float: left; margin-left: 20px; margin-right: 10px; }
 canvas.direction img, canvas.direction {height: 30px; width: 30px }
 
+#ilist_descr { visibility: hidden; }
+
+
+@media screen and (max-device-width: 400px) 
+{
+  div#tags { 
+    columns: 2; 
+    -webkit-columns: 2; 
+    max-width: 330px; 
+    padding: 3px;
+  }
+  div.POPUP {max-width: 350px; }
+  
+  input#search { margin-top: 0.7em; width: 200px}
+}
+div.POPUP h1 {margin-bottom: 1em !important}
+
+div#tags {
+   line-height: 1.6em; 
+} 
 
 
 /*****************************************************************************
@@ -107,14 +128,12 @@ screen and (min-device-width: 1100px) and (-webkit-max-device-pixel-ratio: 2.0),
 screen and (min-device-height: 1100px) and (min-resolution: 110dpi),
 screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 2.0) 
 {
-  #toolZoomIn    { width: 34px; height: 34px; }
-  #toolZoomOut   { width: 34px; height: 34px; }
   #areaSelect    { width: 36px; height: 36px; }
   #layerSelect   { width: 36px; height: 36px; padding-left: 17px;}
   #filterMenu    { width: 36px; height: 36px; }
   #filterChoice  { font-size: 100% !important; bottom: -2px; position: relative }
   
-  #toolbar { height: 45px; min-width: 350px;}
+  #toolbar { height: 45px; min-width: 330px;}
   #tools { height: 39px; }
   #toolbarBackground {height: 45px;}
   
@@ -164,14 +183,12 @@ screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 2.0)
 @media screen and (min-device-width: 1100px) and (min-width: 1000px),
 screen and (min-device-height: 1100px) and (min-height: 1000px)
 {
-  #toolZoomIn    { width: 44px; height: 44px; margin-left: 5px !important; margin-right: 10px}
-  #toolZoomOut   { width: 44px; height: 44px; margin-left: 5px !important}
   #areaSelect    { width: 47px; height: 47px; margin-left: 5px !important}
   #layerSelect   { width: 47px; height: 47px; }
   #filterMenu    { width: 47px; height: 47px; } 
   #filterChoice  { font-size: 130% !important; bottom: -5px; position: relative }
   
-  #toolbar { height: 58px; min-width: 550px; }
+  #toolbar { height: 58px; min-width: 530px; }
 
   #tools { height: 51px; }
   #toolbarBackground {height: 57px;}

@@ -69,9 +69,15 @@ div.POPUPMENU {
   color: gray;
 }
 
-.sleftlab, label.lleftlab {
+.sleftlab {
   width: 5.5em;
 } 
+
+.lleftlab {
+  width: 7em;
+}
+
+form>.sleftlab {padding-top: 5px;}
 
 
 div.POPUP img { max-width: 500px; }
@@ -191,14 +197,14 @@ div#bintlm .on {color: #300; font-weight: bold; border: 1px solid #500; backgrou
 div#bintlm {margin: 1em 1em 0.7em 2em}
 span.dunit {margin-left: 0.6em; color: #527; font-size:smaller; font-style: italic}
 button#listbutton {margin-left: 2em}
-button {background: #cdc; font-size: smaller; margin-left: 5px;}
 
-div#msgtext {
-   border: 1px dotted #555; 
-   padding: 4px; 
-   color: #033; 
-   background: #dfdfcf; 
-   margin: 10px 3px 8px 3px;
-   min-width: 16em; 
-   max-width:24em  
-}
+
+#utmz {width: 2.2ch;}
+#utmnz {width: 1.2ch; }
+#utmx {width: 6.3ch; }
+#utmy {width: 7.3ch; }
+#locx,#locy {width: 4ch; }
+#ll_Nd {width: 2.2ch}
+#ll_Nm {width: 7ch}
+#ll_Ed {width: 3.1ch}
+#ll_Em {width: 7ch}
