@@ -30,6 +30,10 @@ function mapupdate_init() {
 
 
 
+function mapupdate_close() {
+  websocket.close();
+}
+
 
 function mapupdate_subscribe() {
   var ext = myKaMap.getGeoExtents();

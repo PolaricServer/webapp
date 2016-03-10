@@ -82,6 +82,11 @@ function message_init() {
 
 
 
+function message_close() {
+  websocket.close();
+}
+
+
 function message_send(msg) {
   websocket.send(JSON.stringify(msg));
 }
