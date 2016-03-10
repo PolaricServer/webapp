@@ -213,6 +213,16 @@ kaXmlOverlay.prototype.remove = function() {
 
 
 
+kaXmlOverlay.prototype.loadXml = function(xml_url) {
+    return call(xml_url, this, _loadXmlCallback, true); 
+       
+    function _loadXmlCallback(xml_string) {
+        this.applyXml(xml_string);
+    }
+}
+
+
+
 kaXmlOverlay.prototype.applyXml = function(xml_string) {
     if (xml_string == null)
        this.triggerEvent(XMLOVERLAY_ERROR);

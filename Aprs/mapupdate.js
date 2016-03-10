@@ -1,6 +1,8 @@
 
 /*********** Websocket handler ********************************/
 
+var _mapupdate_suspend = false; 
+
 
 function mapupdate_init() {
    var loc = window.location, uri;
@@ -15,7 +17,8 @@ function mapupdate_init() {
   };
   
   websocket.onmessage = function(evt) { 
-     myOverlay.applyXml(evt.data);
+     if (!_mapupdate_suspend)
+         myOverlay.applyXml(evt.data);
   };
   
   websocket.onerror = function(evt) { 
@@ -29,6 +32,11 @@ function mapupdate_init() {
 }
 
 
+function mapupdate_suspend(t) {
+  _mapupdate_suspend = true; 
+   setTimeout( function() {_mapupdate_suspend = false; }, t);
+}
+
 
 function mapupdate_close() {
   websocket.close();
@@ -36,6 +44,7 @@ function mapupdate_close() {
 
 
 function mapupdate_subscribe() {
+  _mapupdate_suspend = false; 
   var ext = myKaMap.getGeoExtents();
   var flt = "";
   if (filterProfiles.selectedProf() != null)
