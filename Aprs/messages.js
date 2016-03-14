@@ -65,8 +65,9 @@ function message_init() {
    uri += "ws/messages_sec";
    websocket = new WebSocket(uri);
   
+   
   websocket.onopen = function() { 
-    OpenLayers.Console.info("Websocket for messaging opened.");
+     OpenLayers.Console.info("Connected to server (for messaging).");
   };
   
   websocket.onmessage = function(evt) { 
@@ -75,8 +76,14 @@ function message_init() {
      popup_showMessage(msgbuf.currIndex());
   };
   
+  
+  websocket.onclose = function(evt) {
+    /* If connection is closed, we probably need to log in again anyway */
+  }
+  
+  
   websocket.onerror = function(evt) { 
-     alert(_("ERROR: Failed to connect to server using websocket")); 
+     OpenLayers.Console.info("Failed to connect to server (for messaging).");
   };
 }
 

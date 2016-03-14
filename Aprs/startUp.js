@@ -451,8 +451,6 @@ function myExtentChanged( eventID, extents )
                setTimeout( function() { mapupdate_subscribe(); }, 10);
                myKaMap.updateObjects();
            } 
-           else
-               setTimeout( function() { mapupdate_subscribe(); }, 1000);
            prev_extents = extents;
        } 
        myKaRuler.reset();
