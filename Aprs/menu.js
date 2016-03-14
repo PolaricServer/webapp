@@ -40,8 +40,6 @@ ctxtMenu.addCallback('MAP', function(m)
 ctxtMenu.addCallback('MAIN', function(m)
 {
   m.d = toolbar;
-  if (canUpdate())
-    m.add(_('Send message'), function()  { setTimeout('popup_sendMessage();',100);});
   m.add(_('Search station/object'), function()  { setTimeout('popup_searchItems();',100);}); 
   m.add(_('Find map reference'), function() { setTimeout('popup_refSearch();',100); });
   if (statkartName_enable)
@@ -52,6 +50,9 @@ ctxtMenu.addCallback('MAIN', function(m)
     m.add(_('Add object'), function() { popup_editObject(null, null); });
     m.add(_('Remove object'), function() { popup_deleteObject(null); });
   }
+  if (canUpdate())
+    m.add(_('Send instant message'), function()  { setTimeout('popup_sendMessage();',100);});
+  
   m.add(null);
   if (isMobileApp) {   
     m.add(_('Set SAR code'), popup_setSarKey);

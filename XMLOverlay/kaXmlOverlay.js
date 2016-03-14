@@ -539,8 +539,8 @@ function _BrowserIdent() {
            _BrowserIdent_version = _BrowserIdent_detect.charAt(_BrowserIdent_place + _BrowserIdent_thestring.length);
         
         if (_BrowserIdent_isMSIE() && 
-             safeParseInt(_BrowserIdent_version) <= 8 && safeParseInt(_BrowserIdent_version) != 1)
-           alert(_("Sorry: We do not support IE version 8 or older. Recommend upgrade of browser.")); 
+             safeParseInt(_BrowserIdent_version) <= 9 && safeParseInt(_BrowserIdent_version) != 1)
+           alert(_("Sorry: We do not support IE version 9 or older. Recommend upgrade of browser.")); 
 }
 
 function _BrowserIdent_isMSIE()
