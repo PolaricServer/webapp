@@ -59,7 +59,7 @@ var msgbuf = new MessageBuffer(10);
 function message_init() {
    if (!tryAuth())
       return;
-   var loc = window.location, uri;
+   var loc = server_loc, uri;
    uri =  (loc.protocol === "https:") ? "wss" : "ws";
    uri += "://" + loc.host + loc.pathname;
    uri += "ws/messages_sec";
