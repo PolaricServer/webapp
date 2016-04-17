@@ -82,7 +82,7 @@ ctxtMenu.addCallback('MAIN', function(m)
     m.add(null);
     m.add(_('Log out'), logout);
   }
-  else {
+  else if (!isMobileApp) {
      m.add(null); 
      m.add(_('Log in'), function() { window.location = 'login.php'; });
   }    

@@ -20,6 +20,7 @@ var isMobileApp = false;
 var storage = null;
 var ses_storage = null;
 var uid = null;
+var server_loc = getLocation(server_url);
 
 var myCoordinates = myOverlay = myInterval = null;
 var filterProfiles = null; 
@@ -55,6 +56,9 @@ window.onbeforeunload = function() {
 
 
 function startUp() {
+  
+    if (server_loc.href === "")
+       server_loc = window.location;
     var szMap = getQueryParam('map');   
     var szExtents = getQueryParam('extents');
     var szCPS = getQueryParam('cps');

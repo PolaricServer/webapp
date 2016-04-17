@@ -8,7 +8,7 @@
 <html>
   <head>
     <title>aprs.no login</title> 
-    <meta http-equiv="REFRESH" content="1; URL=.">
+    <meta http-equiv="REFRESH" content="3; URL=.">
   </head>
   <body style="background: #A1C1C9">
   <img src="images/nrrl.gif" style="float:left; padding-right:10px;">
@@ -19,8 +19,9 @@
     echo "Sorry, login failed...";
     setcookie("polaric.tryLogin", "", time()-3600);
   } else {
-    echo "<p>You are logged in as '{$_SERVER['PHP_AUTH_USER']}'.</p>";
-    setcookie("polaric.tryLogin", "true", time()+3600);
+    echo "<p>You are logged in as <b>'{$_SERVER['PHP_AUTH_USER']}'</b>";
+    echo " &nbsp;(valid for 4 hours).</p>"; 
+    setcookie("polaric.tryLogin", "true", time()+14400);
   }
 ?> 
   

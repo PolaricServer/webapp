@@ -136,3 +136,14 @@ function add_Gpx_Layer(name, url, color, width)
        alert(_("Couldn't read GPX-file..."));
     }
 }
+
+function getLocation(href) {
+  var location = document.createElement("a");
+  location.href = href;
+  if (location.host == "") {
+    location.href = location.href;
+  }
+  return location;
+};
+
+

@@ -8,17 +8,35 @@ function setTryAuth() {
    _tryAuth = true;
 }
 
-/* Return true if we know we are logged in, or failAuth hasn't been called */ 
+
+
+/* Return true if we are going to try to log in and not logged in already */
 function tryAuth() {
    _tryAuth = (Cookies.get("polaric.tryLogin") == 'true'); 
+   if (_tryAuth) {
+      /* Autologout when cookie expires */
+      setInterval(function() { 
+        if ( Cookies.get("polaric.tryLogin") != 'true') 
+           logout();
+      }, 600000);
+   }
+   
    return _tryAuth || getLogin(); 
 }
 
-/* Next time tryAuth is called it will return false if we don't know we are logged in */
+
+
+
+/* Next time tryAuth is called it will return false if we don't know we are logged in. 
+ * Next time failedAuth is called it will return true 
+ */
 function failAuth() {
    _tryAuth = false; 
-   Cookies.get("polaric.tryLogin")
+   document.cookie = 'polaric.tryLogin' + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
 }
+
+
+
 
 /* Return true if we have have called failAuth */
 function failedAuth() {
@@ -91,7 +109,9 @@ function failedAuth() {
  
  function logout() {
    // "Dirty hack" from http://tuhrig.de/basic-auth-log-out-with-javascript/
-   
+   if (!isLoggedIn())
+     return; 
+
    jQuery.ajax({
      type: "GET",
      url: "/login.php",
@@ -108,8 +128,6 @@ function failedAuth() {
      // logged out and we redirect the user.
      window.location = "";
    });
-   
-   return false;
  }
  
  
