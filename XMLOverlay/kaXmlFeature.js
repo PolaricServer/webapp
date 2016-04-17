@@ -143,14 +143,23 @@
    this.xn = new Array();
    this.yn = new Array();
    
+   var prevx=0, prevy=0;
+   
    // Normalize the coordinates
    for (i=0; i<xArray.length; i++) {
       var x = (xArray[i] - this.cxmin);
       var y = (yArray[i] - this.cymin);
       if (i>0) this.coords += ", ";
           this.coords += "("+Math.round(x) + "," + Math.round(y)+")";
-      this.xn.push(x);
-      this.yn.push(y);
+      
+      var dist =  
+        Math.sqrt( (x-prevx)*(x-prevx) + (y-prevy)*(y-prevy) );
+      
+      if (i==0 || dist > 7) {
+         this.xn.push(x);
+         this.yn.push(y);
+         prevx=x; prevy=y; 
+      }
    }
  }
  
