@@ -1,3 +1,10 @@
+polaric-webapp (2.0) stable; urgency=medium
+
+  * Websockets, etc.. 
+  * Fixes and additions... 
+
+ -- Øyvind Hanssen <ohanssen@acm.org>  Mon, 18 Apr 2016 21:04:48 +0200
+
 polaric-webapp (1.9) unstable; urgency=medium
 
   * Some fixes (see changelog of aprsd). 
