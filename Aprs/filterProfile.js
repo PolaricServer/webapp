@@ -54,7 +54,7 @@ FilterProfile.prototype.init = function() {
     if (t.done)
         return;
         
-    var flt = args['view'];
+    var flt = args['filter'];
     if (flt)
        t.sFilter = flt;  
     if (t.sFilter==null)
