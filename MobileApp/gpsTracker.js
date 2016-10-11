@@ -34,7 +34,7 @@ GpsTracker.prototype.activate = function ()
            t.my_point.removeFromMap();
            t.my_point = null;
         }
-        setStatus('&nbsp; '+_('GPS inaccurate position')+' ('+position.coords.accuracy+' m)');
+        setStatus('&nbsp; '+_('GPS inaccurate position')+' ('+ Math.round(position.coords.accuracy) +' m)');
         return;
      }
      var ll = new LatLng(position.coords.latitude, position.coords.longitude);
@@ -44,12 +44,11 @@ GpsTracker.prototype.activate = function ()
      /* Show speed and heading */
      if (t.speedDisplay > 0) {
        setStatus('<div id="speedDisplay">'
-         + ((false && position.coords.speed > 0.3) ? '<div id="gpsheadd"><img id="gpsheading" src="images/ptr1.png"></div>' : '')  
+ //      + ((position.coords.speed > 0.3) ? '<div id="gpsheadd"><img id="gpsheading" src="images/ptr1.png"></div>' : '')  
          + speedHeading(position.coords) + '</div>');
        
-      //   FIXME: Rotated arrow doesn't work. Not important. 
-      //   var hd = new ImgRotate('gpsheading');
-      //   hd.rotate(position.coords.heading);
+ //       var hd = new ImgRotate('gpsheading');
+ //       hd.rotate(position.coords.heading);
      }
      else
         setStatus('&nbsp; '+_('GPS position ok')+ '<br>' + uref + '&nbsp;/&nbsp;'+ speedHeading(position.coords));

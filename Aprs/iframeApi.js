@@ -30,7 +30,10 @@ function init_polaric(iframeid, serverdomain)
 
 function polaricApi(iframeid, serverdomain) {
    this.domain = serverdomain;
-   this.frame = document.getElementById(iframeid).contentWindow; 
+   if (iframeid === '_PARENT_')
+      this.frame = opener;
+   else
+      this.frame = document.getElementById(iframeid).contentWindow; 
 }
 
 

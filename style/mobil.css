@@ -172,6 +172,7 @@ screen and (min-device-height: 1100px) and (-webkit-max-device-pixel-ratio: 2.0)
   
   #speedDisplay {font-size: 24px; font-weight: bold}
   #speedDisplay span.speed {font-size: 36px}
+  canvas.direction img, canvas.direction {height: 40px; width: 40px }
 }
 
 
@@ -246,7 +247,7 @@ screen and (min-device-height: 1100px) and (min-height: 1000px)
   #speedDisplay {font-size: 31px}
   #speedDisplay span.speed {font-size: 38px}
   #gpsheadd { margin-left: 26px; margin-right: 13px; }
-  
+  canvas.direction img, canvas.direction {height: 70px; width: 70px }
   
   #refToggler, #toolbarToggler {
   width: 33px; 
