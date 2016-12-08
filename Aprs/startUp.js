@@ -505,8 +505,8 @@ function myMouseMoved( eventID, position) {
   function formatDeg(llref) {
      latD = Math.floor(Math.abs(llref.lat)); 
      lonD = Math.floor(Math.abs(llref.lng));
-     return latD+"\u00B0 " + Math.round((Math.abs(llref.lat)-latD)*60)+"\' " + (llref.lat<0 ? "S " : "N ") + "&nbsp;" + 
-            lonD+"\u00B0 " + Math.round((Math.abs(llref.lng)-lonD)*60)+"\' " + (llref.lng<0 ? "W" : "E") ;
+     return latD+"\u00B0 " + Math.round((Math.abs(llref.lat)-latD)*6000)/100+"\' " + (llref.lat<0 ? "S " : "N ") + "&nbsp;" + 
+            lonD+"\u00B0 " + Math.round((Math.abs(llref.lng)-lonD)*6000)/100+"\' " + (llref.lng<0 ? "W" : "E") ;
   }
 }
 
