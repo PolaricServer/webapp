@@ -20,8 +20,8 @@
     setcookie("polaric.tryLogin", "", time()-3600);
   } else {
     echo "<p>You are logged in as <b>'{$_SERVER['PHP_AUTH_USER']}'</b>";
-    echo " &nbsp;(valid for 4 hours).</p>"; 
-    setcookie("polaric.tryLogin", "true", time()+14400);
+    echo " &nbsp;(valid for 12 hours).</p>"; 
+    setcookie("polaric.tryLogin", "true", time()+43200);
   }
 ?> 
   
