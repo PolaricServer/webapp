@@ -42,9 +42,10 @@ ctxtMenu.addCallback('MAIN', function(m)
   m.d = toolbar;
   m.add(_('Search station/object'), function()  { setTimeout('popup_searchItems();',100);}); 
   m.add(_('Find map reference'), function() { setTimeout('popup_refSearch();',100); });
-  if (statkartName_enable)
-    m.add(_('Find location name (Norway)'), function()  { setTimeout('popup_searchNames();',100);}); 
-  
+  if (statkartName_enable) {
+    m.add(_('Find location name (Norway)'), function()  { setTimeout('popup_searchNames();',100);});
+    m.add(_('Find address info (Norway)'), function() { setTimeout('popup_searchAddr();',100);});
+  }
   
   if (canUpdate()) {                 
     m.add(_('Add object'), function() { popup_editObject(null, null); });
@@ -599,6 +600,50 @@ function popup_searchNames()
   }
 }
 
+
+
+var skAddr = new statkartAddress(statkartAddr_url);
+
+/********************************************************
+ * popup window to search for addresses in SK database
+ ********************************************************/
+
+function popup_searchAddr()
+{  
+  var xpos = 50; 
+  var ypos = 70;
+  var pdiv = popupwindow(document.getElementById("anchor"), 
+                         ' <div><h1>'+_('Find Address (Kartverket)')+'</h1><div id="searchform"><form> '+
+                         ' Søk: <input type="text"  width="10" id="findname"/> '+
+                         ' <input id="searchbutton" type="button"' +
+                         ' value="'+_('Search')+'" />' +
+                         '</form><br><div id="searchresult"></div></div></div>', xpos, ypos, null); 
+  
+  $('#searchbutton').click( function(e) {
+    e = (e)?e:((event)?event:null);
+    e.cancelBubble = true; 
+    if (e.stopPropagation) e.stopPropagation();
+                           skAddr.doSearch($('#findname').val(), searchCallback);  
+  });
+  
+  
+  function searchCallback(info)
+  {  
+    if (info == null) 
+      return; 
+    
+    var x = (isMobile ? document.getElementById('searchform') : 
+    document.getElementById('searchresult'));
+    if (x != null) {            
+      x.innerHTML = info;
+      
+      /* To allow scrollbar to be added */
+      removePopup();
+      setTimeout(function() { popup(document.getElementById("anchor"), pdiv, xpos, ypos, null);}, 1000); 
+    } 
+    
+  }
+}
 
 
 
