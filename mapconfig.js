@@ -217,7 +217,7 @@ var statkartWPS_url = "/aprs/wps";
 
 var statkartName_enable = false; 
 var statkartName_url = "/namesearch";
-var statkartName_url = "http://ws.geonorge.no/AdresseWS/adresse/sok";
+var statkartAddr_url = "http://ws.geonorge.no/AdresseWS/adresse/sok";
 
 
 
