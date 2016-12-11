@@ -1,3 +1,21 @@
+polaric-webapp (2.0.3) stable; urgency=medium
+
+  * Offline/online mode 
+
+ -- Øyvind Hanssen <ohanssen@acm.org>  Sun, 11 Dec 2016 14:01:57 +0100
+
+polaric-webapp (2.0.2) stable; urgency=medium
+
+  * Small fix 
+
+ -- Øyvind Hanssen <ohanssen@acm.org>  Sat, 10 Dec 2016 01:24:37 +0100
+
+polaric-webapp (2.0.1) stable; urgency=medium
+
+  * Fix php dependencies, use address service, etc..  
+
+ -- Øyvind Hanssen <ohanssen@acm.org>  Thu, 08 Dec 2016 23:55:09 +0100
+
 polaric-webapp (2.0) stable; urgency=medium
 
   * Websockets, etc.. 

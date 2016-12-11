@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH POLARIC-PASSWD 1 "September 25, 2011"
+.TH POLARIC-OFFLINE 1 "December 10, 2016"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -16,18 +16,17 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-polaric-passwd \- Set or change password of a user
+polaric-offline \- Prepare system for offline use
 .SH SYNOPSIS
-.B polaric-passwd
-.RI " username"
+.B polaric-offline
 .br
 
 .SH DESCRIPTION
-polaric-passwd is an utility for changing passwords used to log in to 
-Polaric Server. It is a simple wrapper for 'htpasswd' provided by the Apache
-web server software. Please note that you hav to manually add user to 
-permissions list in /etc/polaric-aprsd/server.ini and (possibly) to 
-/etc/polaric-webapp/kamap-setup.ph to grant access to the user. I hope to 
-automate this in later versions.
+This utility changes some settings to make system work when there is no connection to the internet. 
+The default action is to add a iptables rule to reject all outgoing requests to port 80 and 443 by returning a 
+icmp-port-unreachable. It assumes that iptables is not used for other purposes. 
+The default action for online use is to reset iptables. 
+
+If a script /etc/polaric-webapp/offline.sh exist, this will be used instead. Use this to customise offline settings. 
 .PP
 This program and manual page was written by LA7ECA, Øyvind hanssen <ohanssen@acm.org>.

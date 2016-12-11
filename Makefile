@@ -38,6 +38,8 @@ install: Aprs/compiled.js
 	chown www-data.www-data $(INSTALL_DATA)/mapcache
 	install -m 644 htaccess $(INSTALL_WEB)/.htaccess
 	install -m 755 polaric-passwd $(INSTALL_BIN)
+	install -m 755 polaric-offline $(INSTALL_BIN)
+	install -m 755 polaric-online $(INSTALL_BIN)
 	install -m 644 form_full.php form_small.php index.php  $(INSTALL_WEB)
 	install -m 644 iconx.png login.php nrrl.gif proj4js-compressed.js robots.txt $(INSTALL_WEB)
 	install -m 644 images/* $(INSTALL_WEB)/images
