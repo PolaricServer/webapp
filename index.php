@@ -101,11 +101,8 @@ include_once( 'webappconfig.php' );
         <div id="scale">current scale</div>
     </div>
     <div id="geoPosition"></div>
-</div>   
-       
+</div>    
 </div>
-
-<!--[if IE]><script type="text/javascript" src="KaMap/excanvas.js"></script><![endif]-->
 
 <?php
   if (!$isMobile) 
@@ -120,13 +117,30 @@ include_once( 'webappconfig.php' );
 <script type="text/javascript" src="mapconfig.js"></script>
 
 
+    
 <?php
+  /******************************
+   * Auto include of JS files   *
+   * for config                 *
+   ******************************/
+  if ($handle = opendir('/etc/polaric-webapp/www/auto_config')) {
+     while (false !== ($file = readdir($handle)))
+        if ($file != "." && $file != ".." && strtolower(substr($file, strrpos($file, '.') + 1)) == 'js')
+            echo('<script type="text/javascript" src="config/auto_config/'.$file.'" ></script>');
+     closedir($handle);
+  }
+
+
   if  (!$isDebug) {
      echo('<script type="text/javascript" src="KaMap/kamap-core.js"></script>');
      echo('<script type="text/javascript" src="XMLOverlay/compiled.js"></script>');
      echo('<script type="text/javascript" src="Aprs/compiled.js"></script>');
   }
   else {
+     /************************************************************************
+      * Debug mode, use source javascript files instead of compiled files
+      ************************************************************************/
+      
      echo('<script type="text/javascript" src="KaMap/eventManager.js"></script>');
      echo('<script type="text/javascript" src="KaMap/DHTMLapi.js"></script>');
      echo('<script type="text/javascript" src="KaMap/xhr.js"></script>');
@@ -167,7 +181,9 @@ include_once( 'webappconfig.php' );
        
 <?php
 
-   /* Auto include of JS files */
+   /******************************
+    * Auto include of JS files   *
+    ******************************/
    if ($handle = opendir('/etc/polaric-webapp/www/auto')) {
        while (false !== ($file = readdir($handle)))
           if ($file != "." && $file != ".." && strtolower(substr($file, strrpos($file, '.') + 1)) == 'js')
@@ -175,7 +191,9 @@ include_once( 'webappconfig.php' );
        closedir($handle);
     }
 
-  // Add extra Javascript files
+  /********************************
+   * Add extra Javascript files   *
+   ********************************/
   foreach ($jsIncludes as $inc) 
     if ($inc != "." && $inc != ".." && strtolower(substr($inc, strrpos($inc, '.') + 1)) == 'js')
        echo ('<script type="text/javascript" src="config/'.$inc.'" ></script>');

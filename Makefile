@@ -26,6 +26,7 @@ install: Aprs/compiled.js
 	install -d $(INSTALL_CONFIG)
 	install -d $(INSTALL_CONFIG)/www
 	install -d $(INSTALL_CONFIG)/www/auto
+	install -d $(INSTALL_CONFIG)/www/auto_config
 	install -d $(INSTALL_BIN)
 	install -d $(INSTALL_DATA)
 	install -d $(INSTALL_DATA)/mapcache
