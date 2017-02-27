@@ -77,6 +77,8 @@ function PopupMenu(title, heading)
     this.lastItem = null;
     this.menudiv = null;
     this.heading = null;
+    this.sections = [];
+    this.secNo = 0;
 }
 
 
@@ -84,8 +86,8 @@ PopupMenu.prototype.clear = function()
 {  
    this.lastItem = null;
    this.menudiv = document.createElement('div');
-//   this.menudiv.style.display = 'none';
-//   this.menudiv.className = 'POPUPMENU';
+   this.secNo = 0;
+   this.sections = [];
 }
 
 
@@ -97,8 +99,10 @@ PopupMenu.prototype.setHeading = function(hd)
 
 PopupMenu.prototype.add = function(txt, func, arg)
 {
-   if (txt == null) 
+   if (txt == null) { 
      this.lastItem.className = 'ITEM_sep';
+     this.sections[this.secNo++] = this.lastItem;
+   }
    else {
      var atxt  = (txt == null ? '' : txt);
      var alink = (func == null ? '' : func);
@@ -107,6 +111,26 @@ PopupMenu.prototype.add = function(txt, func, arg)
   }
 }
 
+
+/* Add to section in a menu */
+PopupMenu.prototype.insert = function(sect, txt, func, arg)
+{
+   if (this.secNo == 0) {
+      this.add(txt,func,arg);
+      return;
+   }
+   if (sect >= this.secNo)
+      sect = this.secNo-1;
+   this.sections[sect].className = '';
+   
+   /* Insert immediately after sectons[sect] */
+   var atxt  = (txt == null ? '' : txt);
+   var alink = (func == null ? '' : func);
+   var newNode = createItem(atxt, alink, arg);
+   this.sections[sect].parentNode.insertBefore(newNode, this.sections[sect].nextSibling);
+   newNode.className = 'ITEM_sep';
+   this.sections[sect] = newNode;
+}
 
 
 PopupMenu.prototype.activate = function(onDiv, x, y)
