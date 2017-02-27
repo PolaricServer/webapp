@@ -17,9 +17,7 @@ ctxtMenu.addCallback('MAP', function(m)
 {
   
   m.add(_('Show map reference'), function () { setTimeout('popup_posInfoPix('+m.x+', '+m.y+');',100); });
-  if (WXreport_enable)
-    m.add(_('WX report (Norway)'), function() { setTimeout('popup_wxInfoPix('+m.x+', '+m.y+');',100); });
-  
+
   if (canUpdate()) 
     m.add(_('Add APRS object'), function () { popup_editObject(m.x, m.y);});
   if (isAdmin())
@@ -42,10 +40,6 @@ ctxtMenu.addCallback('MAIN', function(m)
   m.d = toolbar;
   m.add(_('Search station/object'), function()  { setTimeout('popup_searchItems();',100);}); 
   m.add(_('Find map reference'), function() { setTimeout('popup_refSearch();',100); });
-  if (statkartName_enable) {
-    m.add(_('Find location name (Norway)'), function()  { setTimeout('popup_searchNames();',100);});
-    m.add(_('Find address info (Norway)'), function() { setTimeout('popup_searchAddr();',100);});
-  }
   
   if (canUpdate()) {                 
     m.add(_('Add object'), function() { popup_editObject(null, null); });
@@ -554,99 +548,6 @@ function showDMstring(ll)
 
 
 
-
-
-var skNames = new statkartName(statkartName_url);
-
-
-/********************************************************
- * popup window to search for place names in SK database
- ********************************************************/
-
-function popup_searchNames()
-{  
-  var xpos = 50; 
-  var ypos = 70;
-  var pdiv = popupwindow(document.getElementById("anchor"), 
-          ' <div><h1>'+_('Find Location Name (Kartverket)')+'</h1><div id="searchform"><form> '+
-          ' Navn: <input type="text"  width="10" id="findname"/> '+
-          ' <input id="searchbutton" type="button"' +
-          ' value="'+_('Search')+'" />' +
-          '</form><br><div id="searchresult"></div></div></div>', xpos, ypos, null); 
-  
-  $('#searchbutton').click( function(e) {
-     e = (e)?e:((event)?event:null);
-     e.cancelBubble = true; 
-     if (e.stopPropagation) e.stopPropagation();
-     skNames.doSearch($('#findname').val(), searchCallback);  
-  });
-  
-  
-  function searchCallback(info)
-  {  
-    if (info == null) 
-      return; 
-    
-    var x = (isMobile ? document.getElementById('searchform') : 
-                        document.getElementById('searchresult'));
-    if (x != null) {            
-       x.innerHTML = info;
-       
-       /* To allow scrollbar to be added */
-       removePopup();
-       setTimeout(function() { popup(document.getElementById("anchor"), pdiv, xpos, ypos, null);}, 1000); 
-    } 
-    
-  }
-}
-
-
-
-var skAddr = new statkartAddress(statkartAddr_url);
-
-/********************************************************
- * popup window to search for addresses in SK database
- ********************************************************/
-
-function popup_searchAddr()
-{  
-  var xpos = 50; 
-  var ypos = 70;
-  var pdiv = popupwindow(document.getElementById("anchor"), 
-                         ' <div><h1>'+_('Find Address (Kartverket)')+'</h1><div id="searchform"><form> '+
-                         ' Søk: <input type="text"  width="10" id="findname"/> '+
-                         ' <input id="searchbutton" type="button"' +
-                         ' value="'+_('Search')+'" />' +
-                         '</form><br><div id="searchresult"></div></div></div>', xpos, ypos, null); 
-  
-  $('#searchbutton').click( function(e) {
-    e = (e)?e:((event)?event:null);
-    e.cancelBubble = true; 
-    if (e.stopPropagation) e.stopPropagation();
-                           skAddr.doSearch($('#findname').val(), searchCallback);  
-  });
-  
-  
-  function searchCallback(info)
-  {  
-    if (info == null) 
-      return; 
-    
-    var x = (isMobile ? document.getElementById('searchform') : 
-    document.getElementById('searchresult'));
-    if (x != null) {            
-      x.innerHTML = info;
-      
-      /* To allow scrollbar to be added */
-      removePopup();
-      setTimeout(function() { popup(document.getElementById("anchor"), pdiv, xpos, ypos, null);}, 1000); 
-    } 
-    
-  }
-}
-
-
-
 /*******************************************************************************
  * popup info on a position on the map
  * based on pixel position on display
@@ -667,7 +568,6 @@ function popup_posInfoXY(x, y)
 
 
 
-var wps = new statkartWPS(statkartWPS_url);
 
 /*******************************************************************************
  * popup info on a position on the map
@@ -693,17 +593,8 @@ function popup_posInfo(llref, iconOnly)
                  nPixPos[0], nPixPos[1], true); 
     
     if (statkartWPS_enable) 
-      wps.doElevation(llref, function(wdata) {
-         if (!wdata.terrain && !wdata.placename && !wdata.elevation)
-             return; 
-         var txt = ""; 
-         if (wdata.placename) 
-             txt += '<span class="sleftlab">Sted:</span>' + wdata.placename +'<br>';
-         txt += '<span class="sleftlab">Terreng:</span>' + wdata.terrain +'<br>';
-         if (wdata.elevation) 
-             txt += '<span class="sleftlab">Høyde:</span>' + Math.round(wdata.elevation) +' moh<br>';
-         document.getElementById("wpsresult").innerHTML = txt; 
-      });
+      statkartWPS_posInfo(llref);
+      /* FIXME: This is tied to a specific plugin */
       
     if (canUpdate()) {
        var hr = w.appendChild(document.createElement("hr"));
@@ -734,63 +625,3 @@ function popup_setLanguage()
 }
 
 
-/**************************************************************
- * popup weather report from met.no 
- **************************************************************/
-
-var wx = new WXreport(WXreport_url);
-
-function popup_wxInfoPix(x, y) {
-  var coord = myKaMap.pixToGeo(x, y);
-  var ref = new LatLng(coord[1], coord[0]);
-  popup_wxInfo(ref);
-}
-
-
-
-function popup_wxInfo(ref) {
-  var nPixPos = myKaMap.geoToPix(ref.lng, ref.lat);
-  
-  var w = popupwindow(myKaMap.domObj, 
-        '<img title="Kilde: Meteorologisk institutt (met.no)" src="images/met.gif" align="right">'+
-        '<h3>Værmelding fra met.no</h3>' +
-        '<div id="wxresult"></div>', 
-         nPixPos[0], nPixPos[1], false);
-                      
-  wx.doTextReport(ref, function(wdata) {
-    var txt = writefcast(wdata[0]); 
-    txt += writefcast(wdata[1]);
-    if (!isMobileApp)
-        txt += writefcast(wdata[2]);
-    var z = document.getElementById("wxresult"); 
-    z.innerHTML = txt;
-    
-    function writefcast(x) { return '<h4 head="wxhead">'+dateFormat(x.from, x.to) 
-                                  +" ("+x.name+")</h4>" + x.fcast; }
-  });
-}
-
-
-
-function dateFormat(d1, d2) {
-  var txt = "";
-  var days = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag']; 
-  var today = new Date();
-  var h1 = d1.getHours(), h2 = d2.getHours();
-  if (h1 < 10) h1 = '0'+h1;
-  if (h2 < 10) h2 = '0'+h2;
-  txt = days[d1.getDay()];
-  if (d1.getDate() > today.getDate() && d1.getHours() > 0)
-    txt = txt + " kl." + h1;
-  if ( (d2.getDate() > d1.getDate()+1 || d2.getHours() > 0) ) {
-    if (d2.getHours() == 0)
-      txt = txt + " til " + d2.getDay()+"/"+days[ prevDay(d2.getDay())]; 
-    else
-      txt = txt + " til " + (d1.getDate() != d2.getDate() ? days[ d2.getDay()] : "") + " kl. "+h2;
-  }
-  return txt;
-  
-  function prevDay(x) {
-    return x -1; 
-  }
-}
