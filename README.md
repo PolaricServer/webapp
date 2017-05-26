@@ -7,6 +7,10 @@ The web application lets the user browse maps. It can present live APRS infomati
 More documentation on the project can be found here: 
 http://aprs.no/polaricserver
 
+A rewrite/port to OpenLayers 4+ is in progress: 
+https://github.com/PolaricServer/webapp2
+
+
 ## System requirements
 
 Linux/Apache/PHP platform (tested with Debian/Ubuntu/Mint).
