@@ -71,15 +71,15 @@ ctxtMenu.addCallback('MAIN', function(m)
   
   if (isAdmin() || canUpdate()) {
     m.add(null);
-    if (sarUrl) 
-      m.add(_('SAR URL'), popup_sarUrl);
+//    if (sarUrl) 
+//      m.add(_('SAR URL'), popup_sarUrl);
     m.add(_('SAR mode'), popup_sarMode);
     m.add(null);
-    m.add(_('Log out'), logout);
+    m.add(_('Log out'), function() { window.location = 'srv/logout?url='+window.location.href});
   }
   else if (!isMobileApp) {
      m.add(null); 
-     m.add(_('Log in'), function() { window.location = 'login.php'; });
+     m.add(_('Log in'), function() { window.location = 'srv/formLogin?origin=../'; });
   }    
 }); 
 

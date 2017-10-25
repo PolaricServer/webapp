@@ -55,34 +55,33 @@ MessageBuffer.prototype.decrementIndex = function() {
 /*********** Websocket handler ********************************/
 
 var msgbuf = new MessageBuffer(10);
+var msg_websock = null;
 
 function message_init() {
-   if (!tryAuth())
-      return;
    var loc = server_loc, uri;
    uri =  (loc.protocol === "https:") ? "wss" : "ws";
    uri += "://" + loc.host + loc.pathname;
-   uri += "ws/messages_sec";
-   websocket = new WebSocket(uri);
+   uri += "ws/messages";
+   msg_websock = new WebSocket(uri);
   
    
-  websocket.onopen = function() { 
+  msg_websock.onopen = function() { 
      OpenLayers.Console.info("Connected to server (for messaging).");
   };
   
-  websocket.onmessage = function(evt) { 
+  msg_websock.onmessage = function(evt) { 
      var msg = JSON.parse(evt.data);
      msgbuf.putMessage(msg);
      popup_showMessage(msgbuf.currIndex());
   };
   
   
-  websocket.onclose = function(evt) {
+  msg_websock.onclose = function(evt) {
     /* If connection is closed, we probably need to log in again anyway */
   }
   
   
-  websocket.onerror = function(evt) { 
+  msg_websock.onerror = function(evt) { 
      OpenLayers.Console.info("Failed to connect to server (for messaging).");
   };
 }
@@ -90,12 +89,13 @@ function message_init() {
 
 
 function message_close() {
-  websocket.close();
+  if (msg_websock && msg_websock != null) 
+      msg_websock.close();
 }
 
 
 function message_send(msg) {
-  websocket.send(JSON.stringify(msg));
+  msg_websock.send(JSON.stringify(msg));
 }
 
 

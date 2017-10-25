@@ -1,47 +1,6 @@
  
  
 var sar_key = null;
-var _tryAuth = false; 
- 
- 
-function setTryAuth() {
-   _tryAuth = true;
-}
-
-
-
-/* Return true if we are going to try to log in and not logged in already */
-function tryAuth() {
-   _tryAuth = (Cookies.get("polaric.tryLogin") == 'true'); 
-   if (_tryAuth) {
-      /* Autologout when cookie expires */
-      setInterval(function() { 
-        if ( Cookies.get("polaric.tryLogin") != 'true') 
-           logout();
-      }, 600000);
-   }
-   
-   return _tryAuth || getLogin(); 
-}
-
-
-
-
-/* Next time tryAuth is called it will return false if we don't know we are logged in. 
- * Next time failedAuth is called it will return true 
- */
-function failAuth() {
-   _tryAuth = false; 
-   document.cookie = 'polaric.tryLogin' + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
-}
-
-
-
-
-/* Return true if we have have called failAuth */
-function failedAuth() {
-  return !_tryAuth; 
-}
 
  
  /* Permissions */
@@ -105,31 +64,7 @@ function failedAuth() {
     storage.removeItem('polaric.sarkey');
  }
  
- 
- 
- function logout() {
-   // "Dirty hack" from http://tuhrig.de/basic-auth-log-out-with-javascript/
-   if (!isLoggedIn())
-     return; 
 
-   jQuery.ajax({
-     type: "GET",
-     url: "/login.php",
-     async: false,
-     username: "logmeout",
-     password: "---",
-     headers: { "Authorization": "Basic xxx" }
-   })
-   .done(function(){
-     // If we don't get an error, we actually got an error as we expect an 401!
-   })
-   .fail(function(){
-     // We expect to get an 401 Unauthorized error! In this case we are successfully 
-     // logged out and we redirect the user.
-     window.location = "";
-   });
- }
- 
  
  
  

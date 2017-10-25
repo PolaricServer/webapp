@@ -3,13 +3,14 @@
 
 var _mapupdate_suspend = false;
 var _mapupdate_retry = 0;
+var websocket = null; 
 
 
 function mapupdate_init() {
    var loc = server_loc, uri;
    uri =  (loc.protocol === "https:") ? "wss" : "ws";
    uri += "://" + loc.host + loc.pathname;
-   uri += (tryAuth() ? 'ws/mapdata_sec' : 'ws/mapdata');
+   uri += 'ws/mapdata';
    websocket = new WebSocket(uri);
   
    
@@ -41,19 +42,12 @@ function mapupdate_init() {
   
   
   websocket.onerror = function(evt) { 
-     if (failedAuth()) {
-        OpenLayers.Console.error("Failed to connect to server (for XML overlay).");
-        alert(_("ERROR: Failed to connect to server"));
-     }
-     else {
-        /* If auth hasn't already failed, set failAuth
-         * and try again connecting the INSECURE websocket.
-         */
-        failAuth();
-        mapupdate_init();
-     }
+     OpenLayers.Console.error("Failed to connect to server (for XML overlay).");
+     alert(_("ERROR: Failed to connect to server"));
   };
 }
+
+
 
 
 function mapupdate_suspend(t) {
@@ -63,7 +57,8 @@ function mapupdate_suspend(t) {
 
 
 function mapupdate_close() {
-  websocket.close();
+  if (websocket && websocket != null)
+       websocket.close();
 }
 
 

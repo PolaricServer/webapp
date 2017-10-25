@@ -8,7 +8,7 @@
        <div class="kmTitle"><?php echo($screenTitle) ?></div>
 
        <div id="sarmode"><img src="images/sar.png" title="SAR modus"></div>
-       <div id="login"><a href="login.php" title="Logg inn">
+       <div id="login"><a href="srv/formLogin?origin=../" title="Logg inn">
                   <img src="images/password.png"></a></div>&nbsp;
        
        <img id="buttonMenu" src="images/exec.gif" alt="Meny...">&nbsp;
@@ -27,7 +27,7 @@
        <div id="permolink">&nbsp;</div>
     </div>
     <div id="kaLogo">    
-        <a href="http://la3t.no/polaricserver/" target="_blank">
+        <a href="http://aprs.no/polaricserver/" target="_blank">
         <img alt="Powered by Polaric Server" src="KaMap/images/PolaricServer_s.png" border="0"></a>
     </div>
 </div>  <!-- id=toolbar -->
