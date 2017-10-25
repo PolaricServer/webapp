@@ -212,6 +212,8 @@ kaMap.prototype.initializeOL = function( ) {
   }
   
   
+  
+  
   /* This function is called each time the user changes base layer */
   function layerChange() { 
     /* First, get the center point of the map, transform the coordinates
@@ -317,6 +319,8 @@ kaMap.prototype.initializeOL = function( ) {
 /* End of initializeOL */
 
 
+/* mapLayers is an array of layers defined in mapconfig.js. 
+ * Add the layers to the OpenLayers map */
 
 kaMap.prototype.addLayers = function() {
   if (mapLayers != null && mapLayers.length > 0) 

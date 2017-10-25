@@ -8,7 +8,6 @@
  window.onmessage = function(e)  
  {   
    e = (e)?e:((event)?event:null);
-   
    var args = e.data.split("##");
    var op = args[0].split("#");
    

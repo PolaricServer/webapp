@@ -31,7 +31,7 @@ function ScaleBar(scaleDenominator) {
     // may be modified after construction
     // if modified after ScaleBar.place(), use ScaleBar.update()
     this.scaleDenominator = (scaleDenominator == null) ? 1 : scaleDenominator;
-    this.displaySystem = 'metric'; // metric or english supported
+    this.displaySystem = 'metric'; // (measurementSystem == NaN || measurementSystem == null) ? 'metric' : measurementSystem; // metric or english supported
     this.minWidth = 100; // pixels
     this.maxWidth = 200; // pixels
     this.divisions = 2;

@@ -42,7 +42,7 @@ install: Aprs/compiled.js
 	install -m 755 polaric-offline $(INSTALL_BIN)
 	install -m 755 polaric-online $(INSTALL_BIN)
 	install -m 644 form_full.php form_small.php index.php  $(INSTALL_WEB)
-	install -m 644 iconx.png login.php nrrl.gif proj4js-compressed.js robots.txt $(INSTALL_WEB)
+	install -m 644 iconx.png nrrl.gif proj4js-compressed.js robots.txt $(INSTALL_WEB)
 	install -m 644 images/* $(INSTALL_WEB)/images
 	install -m 644 style/*.css $(INSTALL_WEB)/style
 	install -m 644 Aprs/compiled.js Aprs/configSupport.js Aprs/iframeApi.js $(INSTALL_WEB)/Aprs

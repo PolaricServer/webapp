@@ -71,13 +71,13 @@ ctxtMenu.addCallback('MAIN', function(m)
   
   if (isAdmin() || canUpdate()) {
     m.add(null);
-//    if (sarUrl) 
-//      m.add(_('SAR URL'), popup_sarUrl);
     m.add(_('SAR mode'), popup_sarMode);
+  }
+  if (isLoggedIn()) {
     m.add(null);
     m.add(_('Log out'), function() { window.location = 'srv/logout?url='+window.location.href});
   }
-  else if (!isMobileApp) {
+  else {
      m.add(null); 
      m.add(_('Log in'), function() { window.location = 'srv/formLogin?origin=../'; });
   }    
