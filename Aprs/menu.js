@@ -57,30 +57,46 @@ ctxtMenu.addCallback('MAIN', function(m)
             gpsTracker.activate(); 
       } );
     else
-      m.add(_('De-activate GPS pos.'), function() { gpsTracker.deactivate(); });
+       m.add(_('De-activate GPS pos.'), function() { gpsTracker.deactivate(); });
     m.add(_('Change language'), function() { popup_setLanguage(); } ); 
   }
   
   if (!traceIsHidden('ALL'))
-    m.add(_('Hide traces'), function() { myOverlay.hidePointTrace('ALL'); });
+     m.add(_('Hide traces'), function() { myOverlay.hidePointTrace('ALL'); });
   else
-    m.add(_('Show traces'), function() { myOverlay.showPointTrace('ALL'); });
+     m.add(_('Show traces'), function() { myOverlay.showPointTrace('ALL'); });
   m.add(null);
   m.add(_('Font size +'), function() { labelStyle.next(); });
   m.add(_('Font size -'), function() { labelStyle.previous(); });
   
   if (isAdmin() || canUpdate()) {
-    m.add(null);
-    m.add(_('SAR mode'), popup_sarMode);
+     m.add(null);
+     m.add(_('SAR mode'), popup_sarMode);
   }
+  
+  if (isAdmin() || canUpdate()) {
+     m.add(null);
+     m.add(_("User/password.."), setPasswd);
+     if (isAdmin())
+        m.add(_("Admin/configuration.."), webConfig);
+     else
+        m.add(_("Server status info.."), adminWindow);
+  }
+  
   if (isLoggedIn()) {
-    m.add(null);
-    m.add(_('Log out'), function() { window.location = 'srv/logout?url='+window.location.href});
+      m.add(null);
+      m.add(_('Log out'), function() { window.location = 'srv/logout?url='+window.location.href});
   }
   else {
-     m.add(null); 
-     m.add(_('Log in'), function() { window.location = 'srv/formLogin?origin=../'; });
-  }    
+      m.add(null); 
+      m.add(_('Log in'), function() { window.location = 'srv/formLogin?origin=../'; });
+  }   
+  
+  
+  
+  
+  
+  
 }); 
 
 
@@ -136,6 +152,16 @@ ctxtMenu.addCallback('ITEM', function(m)
 });
 
 
+
+function setPasswd()
+  { fullPopupWindow(_('Password'), server_url + 'srv/passwd'+'?lang='+language, 430, 250); }
+
+function webConfig()
+  { fullPopupWindow(_('Config'), server_url + 'srv/config_menu'+'?lang='+language, 900, 700); }
+
+function adminWindow()
+  { fullPopupWindow(_('Status'), server_url + 'srv/admin?cmd=info'+'&lang='+language, 800, 600); }
+  
 
 
 function popup_setTag(ident, x, y)

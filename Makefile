@@ -61,7 +61,6 @@ install: Aprs/compiled.js
 	install -m 644 mapconfig.js  $(INSTALL_CONFIG)/mapconfig.js
 	install -m 644 mapcache.xml $(INSTALL_CONFIG)/mapcache.xml
 	install -m 644 webappconfig.php $(INSTALL_CONFIG)
-	install -m 644 users $(INSTALL_CONFIG)
 	
 	# To keep Lintian happy (redundant license file)
 	rm $(INSTALL_WEB)/OpenLayers/lib/Firebug/license.txt
