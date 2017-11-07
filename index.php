@@ -132,52 +132,52 @@ include_once( 'webappconfig.php' );
 
 
   if  (!$isDebug) {
-     echo('<script type="text/javascript" src="KaMap/kamap-core.js"></script>');
-     echo('<script type="text/javascript" src="XMLOverlay/compiled.js"></script>');
-     echo('<script type="text/javascript" src="Aprs/compiled.js"></script>');
+     echo('<script src="KaMap/kamap-core.js"></script>');
+     echo('<script src="XMLOverlay/compiled.js"></script>');
+     echo('<script src="Aprs/compiled.js"></script>');
   }
   else {
      /************************************************************************
       * Debug mode, use source javascript files instead of compiled files
       ************************************************************************/
       
-     echo('<script type="text/javascript" src="KaMap/eventManager.js"></script>');
-     echo('<script type="text/javascript" src="KaMap/DHTMLapi.js"></script>');
-     echo('<script type="text/javascript" src="KaMap/xhr.js"></script>');
-     echo('<script type="text/javascript" src="KaMap/touchHandler.js"></script>');
-     echo('<script type="text/javascript" src="KaMap/kaMap.js"></script>');
-     echo('<script type="text/javascript" src="KaMap/kaTool.js"></script>');
-     echo('<script type="text/javascript" src="KaMap/kaQuery.js"></script>');
-     echo('<script type="text/javascript" src="KaMap/kaMouseTracker.js"></script>');
-     echo('<script type="text/javascript" src="KaMap/scalebar/scalebar.js"></script>');
-     echo('<script type="text/javascript" src="XMLOverlay/labelStyle.js"></script>');    
-     echo('<script type="text/javascript" src="XMLOverlay/kaXmlOverlay.js"></script>');
-     echo('<script type="text/javascript" src="XMLOverlay/kaXmlFeature.js"></script>');
-     echo('<script type="text/javascript" src="XMLOverlay/kaXmlIcon.js"></script>');
-     echo('<script type="text/javascript" src="XMLOverlay/kaXmlLabel.js"></script>');
-     echo('<script type="text/javascript" src="XMLOverlay/kaXmlPoint.js"></script>');
-     echo('<script type="text/javascript" src="XMLOverlay/kaXmlSymbol.js"></script>');
-     echo('<script type="text/javascript" src="XMLOverlay/labelStyle.js"></script>');
-     echo('<script type="text/javascript" src="Aprs/js.cookie.js"></script>');
-     echo('<script type="text/javascript" src="Aprs/statkartWPS.js"></script>');
-     echo('<script type="text/javascript" src="Aprs/statkartName.js"></script>');
-     echo('<script type="text/javascript" src="Aprs/WXreport.js"></script>');
-     echo('<script type="text/javascript" src="Aprs/api.js"></script>');
-     echo('<script type="text/javascript" src="Aprs/iscroll.js"></script>');
-     echo('<script type="text/javascript" src="Aprs/popup.js"></script>');  
-     echo('<script type="text/javascript" src="Aprs/contextmenu.js"></script>');  
-     echo('<script type="text/javascript" src="Aprs/layerSwitcher.js"></script>'); 
-     echo('<script type="text/javascript" src="Aprs/mapupdate.js"></script>');      
-     echo('<script type="text/javascript" src="Aprs/messages.js"></script>');    
-     echo('<script type="text/javascript" src="Aprs/menu.js"></script>');
-     echo('<script type="text/javascript" src="Aprs/jscoord.js"></script>');
-     echo('<script type="text/javascript" src="Aprs/filterProfile.js"></script>');
-     echo('<script type="text/javascript" src="Aprs/auth.js"></script>');
-     echo('<script type="text/javascript" src="Aprs/startUp.js"></script>');
+     echo('<script src="KaMap/eventManager.js"></script>');
+     echo('<script src="KaMap/DHTMLapi.js"></script>');
+     echo('<script src="KaMap/xhr.js"></script>');
+     echo('<script src="KaMap/touchHandler.js"></script>');
+     echo('<script src="KaMap/kaMap.js"></script>');
+     echo('<script src="KaMap/kaTool.js"></script>');
+     echo('<script src="KaMap/kaQuery.js"></script>');
+     echo('<script src="KaMap/kaMouseTracker.js"></script>');
+     echo('<script src="KaMap/scalebar/scalebar.js"></script>');
+     echo('<script src="XMLOverlay/labelStyle.js"></script>');    
+     echo('<script src="XMLOverlay/kaXmlOverlay.js"></script>');
+     echo('<script src="XMLOverlay/kaXmlFeature.js"></script>');
+     echo('<script src="XMLOverlay/kaXmlIcon.js"></script>');
+     echo('<script src="XMLOverlay/kaXmlLabel.js"></script>');
+     echo('<script src="XMLOverlay/kaXmlPoint.js"></script>');
+     echo('<script src="XMLOverlay/kaXmlSymbol.js"></script>');
+     echo('<script src="XMLOverlay/labelStyle.js"></script>');
+     echo('<script src="Aprs/js.cookie.js"></script>');
+     echo('<script src="Aprs/statkartWPS.js"></script>');
+     echo('<script src="Aprs/statkartName.js"></script>');
+     echo('<script src="Aprs/WXreport.js"></script>');
+     echo('<script src="Aprs/api.js"></script>');
+     echo('<script src="Aprs/iscroll.js"></script>');
+     echo('<script src="Aprs/popup.js"></script>');  
+     echo('<script src="Aprs/contextmenu.js"></script>');  
+     echo('<script src="Aprs/layerSwitcher.js"></script>'); 
+     echo('<script src="Aprs/mapupdate.js"></script>');      
+     echo('<script src="Aprs/messages.js"></script>');    
+     echo('<script src="Aprs/menu.js"></script>');
+     echo('<script src="Aprs/jscoord.js"></script>');
+     echo('<script src="Aprs/filterProfile.js"></script>');
+     echo('<script src="Aprs/auth.js"></script>');
+     echo('<script src="Aprs/startUp.js"></script>');
   }
 ?>
-<script type="text/javascript" src="KaMap/tools/kaRubberZoom.js"></script>
-<script type="text/javascript" src="KaMap/tools/myKaRuler.js"></script> 
+<script src="KaMap/tools/kaRubberZoom.js"></script>
+<script src="KaMap/tools/myKaRuler.js"></script> 
        
 <?php
 
