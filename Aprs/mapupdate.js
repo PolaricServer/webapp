@@ -13,6 +13,9 @@ function mapupdate_init() {
    uri += 'ws/mapdata';
    websocket = new WebSocket(uri);
   
+   setTimeout(function() {
+       websocket.send("");
+   }, 120000);
    
   websocket.onopen = function() { 
      OpenLayers.Console.info("Connected to server (for XML overlay).");
@@ -21,7 +24,11 @@ function mapupdate_init() {
   };
   
   websocket.onmessage = function(evt) { 
-     if (!_mapupdate_suspend)
+     if (_mapupdate_suspend)
+         return;
+     if (evt.data == 'RESTART!')
+        setTimeout(function() {location.reload();}, 20000);
+     else 
          myOverlay.applyXml(evt.data);
   };
   
