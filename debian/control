@@ -4,12 +4,12 @@ Priority: optional
 Maintainer: Øyvind Hanssen <ohanssen@acm.org>
 Build-Depends:  debhelper (>=8)
 Standards-Version: 3.9.6
-Homepage: http://aprs.no/dokuwiki
+Homepage: http://aprs.no/polaricserver
 
 Package: polaric-webapp
 Architecture: all
-Depends: apache2, apache2-utils, libapache2-mod-php5|libapache2-mod-php, php5|php, libapache2-mod-mapcache, libjs-jquery, libjs-jquery-ui, mapcache-tools, polaric-aprsd (>= 2.0), ${misc:Depends}
-Recommends: 
+Depends: apache2, apache2-utils, libapache2-mod-php5|libapache2-mod-php, php5|php, libapache2-mod-mapcache, libjs-jquery, libjs-jquery-ui, mapcache-tools, ${misc:Depends}
+Recommends:  polaric-aprsd (>= 2.0)
 Description: Polaric Server: Web application. 
  The "Polaric Server" is mainly a web based service to present APRS 
  tracking information on maps and where the information is updated at real-

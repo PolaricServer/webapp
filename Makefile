@@ -38,7 +38,6 @@ install: Aprs/compiled.js
 		   $(INSTALL_WEB)/KaMap/scalebar $(INSTALL_WEB)/KaMap/tools
 	chown www-data.www-data $(INSTALL_DATA)/mapcache
 	install -m 644 htaccess $(INSTALL_WEB)/.htaccess
-	install -m 755 polaric-passwd $(INSTALL_BIN)
 	install -m 755 polaric-offline $(INSTALL_BIN)
 	install -m 755 polaric-online $(INSTALL_BIN)
 	install -m 644 form_full.php form_small.php index.php  $(INSTALL_WEB)
