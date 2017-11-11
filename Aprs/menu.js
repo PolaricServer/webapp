@@ -50,7 +50,6 @@ ctxtMenu.addCallback('MAIN', function(m)
   
   m.add(null);
   if (isMobileApp) {   
-    m.add(_('Set SAR code'), popup_setSarKey);
     if (gpsTracker==null || !gpsTracker.isActive())
       m.add(_('Activate GPS pos.'), function() {  
         if (gpsTracker==null) gpsTracker = new GpsTracker(); 
@@ -312,18 +311,6 @@ function popup_telemetry(ident, x, y)
 }
 
 
-/***********************************************************
- * Popup window to get SAR URL (with SAR key) from server 
- *   call to server: 'sarurl'
- ***********************************************************/
-
-function popup_sarUrl(x, y)
-{
-    var pl = document.getElementById("permolink").children[0].children[0].href;
-    remotepopupwindow(myKaMap.domObj, server_url + 'srv/sarurl?url='+escape(pl) + '&lang='+language,  50, 80); 
-}
-
-
 
 /***********************************************************
  * Popup window to search in station history 
@@ -336,36 +323,6 @@ function popup_stationHistory(ident, x, y)
      server_url + 'srv/history?ajax=true&lang='+language+'&simple=true&id='+ident, x, y);
 }
 
-
-
-/***********************************************************
- * Popup window to get SAR key from user 
- *  uses api function setSarKey()
- ***********************************************************/
-
-function popup_setSarKey()
-{  
-  var xpos = 50; 
-  var ypos = 70;
-  var pdiv = popupwindow(document.getElementById("anchor"), 
-         ' <div><h1>'+_('Set SAR code')+'</h1><div id="sarcodeform"><form> '+
-         ' '+_('Code')+': <input type="text" style="width: 6em" width="6" id="sarcode" value="'+ (sar_key==null ? '' : sar_key) + '"/>&nbsp; '+
-         ' <input id="sarcodebutton" type="button"' +
-         ' value="'+_('Confirm')+'" /></div><br></div>', 
-         xpos, ypos, null); 
-  
-  
-  $('#sarcodebutton').click( function(e) {
-    var code = $('#sarcode').val();
-    if (code == "" || code == " ")
-      code = null;
-    setSarKey(code);
-    
-    removePopup();
-    e.cancelBubble = true; 
-    if (e.stopPropagation) e.stopPropagation();  
-  });
-}
 
 
 /***********************************************************

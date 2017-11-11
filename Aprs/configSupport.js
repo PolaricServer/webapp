@@ -124,8 +124,8 @@ function add_Gpx_Layer(name, url, color, width)
     function loadSuccess(request) {
        var features = gpx_format.read(request.responseText);
        for(var i = 0; i<features.length;i++){
-  	  features[i].geometry.transform(new OpenLayers.Projection('EPSG:4326'), 
-	             myKaMap == null ? utm_projection : projection() );
+  	   features[i].geometry.transform(new OpenLayers.Projection('EPSG:4326'), 
+	             (typeof myKaMap === 'undefined' || myKaMap == null) ? utm_projection : projection() );
        }
        layer.addFeatures(features);
     }

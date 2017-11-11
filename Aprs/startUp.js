@@ -187,7 +187,6 @@ function myMapError(msg) {
  */
 var ststate = null;
 function myInitialized() { 
-    sar_key = storage['polaric.sarkey'];
     var view = null;
     if (view == null)
        view = args['view'];
@@ -351,10 +350,6 @@ var retry = 0;
 var lastXmlCall = 0;
 
 
-function sarUrl()
-  { return server_url + (sar_key == null ? '' : 'sar_'+sar_key+'/'); }
-
-  
 
 /*
  * Called if Ajax call to server fails. 
@@ -362,11 +357,6 @@ function sarUrl()
 function postLoadXml_Fail()
 {
   OpenLayers.Console.warn("XML Call: Not found");
-  if (sar_key != null) {
-     alert(_('Access to SAR info denied. Invalid key'));
-     removeSarKey(); 
-     show_SAR_access(false);
-  }
 }
 
 

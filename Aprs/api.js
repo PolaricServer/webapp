@@ -247,7 +247,7 @@
  
  function searchItems(filt, tags, cb)
  {
-   var url = sarUrl() + (getLogin() ? 'srv/search_sec?' : 'srv/search?');  
+   var url = server_url + (getLogin() ? 'srv/search_sec?' : 'srv/search?');  
    call( url + "ajax=true&lang="+language+
      (filt!=null && filt != '' ? '&srch='+filt : '') + 
      (tags!=null && filt != '' ? '&tags='+tags : '') +
@@ -260,7 +260,7 @@
    call(server_url + "srv/tags?ajax=true&lang="+language +
     (item!=null?'&item='+item : '') +
     (tags!=null?'&tags='+tags : '') +
-    (isMobile==true?'&mobile=true':''), null, cb, false );
+    (isMobile==true?'&mobile=true':''), null, cb, false);
  }
  
  

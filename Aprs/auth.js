@@ -26,8 +26,6 @@ var sar_key = null;
  /* get login name */
  function getLogin()
  { 
-   if (sar_key != null || window.location.href.match(/.*\/sar_[0-9a-f]+/))
-     return "-SAR-";
    if (/null/.test(myOverlay.meta.login)) 
      return null;   
    return myOverlay.meta.login; 
@@ -41,28 +39,6 @@ var sar_key = null;
      sdiv.innerHTML = (a ? '<img src="images/sar-o.png">' : '<img src="images/sar.png">');
  }
  
- 
- /**************************************************************************************
-  * setSarKey - Store SAR key
-  *    k key value (string)
-  * 
-  * Note that if this is unsuccessfully used to authenticate to server, it is
-  * removed from local storage.  
-  **************************************************************************************/
- 
- function setSarKey(k)
- { 
-   sar_key = k;
-   storage.removeItem('polaric.sarkey');
-   storage['polaric.sarkey'] = k;
- }
- 
- 
- function removeSarKey()
- {     
-    sar_key = null;
-    storage.removeItem('polaric.sarkey');
- }
  
 
  
