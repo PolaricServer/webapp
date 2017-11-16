@@ -8,8 +8,12 @@ var websocket = null;
 
 function mapupdate_init() {
    var loc = server_loc, uri;
+   var pth = loc.pathname; 
+   if (pth==null || pth==0)
+      pth = '/';
+   
    uri =  (loc.protocol === "https:") ? "wss" : "ws";
-   uri += "://" + loc.host + loc.pathname;
+   uri += "://" + loc.host + pth;
    uri += 'ws/mapdata';
    websocket = new WebSocket(uri);
   
