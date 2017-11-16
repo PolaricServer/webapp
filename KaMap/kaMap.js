@@ -1055,13 +1055,28 @@ kaMap.prototype.getGeoExtents = function() {
 };
 
 
+
 kaMap.prototype.zoomIn = function() {
-    this.olMap.zoomIn();
+    var p1 = this.olMap.getLonLatFromPixel(new OpenLayers.Pixel(cursor_x, cursor_y)); 
+    this.olMap.zoomIn(); 
+    var p2 = this.olMap.getLonLatFromPixel(new OpenLayers.Pixel(cursor_x, cursor_y)); 
+    
+    var center = this.olMap.getCenter(); 
+    var cx = center.lon + (p1.lon - p2.lon);
+    var cy = center.lat + (p1.lat - p2.lat);;    
+    this.olMap.setCenter(new OpenLayers.LonLat(cx, cy));
 };
 
 
 kaMap.prototype.zoomOut = function() {
+    var p1 = this.olMap.getLonLatFromPixel(new OpenLayers.Pixel(cursor_x, cursor_y)); 
     this.olMap.zoomOut();
+    var p2 = this.olMap.getLonLatFromPixel(new OpenLayers.Pixel(cursor_x, cursor_y)); 
+    
+    var center = this.olMap.getCenter(); 
+    var cx = center.lon + (p1.lon - p2.lon);
+    var cy = center.lat + (p1.lat - p2.lat);;    
+    this.olMap.setCenter(new OpenLayers.LonLat(cx, cy));
 };
 
 

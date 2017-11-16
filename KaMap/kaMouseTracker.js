@@ -60,6 +60,8 @@
 // the mouse tracker event id
 var KAMAP_MOUSE_TRACKER = gnLastEventId ++;
 var mousetrack_suspend = false; 
+var cursor_x = 0, cursor_y = 0 ;
+
 
 /**
  * kaMouseTracker constructor
@@ -90,9 +92,9 @@ kaMouseTracker.prototype.onmousemove = function(e) {
     e = (e)?e:((event)?event:null);
     if (mousetrack_suspend) 
        return false;
-    var x = e.pageX || (e.clientX +
+    var x = cursor_x = e.pageX || (e.clientX +
           (document.documentElement.scrollLeft || document.body.scrollLeft));
-    var y = e.pageY || (e.clientY +
+    var y = cursor_y = e.pageY || (e.clientY +
                 (document.documentElement.scrollTop || document.body.scrollTop));
 
     var p = this.kaMap.pixToGeo( x, y );
