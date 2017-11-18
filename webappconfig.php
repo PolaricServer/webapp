@@ -3,7 +3,7 @@
 /*
  * Title of the site
  */
-$siteTitle = "Polaric Server 2 - APRS kart";
+$siteTitle = "Polaric Server - APRS kart";
 
 
 /*

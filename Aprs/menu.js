@@ -156,11 +156,8 @@ function setPasswd()
   { fullPopupWindow(_('Password'), server_url + 'srv/passwd'+'?lang='+language, 430, 250); }
 
 function webConfig()
-  { fullPopupWindow(_('Config'), server_url + 'srv/config_menu'+'?lang='+language, 900, 700); }
+  { fullPopupWindow(_('Config'), server_url + 'srv/config_menu'+'?inapp=true&lang='+language, 900, 700); }
 
-function adminWindow()
-  { fullPopupWindow(_('Status'), server_url + 'srv/admin?cmd=info'+'&lang='+language, 800, 600); }
-  
 
 
 function popup_setTag(ident, x, y)
